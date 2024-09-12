@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  firstName String
+  lastName String
+  userName String
+  email String
+  bio String
+  // profileImg StringUrl
+  role Role @default(USER)
+  posts Post[]
+  likes Likes[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Trips {
+  id Int @id @default(autoincrement())
+  userId Int @unique
+  destination Destination @relation(fields: [destinationId], references: [id])
+  destinationId Int @unique
+  tripName String
+  start DateTime @default(now())
+  end DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model Post {
+  id Int @id @default(autoincrement())
+  userId Int @unique
+  user User[]
+  //trip Trip @relation(fields: [userId]) --- something of this sort
+  postTxt String
+  likes Likes[] 
+  //postImg
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model Likes {
+  id Int @id @default(autoincrement())
+  post Post @relation(fields: [postId], references: [id])
+  postId Int @unique
+  user User @relation(fields: [userId], references: [id])
+  userId Int @unique
+}
+
+model Destination {
+  id Int @id @default(autoincrement())
+  destinationName String
+  //destinationImg []
+  createdAt DateTime @default(now())
+  trips Trips[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
