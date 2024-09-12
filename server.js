@@ -29,7 +29,7 @@ app.get("/api/users", async (req, res, next) => {
 });
 
 //get all destinations
-app.get("api/destination", async (req, res, next) => {
+app.get("/api/destination", async (req, res, next) => {
   try {
     const destinations = await prisma.destination.findMany();
     res.json(destinations);
