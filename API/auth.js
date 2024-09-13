@@ -34,6 +34,16 @@ router.post("/register", async (req, res, next) => {
   }
 });
 
+// <-- how to use createUser function in server.js BUT DONT KNOW WHERE TO PUT
+// router.post("/register", async (req, res, next) => {
+//   try {
+//     res.send(await createUser(req.body));
+//   } catch (error) {
+//     console.error("Couldnt post new user");
+//     console.log(error);
+//   }
+// });
+
 //get user by ID -- WORKS -- NEEDS EDIT for logged in user
 router.get("/account/:id", async (req, res, next) => {
   try {
