@@ -2,9 +2,8 @@ const router = require("express").Router();
 module.exports = router;
 
 const prisma = require("../prisma");
-const bcrypt = require("bcrypt");
 
-//get all users
+//get all users -- WORKS
 router.get("/", async (req, res, next) => {
   try {
     const users = await prisma.user.findMany();
@@ -14,30 +13,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-//create new user
-router.post("/", async (req, res, next) => {
-  try {
-    const { firstName, lastName, userName, email, password } = req.body;
-
-    if (!firstName || !lastName || !userName || !email || !password) {
-      const error = {
-        status: 400,
-        messsage: "Registration fields required",
-      };
-
-      return next(error);
-    }
-
-    const user = await prisma.author.create({
-      data: { firstName, lastName, userName, email, password },
-    });
-    res.json(user);
-  } catch (error) {
-    next();
-  }
-});
-
-//get user by ID
+//get user by ID -- WORKS
 router.get("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
@@ -53,12 +29,14 @@ router.get("/:id", async (req, res, next) => {
 
     res.json(user);
   } catch (error) {
-    next();
+    next(error);
   }
 });
 
-//get trips associated with a user
-router.get("/api/users/:id/trips", async (req, res, next) => {
+// ----- cant test until schema is fixed -----
+
+//get posts associated with a user
+router.get("/:id/posts", async (req, res, next) => {
   try {
     const id = +req.params.id;
     console.log(id);
@@ -72,10 +50,10 @@ router.get("/api/users/:id/trips", async (req, res, next) => {
       });
     }
 
-    const trips = await prisma.trips.findMany({ where: { userId: id } });
+    const posts = await prisma.post.findMany({ where: { userId: id } });
 
-    res.json(trips);
+    res.json(posts);
   } catch (error) {
-    next();
+    next(error);
   }
 });

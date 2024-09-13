@@ -20,7 +20,7 @@ model User {
   userName String
   email String
   password String
-  bio String
+  bio String?
   // profileImg StringUrl
   role Role @default(USER)
   posts Post[]
@@ -38,7 +38,7 @@ model Trips {
   start DateTime @default(now())
   end DateTime
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model Post {
@@ -50,7 +50,7 @@ model Post {
   likes Likes[] 
   //postImg
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model Likes {

@@ -3,8 +3,8 @@ module.exports = router;
 
 const prisma = require("../prisma");
 
-//get all destinations
-router.get("/api/destinations", async (req, res, next) => {
+//get all destinations --- WORKS
+router.get("/", async (req, res, next) => {
   try {
     const destinations = await prisma.destination.findMany();
     res.json(destinations);
@@ -13,12 +13,12 @@ router.get("/api/destinations", async (req, res, next) => {
   }
 });
 
-//get a destination by id
-router.get("/api/destinations/:id", async (req, res, next) => {
+//get a destination by id --- WORKS
+router.get("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
 
-    const destination = await prisma.user.findUnique({ whhere: { id } });
+    const destination = await prisma.destination.findUnique({ where: { id } });
 
     if (!destination) {
       return next({
@@ -29,6 +29,51 @@ router.get("/api/destinations/:id", async (req, res, next) => {
 
     res.json(destination);
   } catch (error) {
-    next();
+    next(error);
+  }
+});
+
+//create destination --- WORKS
+router.post("/", async (req, res, next) => {
+  try {
+    const { destinationName } = req.body;
+
+    if (!destinationName) {
+      return next({
+        status: 404,
+        message: "Destination name required",
+      });
+    }
+
+    const destination = await prisma.destination.create({
+      data: { destinationName: destinationName },
+    });
+    res.json(destination);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//delete destination by id --- WORKS
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const id = +req.params.id;
+
+    const destinationExists = await prisma.destination.findUnique({
+      where: { id },
+    });
+
+    if (!destinationExists) {
+      return next({
+        status: 404,
+        message: `Could not find destination by id: ${id}`,
+      });
+    }
+
+    await prisma.destination.delete({ where: { id } });
+
+    res.sendStatus(204);
+  } catch (error) {
+    next(error);
   }
 });
