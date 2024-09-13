@@ -5,8 +5,9 @@ const prisma = require("../prisma");
 const user = Array.from({ length: 30 }).map(() => ({
   firstName: faker.person.firstName(),
   lastName: faker.person.lastName(),
-  userName: faker.person.firstName() + faker.person.lastName(),
+  userName: faker.internet.userName(),
   email: faker.internet.email(),
+  password: faker.internet.password(),
   bio: faker.person.bio(),
 }));
 

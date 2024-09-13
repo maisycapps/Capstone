@@ -19,6 +19,7 @@ model User {
   lastName String
   userName String
   email String
+  password String
   bio String
   // profileImg StringUrl
   role Role @default(USER)
