@@ -13,7 +13,8 @@ const prisma = require("../prisma");
 const bcrypt = require("bcrypt");
 
 //testing route not final
-router.get("/", getDestinations);
+router.get("/destinations", getDestinations);
+router.post("/trips", createTrip);
 
 //create new user route - see authControllers folder
 router.post("/register", createUser);
@@ -32,19 +33,7 @@ router.get("/account", isLoggedIn, async (req, res, next) => {
 
 // ----- cant test until schema is fixed -----
 //get trips associated with a user -- NEEDS EDIT for logged in user
-router.get("/account/:id/trips", isLoggedIn, async (req, res, next) => {
-  try {
-    if (req.params.id !== req.params.id) {
-      const error = Error("not authorized");
-      error.status = 401;
-      throw error;
-    }
-
-    res.send(await fetchTrips(req.params.id));
-  } catch (error) {
-    next(error);
-  }
-});
+router.get("/account/trips", isLoggedIn, createTrip);
 
 // ----- cant test until schema is fixed -----
 //get posts associated with a user -- NEEDS EDIT for logged in user

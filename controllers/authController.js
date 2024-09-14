@@ -4,7 +4,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET;
 
-//Logged in user function -- still working on
+// <---------- FINISHED DONT TOUCH ---------->
+
+//Logged in user function
 const isLoggedIn = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -131,6 +133,7 @@ const authenticate = async (req, res, next) => {
     });
   }
 };
+// <---------- ^ FINISHED DONT TOUCH ^ ---------->
 
 //fetch users trips function
 const fetchTrips = async (req, res, next) => {
@@ -159,14 +162,14 @@ const fetchTrips = async (req, res, next) => {
   }
 };
 
-//create users trips function
+//create users trips function -- doesnt work currently
 const createTrip = async (req, res, next) => {
   try {
     const userId = req.user.userId;
-    const { tripName, destinationIds, startDate, endDate } = req.body;
+    const { tripName, destination, startDate, endDate } = req.body;
 
     //error handling
-    if (!tripName || !destinationIds || !startDate || !endDate) {
+    if (!tripName || !destination || !startDate || !endDate) {
       return res.status(400).json({
         status: "error",
         message:
@@ -175,19 +178,19 @@ const createTrip = async (req, res, next) => {
     }
 
     //checks destinationId is in an array
-    if (!Array.isArray(destinationIds) || destinationIds.length === 0) {
+    if (!Array.isArray(destination) || destination.length === 0) {
       return res.status(400).json({
         status: "error",
         message: "destinationIds must be a non-empty array of city IDs.",
       });
     }
 
-    //checks if all destinationIds are valid
+    //checks if all destinations are valid
     const destinations = await prisma.destination.findMany({
-      where: { id: { in: destinationIds } },
+      where: { id: { in: destination } },
     });
 
-    if (destinations.length !== destinationIds.length) {
+    if (destinations.length !== destinations.length) {
       return res.status(400).json({
         status: "error",
         message: "One or more destinationIds are invalid.",
@@ -201,12 +204,12 @@ const createTrip = async (req, res, next) => {
         startDate: new Date(startDate),
         endDate: new Date(endDate),
         userId,
-        destinations: {
-          connect: destinationIds.map((id) => ({ id })),
+        destination: {
+          connect: destination.map((id) => ({ id })),
         },
       },
       include: {
-        destinations: true,
+        destination: true,
       },
     });
 
