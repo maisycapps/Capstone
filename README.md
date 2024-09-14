@@ -37,7 +37,11 @@ Scalability: could be used to plan a trip as simple as going to the grocery stor
 
 # Database revisions/discussion
 
-- New schema, fix relations for post, trips, destinations. Add relations for comments and posts. Cant seed trips, schema needs fixing. Potentially friends?
+- New schema, fix relations for post, trips, destinations. Add relations for comments and posts.
+* MC added comments, fixed posts, trips, destinations.
+
+ Cant seed trips, schema needs fixing. Potentially friends?
+ 
 - /auth/account GET, POST, DELETE needs review
 - Trips GET, POST, DELETE is only for AUTH USER so no need for individual route?
   Same for Likes?
