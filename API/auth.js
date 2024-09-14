@@ -1,64 +1,30 @@
 const router = require("express").Router();
 module.exports = router;
+const {
+  createUser,
+  authenticate,
+  isLoggedIn,
+  fetchTrips,
+  createTrip,
+  getDestinations,
+} = require("../controllers/authController");
 
 const prisma = require("../prisma");
 const bcrypt = require("bcrypt");
 
-//create new user --- WORKS
-router.post("/register", async (req, res, next) => {
+//testing route not final
+router.get("/", getDestinations);
+
+//create new user route - see authControllers folder
+router.post("/register", createUser);
+
+//authentication function route - see authControllers folder
+router.post("/login", authenticate);
+
+//isLoggedIn function route - see authControllers folder
+router.get("/account", isLoggedIn, async (req, res, next) => {
   try {
-    const { firstName, lastName, userName, email, password } = req.body;
-
-    if (!firstName && !lastName && !userName && !email && !password) {
-      const error = {
-        status: 400,
-        message: "Registration fields required",
-      };
-
-      return next(error);
-    }
-
-    const user = await prisma.user.create({
-      data: {
-        firstName: firstName,
-        lastName: lastName,
-        userName: userName,
-        email: email,
-        password: password,
-      },
-    });
-
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
-});
-
-// <-- how to use createUser function in server.js BUT DONT KNOW WHERE TO PUT
-// router.post("/register", async (req, res, next) => {
-//   try {
-//     res.send(await createUser(req.body));
-//   } catch (error) {
-//     console.error("Couldnt post new user");
-//     console.log(error);
-//   }
-// });
-
-//get user by ID -- WORKS -- NEEDS EDIT for logged in user
-router.get("/account/:id", async (req, res, next) => {
-  try {
-    const id = +req.params.id;
-
-    const user = await prisma.user.findUnique({ where: { id } });
-
-    if (!user) {
-      return next({
-        status: 404,
-        message: `Could not find user by ${id}`,
-      });
-    }
-
-    res.json(user);
+    res.send(req.user);
   } catch (error) {
     next(error);
   }
@@ -66,23 +32,15 @@ router.get("/account/:id", async (req, res, next) => {
 
 // ----- cant test until schema is fixed -----
 //get trips associated with a user -- NEEDS EDIT for logged in user
-router.get("/account/:id/trips", async (req, res, next) => {
+router.get("/account/:id/trips", isLoggedIn, async (req, res, next) => {
   try {
-    const id = +req.params.id;
-    console.log(id);
-
-    const user = await prisma.user.findUnique({ whhere: { id } });
-
-    if (!user) {
-      return next({
-        status: 404,
-        message: `Could not find user by ${id}`,
-      });
+    if (req.params.id !== req.params.id) {
+      const error = Error("not authorized");
+      error.status = 401;
+      throw error;
     }
 
-    const trips = await prisma.trips.findMany({ where: { userId: id } });
-
-    res.json(trips);
+    res.send(await fetchTrips(req.params.id));
   } catch (error) {
     next(error);
   }

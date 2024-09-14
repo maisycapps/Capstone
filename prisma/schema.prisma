@@ -17,7 +17,7 @@ model User {
   id Int @id @default(autoincrement())
   firstName String
   lastName String
-  userName String
+  userName String @unique
   email String
   password String
   bio String?
@@ -25,20 +25,21 @@ model User {
   role Role @default(USER)
   posts Post[]
   likes Likes[]
+  trips Trips[] // One-to-many relationship with Trip
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Trips {
   id Int @id @default(autoincrement())
-  userId Int @unique
-  destination Destination @relation(fields: [destinationId], references: [id])
-  destinationId Int @unique
   tripName String
   start DateTime @default(now())
   end DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  userId Int // Foreign key to User
+  user User @relation(fields: [userId], references: [id])
+  destination Destination[] @relation("TripDestinations")
 }
 
 model Post {
@@ -63,10 +64,10 @@ model Likes {
 
 model Destination {
   id Int @id @default(autoincrement())
-  destinationName String
+  destinationName String @unique
   //destinationImg []
   createdAt DateTime @default(now())
-  trips Trips[]
+  trips Trips[] @relation("TripDestinations")
 }
 
 enum Role {
