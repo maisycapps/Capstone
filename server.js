@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = 3000;
-const apiRoutes = require("./api/index");
+const apiRoutes = require("./API/index");
 require("dotenv").config();
 
 //middleware

@@ -23,9 +23,9 @@ model User {
   bio String?
   // profileImg StringUrl
   role Role @default(USER)
-  posts Post[]
-  likes Likes[]
-  trips Trips[] // One-to-many relationship with Trip
+  posts Post[] 
+  likes Likes[] 
+  trips Trips[] // one-to-many relationship with Trip
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -44,11 +44,13 @@ model Trips {
 
 model Post {
   id Int @id @default(autoincrement())
-  userId Int @unique
-  user User[]
+  userId Int @unique //author of post
+  user User[] 
   //trip Trip @relation(fields: [userId]) --- something of this sort
   postTxt String
   likes Likes[] 
+  destination Destination @relation(fields: [destinationId], references: [id])
+  destinationId Int //destination post is regarding
   //postImg
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -68,6 +70,7 @@ model Destination {
   //destinationImg []
   createdAt DateTime @default(now())
   trips Trips[] @relation("TripDestinations")
+  posts Post[] //one-to-many relationship with Post
 }
 
 enum Role {
