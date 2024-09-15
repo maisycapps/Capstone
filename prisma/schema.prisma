@@ -44,15 +44,14 @@ model Trips {
 
 model Post {
   id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
   userId Int @unique //author of post
-  user User[] 
-  //trip Trip @relation(fields: [userId]) --- something of this sort
-  postTxt String
-  likes Likes[] //one-to-many relationship with Likes
-  comments Comments[] //one-to-many relationship with Comments
   destination Destination @relation(fields: [destinationId], references: [id])
-  destinationId Int //destination post is regarding
-  //postImg
+  destinationId Int 
+  text String
+  likes Likes[] 
+  comments Comments[] 
+  //postImg T3 goal: users can upload images and post them
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -61,17 +60,17 @@ model Comments {
   id Int @id @default(autoincrement())
   userId Int @unique //author of comment
   post Post @relation(fields: [postId], references: [id])
-  postId Int @unique //post comment is related to
-  text String //comment text content
+  postId Int @unique 
+  text String 
   createdAt DateTime @default(now())
 }
 
 model Likes {
   id Int @id @default(autoincrement())
-  post Post @relation(fields: [postId], references: [id])
-  postId Int @unique //post like is related to
   user User @relation(fields: [userId], references: [id])
   userId Int @unique //author of like
+  post Post @relation(fields: [postId], references: [id])
+  postId Int @unique //post like is related to
   createdAt DateTime @default(now())
 }
 
@@ -80,8 +79,8 @@ model Destination {
   destinationName String @unique
   //destinationImg []
   createdAt DateTime @default(now())
-  trips Trips[] @relation("TripDestinations")
-  posts Post[] //one-to-many relationship with Post
+  posts Post[]
+  trips Trips[] @relation("TripDestinations") 
 }
 
 enum Role {
