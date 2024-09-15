@@ -39,7 +39,7 @@ model Trips {
   updatedAt DateTime @updatedAt
   userId Int // Foreign key to User
   user User @relation(fields: [userId], references: [id])
-  destination Destination[] @relation("TripDestinations")
+  destination Destination[] @relation("TripDestinations") //maybe should just be destination Destination @relation(fields: [destinationId], references: [id]) ?
 }
 
 model Post {
@@ -80,7 +80,7 @@ model Destination {
   //destinationImg []
   createdAt DateTime @default(now())
   posts Post[]
-  trips Trips[] @relation("TripDestinations") 
+  trips Trips[] @relation("TripDestinations") //maybe should just be trips Trips[] ?
 }
 
 enum Role {
