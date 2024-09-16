@@ -14,7 +14,7 @@ const bcrypt = require("bcrypt");
 
 //testing route not final
 router.get("/destinations", getDestinations);
-router.post("/trips", createTrip);
+router.post("/account/trips", createTrip);
 
 //create new user route - see authControllers folder
 router.post("/register", createUser);
@@ -33,11 +33,11 @@ router.get("/account", isLoggedIn, async (req, res, next) => {
 
 // ----- cant test until schema is fixed -----
 //get trips associated with a user -- NEEDS EDIT for logged in user
-router.get("/account/trips", isLoggedIn, createTrip);
+router.get("/account/trips", isLoggedIn, fetchTrips);
 
 // ----- cant test until schema is fixed -----
-//get posts associated with a user -- NEEDS EDIT for logged in user
-router.get("/account/:id/posts", async (req, res, next) => {
+//get posts associated with a user -- needs testing
+router.get("/account/posts", isLoggedIn, async (req, res, next) => {
   try {
     const id = +req.params.id;
     console.log(id);
@@ -59,8 +59,8 @@ router.get("/account/:id/posts", async (req, res, next) => {
   }
 });
 
-//update existing user -- WORKS -- NEEDS EDIT for logged in user
-router.put("/account/:id", async (req, res, next) => {
+//update existing user -- needs testing
+router.put("/account", isLoggedIn, async (req, res, next) => {
   try {
     const id = +req.params.id;
 
@@ -95,8 +95,8 @@ router.put("/account/:id", async (req, res, next) => {
   }
 });
 
-//delete logged in users account -- WORKS -- NEEDS EDIT for logged in user
-router.delete("/account/:id", async (req, res, next) => {
+//delete logged in users account -- needs testing
+router.delete("/account", isLoggedIn, async (req, res, next) => {
   try {
     const id = +req.params.id;
     const userExists = await prisma.user.findUnique({
