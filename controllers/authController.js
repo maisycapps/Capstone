@@ -46,7 +46,7 @@ const createUser = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = await prisma.user.create({
+    const newUser = await prisma.users.create({
       data: {
         firstName: firstName,
         lastName: lastName,
@@ -76,7 +76,7 @@ const authenticate = async (req, res, next) => {
 
     console.log("Step 1: Finding user"); //debuggin
     //find user by username
-    const user = await prisma.user.findUnique({
+    const user = await prisma.users.findUnique({
       where: { userName },
     });
 
@@ -165,7 +165,7 @@ const fetchTrips = async (req, res, next) => {
 //gets a list of destinations
 const getDestinations = async (req, res, next) => {
   try {
-    const destinations = await prisma.destination.findMany({
+    const destinations = await prisma.destinations.findMany({
       orderBy: { destinationName: "asc" }, //alphabetical order
     });
 

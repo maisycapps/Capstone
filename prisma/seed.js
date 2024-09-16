@@ -26,8 +26,8 @@ const destinationData = Array.from({ length: 30 }).map(() => ({
 // }));
 
 const seed = async () => {
-  await prisma.user.createMany({ data: user });
-  await prisma.destination.createMany({ data: destinationData });
+  await prisma.users.createMany({ data: user });
+  await prisma.destinations.createMany({ data: destinationData });
   // await prisma.trips.createMany({ data: tripsData });
 };
 seed()

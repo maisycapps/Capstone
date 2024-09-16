@@ -18,7 +18,7 @@ Scalability: could be used to plan a trip as simple as going to the grocery stor
 - GET /api/auth/account
 
 - user.js
-- GET /api/users
+- GET /api/users 
 - GET /api/users/:id/trips
 - GET /api/users/:id/trips/:id
 - GET /api/users/:id/posts
@@ -37,9 +37,23 @@ Scalability: could be used to plan a trip as simple as going to the grocery stor
 
 # Database revisions/discussion
 
-- New schema, fix relations for post, trips, destinations. Add relations for comments and posts. Cant seed trips, schema needs fixing. Potentially friends?
+- New schema, fix relations for post, trips, destinations. Add relations for comments and posts.
+ Cant seed trips, schema needs fixing. Potentially friends?
+
 - /auth/account GET, POST, DELETE needs review
 - Trips GET, POST, DELETE is only for AUTH USER so no need for individual route?
   Same for Likes?
 
 # ------ ^ Database Notes ^ ------
+
+<!-- MC notes -->
+# MC topics. Need team go-ahead before doing:
+
+Social: User friendships
+- Logged in users should have access to a seach bar to search other users by name
+-Can follow another user 
+
+Social: Trips with multiple users
+- If both users follow eachother, they can add eachother to trips (also modeled after tripDestinations relationship)
+
+

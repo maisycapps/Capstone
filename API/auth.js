@@ -38,7 +38,7 @@ router.get("/account/posts", isLoggedIn, async (req, res, next) => {
     const id = +req.params.id;
     console.log(id);
 
-    const user = await prisma.user.findUnique({ whhere: { id } });
+    const user = await prisma.users.findUnique({ where: { id } });
 
     if (!user) {
       return next({
@@ -47,7 +47,7 @@ router.get("/account/posts", isLoggedIn, async (req, res, next) => {
       });
     }
 
-    const posts = await prisma.post.findMany({ where: { userId: id } });
+    const posts = await prisma.posts.findMany({ where: { userId: id } });
 
     res.json(posts);
   } catch (error) {
@@ -60,7 +60,7 @@ router.put("/account", isLoggedIn, async (req, res, next) => {
   try {
     const id = +req.params.id;
 
-    const userExists = await prisma.user.findUnique({ where: { id } });
+    const userExists = await prisma.users.findUnique({ where: { id } });
     if (!userExists) {
       return next({
         status: 400,
@@ -76,7 +76,7 @@ router.put("/account", isLoggedIn, async (req, res, next) => {
       });
     }
 
-    const user = await prisma.user.update({
+    const user = await prisma.users.update({
       where: { id },
       data: {
         firstName: firstName,
@@ -95,7 +95,7 @@ router.put("/account", isLoggedIn, async (req, res, next) => {
 router.delete("/account", isLoggedIn, async (req, res, next) => {
   try {
     const id = +req.params.id;
-    const userExists = await prisma.user.findUnique({
+    const userExists = await prisma.users.findUnique({
       where: { id },
     });
 
@@ -105,7 +105,7 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
         message: `Cpuld not find user with id ${id}`,
       });
     }
-    await prisma.user.delete({ where: { id } });
+    await prisma.users.delete({ where: { id } });
     res.sendStatus(204);
   } catch (error) {
     next(error);
