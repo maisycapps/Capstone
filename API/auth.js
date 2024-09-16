@@ -137,7 +137,7 @@ router.post("/account/create", isLoggedIn, async (req, res) => {
     const newTrip = await prisma.trips.create({
       data: {
         tripName,
-        destinationid,
+        destinationId,
         startDate: new Date(startDate),
         endDate: new Date(endDate),
         userId,
