@@ -10,6 +10,12 @@ const user = Array.from({ length: 30 }).map(() => ({
   email: faker.internet.email(),
   password: faker.internet.password(),
   bio: faker.person.bio(),
+  following: {
+    //random users
+  },
+  follower: {
+    //random users
+  }
 }));
 
 //seeds destinations
