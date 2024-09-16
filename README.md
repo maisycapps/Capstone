@@ -51,10 +51,9 @@ Scalability: could be used to plan a trip as simple as going to the grocery stor
 
 Social: User friendships
 - Logged in users should have access to a seach bar to search other users by name
--Can follow another user (modeled after tripDestinations relationship) 
+-Can follow another user 
 
 Social: Trips with multiple users
 - If both users follow eachother, they can add eachother to trips (also modeled after tripDestinations relationship)
 
-Minor things:
-- I would like to make model titles all plural for best practices (ie. POSTS vs POST)
+

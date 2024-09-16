@@ -71,7 +71,7 @@ router.delete("/:id", async (req, res, next) => {
       });
     }
 
-    await prisma.destination.delete({ where: { id } });
+    await prisma.destinations.delete({ where: { id } });
 
     res.sendStatus(204);
   } catch (error) {
