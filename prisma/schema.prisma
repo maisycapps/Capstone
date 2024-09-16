@@ -26,17 +26,11 @@ model Users {
   posts Posts[] 
   likes Likes[] 
   trips Trips[] // one-to-many relationship with Trip
-
-  // STILL WORKING ON SOCIAL
   followedBy Follows[] @relation("followedBy") //user's followers
   following Follows[] @relation("following") //users user is following
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-	@@map("User")
 }
-
-// STILL WORKING ON SOCIAL
 model Follows {
   followedBy Users @relation("followedBy", fields: [followedById], references: [id])
   followedById Int
@@ -45,8 +39,6 @@ model Follows {
 
   @@id([followingId, followedById])
 }
-
-// model Friends
 model Trips {
   id Int @id @default(autoincrement())
   tripName String
@@ -66,7 +58,6 @@ model Destinations {
   createdAt DateTime @default(now())
   posts Posts[]
   trips Trips[] 
-	@@map("Destination")
 }
 
 model Posts {
@@ -82,7 +73,6 @@ model Posts {
   //postImg T3 goal: users can upload images and post them
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-	@@map("Post")
 }
 
 model Comments {

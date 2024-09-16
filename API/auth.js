@@ -124,7 +124,7 @@ router.post("/account/create", isLoggedIn, async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const destination = await prisma.destination.findUnique({
+    const destination = await prisma.destinations.findUnique({
       where: { id: destinationId },
     });
 
