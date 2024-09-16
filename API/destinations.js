@@ -34,6 +34,7 @@ router.get("/:id", async (req, res, next) => {
 });
 
 //create destination --- WORKS
+//ADMIN FUNCTION
 router.post("/", async (req, res, next) => {
   try {
     const { destinationName } = req.body;

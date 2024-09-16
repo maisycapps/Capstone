@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
+model Users {
   id Int @id @default(autoincrement())
   firstName String
   lastName String
@@ -23,13 +23,30 @@ model User {
   bio String?
   // profileImg StringUrl
   role Role @default(USER)
-  posts Post[] 
+  posts Posts[] 
   likes Likes[] 
   trips Trips[] // one-to-many relationship with Trip
+
+  // STILL WORKING ON SOCIAL
+  followedBy Follows[] @relation("followedBy") //user's followers
+  following Follows[] @relation("following") //users user is following
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+	@@map("User")
 }
 
+// STILL WORKING ON SOCIAL
+model Follows {
+  followedBy Users @relation("followedBy", fields: [followedById], references: [id])
+  followedById Int
+  following Users @relation("following", fields: [followingId], references: [id])
+  followingId Int
+
+  @@id([followingId, followedById])
+}
+
+// model Friends
 model Trips {
   id Int @id @default(autoincrement())
   tripName String
@@ -37,17 +54,26 @@ model Trips {
   end DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  user Users @relation(fields: [userId], references: [id])
   userId Int // Foreign key to User
-  user User @relation(fields: [userId], references: [id])
-  destination Destination @relation(fields: [destinationId], references: [id])  //@relation("TripDestinations") 
+  destination Destinations @relation(fields: [destinationId], references: [id])
   destinationId Int 
 }
-
-model Post {
+model Destinations {
   id Int @id @default(autoincrement())
-  user User @relation(fields: [userId], references: [id])
+  destinationName String @unique
+  //destinationImg []
+  createdAt DateTime @default(now())
+  posts Posts[]
+  trips Trips[] 
+	@@map("Destination")
+}
+
+model Posts {
+  id Int @id @default(autoincrement())
+  user Users @relation(fields: [userId], references: [id])
   userId Int @unique //author of post
-  destination Destination @relation(fields: [destinationId], references: [id])
+  destination Destinations @relation(fields: [destinationId], references: [id])
   destinationId Int 
   text String
   //image url
@@ -56,12 +82,13 @@ model Post {
   //postImg T3 goal: users can upload images and post them
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+	@@map("Post")
 }
 
 model Comments {
   id Int @id @default(autoincrement())
   userId Int @unique //author of comment
-  post Post @relation(fields: [postId], references: [id])
+  post Posts @relation(fields: [postId], references: [id])
   postId Int @unique 
   text String 
   createdAt DateTime @default(now())
@@ -69,20 +96,11 @@ model Comments {
 
 model Likes {
   id Int @id @default(autoincrement())
-  user User @relation(fields: [userId], references: [id])
+  user Users @relation(fields: [userId], references: [id])
   userId Int @unique //author of like
-  post Post @relation(fields: [postId], references: [id])
+  post Posts @relation(fields: [postId], references: [id])
   postId Int @unique //post like is related to
   createdAt DateTime @default(now())
-}
-
-model Destination {
-  id Int @id @default(autoincrement())
-  destinationName String @unique
-  //destinationImg []
-  createdAt DateTime @default(now())
-  posts Post[]
-  trips Trips[]  // @relation("TripDestinations") 
 }
 
 enum Role {
