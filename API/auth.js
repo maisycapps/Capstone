@@ -5,7 +5,6 @@ const {
   authenticate,
   isLoggedIn,
   fetchTrips,
-  createTrip,
   getDestinations,
 } = require("../controllers/authController");
 
@@ -14,7 +13,6 @@ const bcrypt = require("bcrypt");
 
 //testing route not final
 router.get("/destinations", getDestinations);
-router.post("/account/trips", createTrip);
 
 //create new user route - see authControllers folder
 router.post("/register", createUser);
@@ -31,9 +29,7 @@ router.get("/account", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// ----- cant test until schema is fixed -----
-//get trips associated with a user -- NEEDS EDIT for logged in user
-router.get("/account/trips", isLoggedIn, fetchTrips);
+// <---------- v EDIT USER ACCOUNT ROUTES v ---------->
 
 // ----- cant test until schema is fixed -----
 //get posts associated with a user -- needs testing
@@ -113,5 +109,43 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
     res.sendStatus(204);
   } catch (error) {
     next(error);
+  }
+});
+// <---------- ^ EDIT USER ACCOUNT ROUTES ^ ---------->
+
+// ----- cant test until schema is fixed -----
+//get trips associated with a user -- NEEDS EDIT for logged in user
+router.get("/account/trips", isLoggedIn, fetchTrips);
+
+//creating a trip from loggedin user
+router.post("/account/create", isLoggedIn, async (req, res) => {
+  const { tripName, destinationId, startDate, endDate } = req.body;
+
+  try {
+    const userId = req.user.id;
+
+    const destination = await prisma.destination.findUnique({
+      where: { id: destinationId },
+    });
+
+    //error handling
+    if (!destination) {
+      return res.status(400).json({ error: "Invalid destination" });
+    }
+
+    //create trip
+    const newTrip = await prisma.trips.create({
+      data: {
+        tripName,
+        destinationid,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+        userId,
+      },
+    });
+
+    res.status(201).json(newTrip);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create trip!" });
   }
 });

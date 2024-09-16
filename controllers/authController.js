@@ -162,66 +162,6 @@ const fetchTrips = async (req, res, next) => {
   }
 };
 
-//create users trips function -- doesnt work currently
-const createTrip = async (req, res, next) => {
-  try {
-    const userId = req.user.userId;
-    const { tripName, destination, startDate, endDate } = req.body;
-
-    //error handling
-    if (!tripName || !destination || !startDate || !endDate) {
-      return res.status(400).json({
-        status: "error",
-        message:
-          "tripName, destinationIds, startDate, and endDate are required.",
-      });
-    }
-
-    //checks destinationId is in an array
-    if (!Array.isArray(destination) || destination.length === 0) {
-      return res.status(400).json({
-        status: "error",
-        message: "destinationIds must be a non-empty array of city IDs.",
-      });
-    }
-
-    //checks if all destinations are valid
-    const destinations = await prisma.destinations.findMany({
-      where: { id: { in: destination } },
-    });
-
-    if (destinations.length !== destinations.length) {
-      return res.status(400).json({
-        status: "error",
-        message: "One or more destinationIds are invalid.",
-      });
-    }
-
-    //creates new trip and connects destination
-    const newTrip = await prisma.trips.create({
-      data: {
-        tripName: tripName,
-        startDate: new Date(startDate),
-        endDate: new Date(endDate),
-        userId,
-        destination: {
-          connect: destination.map((id) => ({ id })),
-        },
-      },
-      include: {
-        destination: true,
-      },
-    });
-
-    res.status(201).json({
-      status: "success",
-      data: newTrip,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
 //gets a list of destinations
 const getDestinations = async (req, res, next) => {
   try {
@@ -243,6 +183,5 @@ module.exports = {
   authenticate,
   isLoggedIn,
   fetchTrips,
-  createTrip,
   getDestinations,
 };
