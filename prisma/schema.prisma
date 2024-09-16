@@ -42,11 +42,11 @@ model Follows {
 model Trips {
   id Int @id @default(autoincrement())
   tripName String
-  start DateTime @default(now())
-  end DateTime
+  startDate DateTime @default(now())
+  endDate DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  user Users @relation(fields: [userId], references: [id])
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)//if user deleted trips are deleted
   userId Int // Foreign key to User
   destination Destinations @relation(fields: [destinationId], references: [id])
   destinationId Int 
@@ -62,7 +62,7 @@ model Destinations {
 
 model Posts {
   id Int @id @default(autoincrement())
-  user Users @relation(fields: [userId], references: [id])
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)//if user deleted posts are deleted
   userId Int @unique //author of post
   destination Destinations @relation(fields: [destinationId], references: [id])
   destinationId Int 
@@ -78,7 +78,7 @@ model Posts {
 model Comments {
   id Int @id @default(autoincrement())
   userId Int @unique //author of comment
-  post Posts @relation(fields: [postId], references: [id])
+  post Posts @relation(fields: [postId], references: [id], onDelete: Cascade)//if posts deleted comments are deleted
   postId Int @unique 
   text String 
   createdAt DateTime @default(now())
@@ -86,9 +86,9 @@ model Comments {
 
 model Likes {
   id Int @id @default(autoincrement())
-  user Users @relation(fields: [userId], references: [id])
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)//if user deleted likes are deleted
   userId Int @unique //author of like
-  post Posts @relation(fields: [postId], references: [id])
+  post Posts @relation(fields: [postId], references: [id], onDelete: Cascade)//if posts deleted likes are deleted
   postId Int @unique //post like is related to
   createdAt DateTime @default(now())
 }

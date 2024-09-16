@@ -23,6 +23,7 @@ const isLoggedIn = async (req, res, next) => {
 
     //verify token
     const decoded = jwt.verify(token, JWT_SECRET);
+    console.log("decoded toke: ", decoded);
 
     req.user = decoded;
 
