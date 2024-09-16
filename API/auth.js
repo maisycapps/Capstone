@@ -55,12 +55,16 @@ router.get("/account/posts", isLoggedIn, async (req, res, next) => {
   }
 });
 
-//update existing user -- needs testing
-router.put("/account", isLoggedIn, async (req, res, next) => {
+//update existing user -- needs testing -- WORKS-MC
+router.patch("/account", isLoggedIn, async (req, res, next) => {
+
   try {
-    const id = +req.params.id;
+    const id = +req.user.userId;
+
 
     const userExists = await prisma.users.findUnique({ where: { id } });
+    console.log("userExists", userExists)
+
     if (!userExists) {
       return next({
         status: 400,
@@ -91,22 +95,31 @@ router.put("/account", isLoggedIn, async (req, res, next) => {
   }
 });
 
-//delete logged in users account -- needs testing
+//delete logged in users account -- needs testing -- WORKS-MC
 router.delete("/account", isLoggedIn, async (req, res, next) => {
+  
+  console.log("userId to delete", req.user.userId)
+
   try {
-    const id = +req.params.id;
+    const id = req.user.userId;
+    console.log("id in try", id)
+
     const userExists = await prisma.users.findUnique({
       where: { id },
     });
+    console.log("userExists?", userExists)
+    console.log("parsed", parseInt(id) )
 
     if (!userExists) {
       return next({
         status: 400,
-        message: `Cpuld not find user with id ${id}`,
+        message: `Could not find user with id ${id}`,
       });
     }
-    await prisma.users.delete({ where: { id } });
-    res.sendStatus(204);
+
+    await prisma.users.delete({ where: { id: parseInt(id) } });
+    res.sendStatus(204).json({ message: "User deleted successfully" });
+
   } catch (error) {
     next(error);
   }
@@ -114,6 +127,7 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
 // <---------- ^ EDIT USER ACCOUNT ROUTES ^ ---------->
 
 // <---------- v CREATE, FETCH, UPDATE, DELETE TRIPS v ---------->
+
 //get trips associated with a user -- WORKS
 router.get("/account/trips", isLoggedIn, async (req, res) => {
   try {
@@ -138,7 +152,6 @@ router.get("/account/trips", isLoggedIn, async (req, res) => {
 //creating a trip from loggedin user -- WORKS
 router.post("/account/trips", isLoggedIn, async (req, res) => {
   const { tripName, destinationId, startDate, endDate } = req.body;
-  console.log("Requested user ", req.user);
 
   try {
     const userId = req.user.userId;
@@ -225,7 +238,7 @@ router.put("/account/trips/:id", isLoggedIn, async (req, res) => {
   }
 });
 
-//Delete a trip from existing user
+//Delete a trip from existing user WORKS-MC
 router.delete("/account/trips/:id", isLoggedIn, async (req, res) => {
   const { id } = req.params;
 
@@ -233,10 +246,9 @@ router.delete("/account/trips/:id", isLoggedIn, async (req, res) => {
     const userId = req.user.userId;
 
     //check if trip exists
-    const trip = await prisma.trips.delete({
+    const trip = await prisma.trips.findUnique({
       where: { id: parseInt(id) },
     });
-    console.log("trip to delete", trip);
 
     //error handling
     if (!trip) {
