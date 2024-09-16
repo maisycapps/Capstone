@@ -6,7 +6,7 @@ const prisma = require("../prisma");
 //get all destinations --- WORKS
 router.get("/", async (req, res, next) => {
   try {
-    const destinations = await prisma.destination.findMany();
+    const destinations = await prisma.destinations.findMany();
     res.json(destinations);
   } catch (error) {
     next(error);
@@ -18,7 +18,7 @@ router.get("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
 
-    const destination = await prisma.destination.findUnique({ where: { id } });
+    const destination = await prisma.destinations.findUnique({ where: { id } });
 
     if (!destination) {
       return next({
@@ -46,7 +46,7 @@ router.post("/", async (req, res, next) => {
       });
     }
 
-    const destination = await prisma.destination.create({
+    const destination = await prisma.destinations.create({
       data: { destinationName: destinationName },
     });
     res.json(destination);
@@ -60,7 +60,7 @@ router.delete("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
 
-    const destinationExists = await prisma.destination.findUnique({
+    const destinationExists = await prisma.destinations.findUnique({
       where: { id },
     });
 

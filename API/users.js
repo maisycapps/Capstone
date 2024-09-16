@@ -6,7 +6,7 @@ const prisma = require("../prisma");
 //get all users -- WORKS
 router.get("/", async (req, res, next) => {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.users.findMany();
     res.json(users);
   } catch (error) {
     next(error);
@@ -18,7 +18,7 @@ router.get("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
 
-    const user = await prisma.user.findUnique({ where: { id } });
+    const user = await prisma.users.findUnique({ where: { id } });
 
     if (!user) {
       return next({
@@ -40,7 +40,7 @@ router.get("/:id/posts", async (req, res, next) => {
     const id = +req.params.id;
     console.log(id);
 
-    const user = await prisma.user.findUnique({ whhere: { id } });
+    const user = await prisma.users.findUnique({ whhere: { id } });
 
     if (!user) {
       return next({
@@ -49,7 +49,7 @@ router.get("/:id/posts", async (req, res, next) => {
       });
     }
 
-    const posts = await prisma.post.findMany({ where: { userId: id } });
+    const posts = await prisma.posts.findMany({ where: { userId: id } });
 
     res.json(posts);
   } catch (error) {

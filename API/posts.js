@@ -8,7 +8,7 @@ const prisma = require("../prisma");
 //get all posts
 router.get("/", async (req, res, next) => {
   try {
-    const posts = await prisma.post.findMany();
+    const posts = await prisma.posts.findMany();
     res.json(posts);
   } catch (error) {
     next(error);
@@ -20,7 +20,7 @@ router.get("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
 
-    const post = await prisma.post.findUnique({ where: { id } });
+    const post = await prisma.posts.findUnique({ where: { id } });
 
     if (!post) {
       return next({
