@@ -97,18 +97,13 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
 
 //delete logged in users account -- needs testing -- WORKS-MC
 router.delete("/account", isLoggedIn, async (req, res, next) => {
-  
-  console.log("userId to delete", req.user.userId)
 
   try {
     const id = req.user.userId;
-    console.log("id in try", id)
 
     const userExists = await prisma.users.findUnique({
       where: { id },
     });
-    console.log("userExists?", userExists)
-    console.log("parsed", parseInt(id) )
 
     if (!userExists) {
       return next({
@@ -118,9 +113,11 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
     }
 
     await prisma.users.delete({ where: { id: parseInt(id) } });
-    res.sendStatus(204).json({ message: "User deleted successfully" });
+    res.sendStatus(204);
 
   } catch (error) {
+    console.error("Error deleting user: ", error);
+    res.status(500).json({ error: "failed to delete user" });
     next(error);
   }
 });
@@ -187,6 +184,7 @@ router.post("/account/trips", isLoggedIn, async (req, res) => {
 
 //update existing trip with logged in user -- WORKS
 router.put("/account/trips/:id", isLoggedIn, async (req, res) => {
+
   const { id } = req.params;
   const { tripName, destinationId, startDate, endDate } = req.body;
 
@@ -223,7 +221,7 @@ router.put("/account/trips/:id", isLoggedIn, async (req, res) => {
     //Update Trip
     const updatedTrip = await prisma.trips.update({
       where: { id: parseInt(id) },
-      data: {
+      data: { 
         tripName: tripName || trip.tripName, //keep existing if not changed
         destinationId: destinationId || trip.destinationId, //keep existing if not changed
         startDate: startDate ? new Date(startDate) : trip.startDate, //keep existing if not changed
