@@ -47,8 +47,8 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
       });
     }
 
-    const { firstName, lastName, userName, email, bio } = req.body;
-    if (!firstName || !lastName || !userName || !email || !bio) {
+    const { firstName, lastName, userName, email, bio, profileImg} = req.body;
+    if (!firstName || !lastName || !userName || !email || !bio || !profileImg) {
       return next({
         status: 404,
         message: "Fields are required",
@@ -63,6 +63,7 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
         userName: userName,
         email: email,
         bio: bio,
+        profileImg: profileImg
       },
     });
     res.json(user);
@@ -126,7 +127,7 @@ router.get("/account/posts", isLoggedIn, async (req, res, next) => {
 // create a new post -- WORKS
 router.post("/account/posts", isLoggedIn, async (req, res, next) => {
     
-    const { text, destinationId } = req.body;
+    const { text, destinationId, postImg } = req.body;
   
     try {
       const userId = req.user.userId;
@@ -145,6 +146,7 @@ router.post("/account/posts", isLoggedIn, async (req, res, next) => {
         data: {
           text,
           destinationId,
+          postImg, 
           userId,
         },
       });
@@ -160,7 +162,7 @@ router.post("/account/posts", isLoggedIn, async (req, res, next) => {
 router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
   
   const { id } = req.params;
-  const { text, destinationId } = req.body;
+  const { text, destinationId, postImg  } = req.body;
 
   try {
     const userId = req.user.userId;
@@ -200,7 +202,8 @@ router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
       where: { id: parseInt(id) },
       data: {
         text: text,
-        destinationId: destinationId
+        destinationId: destinationId,
+        postImg: postImg 
       },
     });
     res.json(updatedPost);
