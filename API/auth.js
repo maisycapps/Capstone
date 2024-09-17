@@ -31,12 +31,10 @@ router.get("/account", isLoggedIn, async (req, res, next) => {
 
 // <---------- v EDIT USER ACCOUNT ROUTES v ---------->
 
-// ----- cant test until schema is fixed -----
-//get posts associated with a user -- needs testing
+//get posts associated with a user -- needs testing --WORKS-MC
 router.get("/account/posts", isLoggedIn, async (req, res, next) => {
   try {
-    const id = +req.params.id;
-    console.log(id);
+    const id = req.user.userId;
 
     const user = await prisma.users.findUnique({ where: { id } });
 
@@ -55,19 +53,17 @@ router.get("/account/posts", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// create a new post -- WIP-MC
+// create a new post -- WORKS-MC
 router.post("/account/posts", isLoggedIn, async (req, res, next) => {
-    console.log("req.body for POST to Posts", req.body)
+    
     const { text, destinationId } = req.body;
   
     try {
       const userId = req.user.userId;
-      console.log("userId for POST to Posts", userId);
   
       const destination = await prisma.destinations.findUnique({
         where: { id: destinationId },
       });
-      console.log("destinationId for POST to Posts", destinationId)
   
       //error handling
       if (!destination) {
@@ -86,10 +82,64 @@ router.post("/account/posts", isLoggedIn, async (req, res, next) => {
       res.status(201).json(newPost);
     } catch (error) {
       console.log("error creating post: ", error);
-  
       res.status(500).json({ error: "Failed to create post!" });
     }
-  });
+});
+
+// update existing post with logged in user --WORKS-MC
+router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
+  
+  const { id } = req.params;
+  const { text, destinationId } = req.body;
+
+  try {
+    const userId = req.user.userId;
+
+    // check if post exists
+    const post = await prisma.posts.findUnique({
+      where: { id: parseInt(id) },
+    });
+    
+    if (!post) {
+      return res.status(404).json({ error: "Post not found"});
+    }
+
+    if (post.userId !== userId){
+      return res
+      .status(403)
+      .json({error: "Unauthorized to update this post"});
+    }
+
+    if (!text && destinationId) {
+      const destination = await prisma.destinations.findUnique({
+        where: { id: destinationId },
+      });
+      if (!destination) {
+        return res.status(400).json({ error: "Invalid destination" });
+      }
+    }
+
+    if (!req.body) {
+      return next({
+        status: 404,
+        message: "Fields are required",
+      });
+    }
+
+    const updatedPost = await prisma.posts.update({
+      where: { id: parseInt(id) },
+      data: {
+        text: text,
+        destinationId: destinationId
+      },
+    });
+    res.json(updatedPost);
+  } catch (error) {
+    console.error("Error updating this post: ", error);
+    res.status(500).json({ error: "failed to update post" });
+    next(error);
+  }
+});
 
 //update existing user -- needs testing -- WORKS-MC
 router.patch("/account", isLoggedIn, async (req, res, next) => {
@@ -99,7 +149,6 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
 
 
     const userExists = await prisma.users.findUnique({ where: { id } });
-    console.log("userExists", userExists)
 
     if (!userExists) {
       return next({
