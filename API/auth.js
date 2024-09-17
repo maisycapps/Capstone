@@ -4,7 +4,6 @@ const {
   createUser,
   authenticate,
   isLoggedIn,
-  fetchTrips,
   getDestinations,
 } = require("../controllers/authController");
 
@@ -233,7 +232,7 @@ router.delete("/account/trips/:id", isLoggedIn, async (req, res) => {
     const userId = req.user.userId;
 
     //check if trip exists
-    const trip = await prisma.trips.delete({
+    const trip = await prisma.trips.findUnique({
       where: { id: parseInt(id) },
     });
     console.log("trip to delete", trip);

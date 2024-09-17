@@ -136,33 +136,6 @@ const authenticate = async (req, res, next) => {
 };
 // <---------- ^ FINISHED DONT TOUCH ^ ---------->
 
-//fetch users trips function
-const fetchTrips = async (req, res, next) => {
-  try {
-    const userId = req.user.userId; //gets user id
-
-    //gets trips associated with user
-    const trips = await prisma.trips.findMany({
-      where: {
-        userId: userId,
-      },
-      include: {
-        destinations: true,
-      },
-      orderBy: {
-        startDate: "asc", //orders trip by start date
-      },
-    });
-
-    res.status(200).json({
-      status: "success",
-      data: trips,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
 //gets a list of destinations
 const getDestinations = async (req, res, next) => {
   try {
@@ -183,6 +156,5 @@ module.exports = {
   createUser,
   authenticate,
   isLoggedIn,
-  fetchTrips,
   getDestinations,
 };
