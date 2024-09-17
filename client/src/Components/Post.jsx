@@ -1,4 +1,4 @@
-import styles from "./Post.module.css";
+import styles from "../styles/Post.module.css";
 import italy from "./Images/italy.jpg";
 import { FiMoreVertical } from "react-icons/fi";
 function Post() {
