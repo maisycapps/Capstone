@@ -1,0 +1,17 @@
+.sideBarContainer {
+  /* width: 20%; */
+  height: 100vh;
+  border: 2px solid red;
+}
+.list {
+  display: block;
+  margin-top: 50px;
+}
+
+.sideList {
+  border: 2px solid blue;
+  border-radius: 15px;
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+}

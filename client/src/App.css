@@ -1,0 +1,245 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 2;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+.app {
+  background-color: #fefefe;
+  height: 100vh;
+  width: 100vw;
+}
+
+/* NAVIGATION */
+.navbar {
+  background-color: #1f5156;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80px;
+  max-width: 1500px;
+  position: relative;
+}
+
+.nav-logo {
+  color: #f5b921;
+  align-items: center;
+  margin-left: 20px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 2rem;
+  flex-grow: 1;
+
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+
+.nav-logo .icon {
+  display: inline-block;
+  width: 3rem;
+  height: 3rem;
+  margin-left: 16px;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  text-align: center;
+  margin-right: 2rem;
+}
+
+.nav-links {
+  color: #fff;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  height: 100%;
+  border-bottom: 3px solid transparent;
+}
+/* .fa-code {
+  margin-left: 1rem;
+} */
+
+.nav-item {
+  line-height: 40px;
+  margin-right: 1rem;
+}
+
+.nav-item:after {
+  content: "";
+  display: block;
+  height: 3px;
+  width: 0;
+  background: transparent;
+  transition: width 0.7s ease, background-color 0.5s ease;
+}
+
+.nav-item:hover:after {
+  width: 100%;
+  background: #ffdd40;
+}
+
+.nav-item .active {
+  color: #ffdd40;
+  border: 1px solid #ffdd40;
+}
+
+.nav-icon {
+  display: none;
+  color: #f5b921;
+}
+
+.nav-icon .icon {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+}
+
+@media screen and (max-width: 960px) {
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-top: 1pxsolid #fff;
+    position: absolute;
+    top: 80px;
+    left: -110%;
+    opacity: 1;
+    transition: all 0.5s ease;
+  }
+
+  .nav-menu.active {
+    background: #1f5156;
+    left: 0px;
+    opacity: 1;
+    transition: all 0.5s ease;
+    z-index: 1;
+  }
+  .nav-item .active {
+    color: #ffdd40;
+    border: none;
+  }
+  .nav-links {
+    padding: 1.5rem;
+    width: 100%;
+    display: table;
+  }
+
+  .nav-logo .icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .nav-icon {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(-100%, -50%);
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+    color: #ffdd40;
+  }
+}
+
+/* HOME PAGE */
+/* .carousel {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: lightblue;
+} */
+/* .homepage {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: lightblue;
+} */
+
+/* .carousel {
+  width: 60%;
+  height: 700px;
+  background-color: black;
+} */
+
+/* .carouselInner {
+  height: 100%;
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+} */
+
+/* .carouselInner .left {
+  flex: 5%;
+  height: 100%;
+  background-color: rgb(0, 0, 0, 0.6);
+  display: grid;
+  place-items: center;
+  color: white;
+  cursor: pointer;
+} */
+
+/* .carouselInner .center {
+  flex: 80%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: justify;
+  text-align-last: center;
+} */
+
+/* h1 {
+  font-size: 5rem;
+}
+
+p {
+  font-size: 2rem;
+}
+
+h1,
+p {
+  background-color: rgb(255, 255, 255, 0.8);
+  padding: 20px;
+  border-radius: 9px;
+} */
+
+/* .carouselInner .right {
+  flex: 5%;
+  height: 100%;
+  background-color: rgb(0, 0, 0, 0.6);
+  display: grid;
+  place-items: center;
+  color: white;
+  cursor: pointer;
+} */
