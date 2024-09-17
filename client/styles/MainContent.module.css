@@ -1,0 +1,7 @@
+.mainContent {
+  /* width: 60%; */
+  height: 100vh;
+  border: 2px solid blue;
+  display: grid;
+  place-items: center;
+}
