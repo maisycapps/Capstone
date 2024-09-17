@@ -141,6 +141,15 @@ router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
   }
 });
 
+// delete existing post with logged in user --WIP-MC
+router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
+
+  const { id } = req.params;
+  
+}
+
+
+
 //update existing user -- needs testing -- WORKS-MC
 router.patch("/account", isLoggedIn, async (req, res, next) => {
 
