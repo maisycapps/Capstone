@@ -63,7 +63,7 @@ model Destinations {
 model Posts {
   id Int @id @default(autoincrement())
   user Users @relation(fields: [userId], references: [id], onDelete: Cascade)//if user deleted posts are deleted
-  userId Int @unique //author of post
+  userId Int //author of post
   destination Destinations @relation(fields: [destinationId], references: [id])
   destinationId Int 
   text String
@@ -76,9 +76,9 @@ model Posts {
 
 model Comments {
   id Int @id @default(autoincrement())
-  userId Int @unique //author of comment
+  userId Int //author of comment
   post Posts @relation(fields: [postId], references: [id], onDelete: Cascade)//if posts deleted comments are deleted
-  postId Int @unique 
+  postId Int 
   text String 
   createdAt DateTime @default(now())
 }
@@ -86,9 +86,9 @@ model Comments {
 model Likes {
   id Int @id @default(autoincrement())
   user Users @relation(fields: [userId], references: [id], onDelete: Cascade)//if user deleted likes are deleted
-  userId Int @unique //author of like
+  userId Int //author of like
   post Posts @relation(fields: [postId], references: [id], onDelete: Cascade)//if posts deleted likes are deleted
-  postId Int @unique //post like is related to
+  postId Int  //post like is related to
   createdAt DateTime @default(now())
 }
 
