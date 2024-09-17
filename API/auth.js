@@ -101,7 +101,7 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
 
 // <---------- v CREATE, FETCH, UPDATE, DELETE POSTS v ---------->
 
-//get posts associated with a user -- needs testing --WORKS-MC
+//get posts associated with a user --WORKS
 router.get("/account/posts", isLoggedIn, async (req, res, next) => {
   try {
     const id = req.user.userId;
@@ -123,7 +123,7 @@ router.get("/account/posts", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// create a new post -- WORKS-MC
+// create a new post -- WORKS
 router.post("/account/posts", isLoggedIn, async (req, res, next) => {
     
     const { text, destinationId } = req.body;
@@ -156,7 +156,7 @@ router.post("/account/posts", isLoggedIn, async (req, res, next) => {
     }
 });
 
-// update existing post with logged in user --WORKS-MC
+// update existing post with logged in user --WORKS
 router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
   
   const { id } = req.params;
@@ -211,7 +211,7 @@ router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// delete existing post with logged in user --WIP-MC
+// delete existing post with logged in user --WORKS
 router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
 
   const { id } = req.params;
@@ -360,7 +360,7 @@ router.put("/account/trips/:id", isLoggedIn, async (req, res) => {
   }
 });
 
-//Delete a trip from existing user WORKS-MC (cascading delete also works if a user is deleted, so are the user's trips)
+//Delete a trip from existing user --WORKS
 router.delete("/account/trips/:id", isLoggedIn, async (req, res) => {
   const { id } = req.params;
 

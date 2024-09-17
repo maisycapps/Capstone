@@ -21,7 +21,7 @@ model Users {
   email String
   password String
   bio String?
-  // profileImg StringUrl
+  profileImg String?
   role Role @default(USER)
   posts Posts[] 
   likes Likes[] 
@@ -54,7 +54,7 @@ model Trips {
 model Destinations {
   id Int @id @default(autoincrement())
   destinationName String @unique
-  //destinationImg []
+  destinationImg String?
   createdAt DateTime @default(now())
   posts Posts[]
   trips Trips[] 
@@ -67,10 +67,9 @@ model Posts {
   destination Destinations @relation(fields: [destinationId], references: [id])
   destinationId Int 
   text String
-  //image url
+  postImg String?
   likes Likes[] 
   comments Comments[] 
-  //postImg T3 goal: users can upload images and post them
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
