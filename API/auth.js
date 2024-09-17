@@ -30,7 +30,7 @@ router.get("/account", isLoggedIn, async (req, res, next) => {
 
 // <---------- v EDIT USER ACCOUNT ROUTES v ---------->
 
-//update existing user -- needs testing -- WORKS-MC
+//update existing user -- WORKS
 router.patch("/account", isLoggedIn, async (req, res, next) => {
 
   try {
@@ -71,7 +71,7 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
   }
 });
 
-//delete logged in users account -- needs testing -- WORKS-MC
+//delete logged in users account --WORKS
 router.delete("/account", isLoggedIn, async (req, res, next) => {
 
   try {
@@ -98,6 +98,152 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
   }
 });
 // <---------- ^ EDIT USER ACCOUNT ROUTES ^ ---------->
+
+// <---------- v CREATE, FETCH, UPDATE, DELETE TRIPS v ---------->
+
+//get trips associated with a user -- WORKS
+router.get("/account/trips", isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const userTrips = await prisma.trips.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        destination: true,
+      },
+    });
+
+    res.status(200).json(userTrips);
+  } catch (error) {
+    console.error("Error fetching trips: ", error);
+    res.status(500).json({ error: "Failed to fetch trips!" });
+  }
+});
+
+//creating a trip from loggedin user -- WORKS
+router.post("/account/trips", isLoggedIn, async (req, res) => {
+  const { tripName, destinationId, startDate, endDate } = req.body;
+
+  try {
+    const userId = req.user.userId;
+    console.log(userId);
+
+    const destination = await prisma.destinations.findUnique({
+      where: { id: destinationId },
+    });
+
+    //error handling
+    if (!destination) {
+      return res.status(400).json({ error: "Invalid destination" });
+    }
+
+    //create trip
+    const newTrip = await prisma.trips.create({
+      data: {
+        tripName,
+        destinationId,
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+        userId,
+      },
+    });
+
+    res.status(201).json(newTrip);
+  } catch (error) {
+    console.log("error creating trip: ", error);
+
+    res.status(500).json({ error: "Failed to create trip!" });
+  }
+});
+
+//update existing trip with logged in user -- WORKS
+router.put("/account/trips/:id", isLoggedIn, async (req, res) => {
+  const { id } = req.params;
+  const { tripName, destinationId, startDate, endDate } = req.body;
+
+  try {
+    const userId = req.user.userId;
+
+    //check if trip exists
+    const trip = await prisma.trips.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    //error handling
+    if (!trip) {
+      return res.status(404).json({ error: "Trip not found" });
+    }
+
+    //error handling
+    if (trip.userId !== userId) {
+      return res
+        .status(403)
+        .json({ error: "Unauthorized to update this trip" });
+    }
+
+    //error handling
+    if (destinationId) {
+      const destination = await prisma.destinations.findUnique({
+        where: { id: destinationId },
+      });
+      if (!destination) {
+        return res.status(400).json({ error: "Invalid destination" });
+      }
+    }
+
+    //Update Trip
+    const updatedTrip = await prisma.trips.update({
+      where: { id: parseInt(id) },
+      data: {
+        tripName: tripName || trip.tripName, //keep existing if not changed
+        destinationId: destinationId || trip.destinationId, //keep existing if not changed
+        startDate: startDate ? new Date(startDate) : trip.startDate, //keep existing if not changed
+        endDate: endDate ? new Date(endDate) : trip.endDate, //keep existing if not changed
+      },
+    });
+
+    res.status(200).json(updatedTrip);
+  } catch (error) {
+    console.error("Error updating trip: ", error);
+    res.status(500).json({ error: "Failed to update trip" });
+  }
+});
+
+//Delete a trip from existing user --WORKS
+router.delete("/account/trips/:id", isLoggedIn, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const userId = req.user.userId;
+
+    //check if trip exists
+    const trip = await prisma.trips.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    //error handling
+    if (!trip) {
+      return res.status(404).json({ error: "Trip not found" });
+    }
+
+    if (trip.userId !== userId) {
+      return res.status(403).json({ error: "Unauthorized to delete trip" });
+    }
+
+    //delete trip
+    await prisma.trips.delete({
+      where: { id: parseInt(id) },
+    });
+
+    res.status(200).json({ message: "Trip deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting trip: ", error);
+    res.status(500).json({ error: "failed to delete trip" });
+  }
+});
+// <---------- ^ CREATE, FETCH, UPDATE, DELETE TRIPS ^ ---------->
 
 // <---------- v CREATE, FETCH, UPDATE, DELETE POSTS v ---------->
 
@@ -247,148 +393,62 @@ router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
 
 // <---------- ^ CREATE, FETCH, UPDATE, DELETE POSTS ^ ---------->
 
-// <---------- v CREATE, FETCH, UPDATE, DELETE TRIPS v ---------->
+// <---------- v CREATE, FETCH, UPDATE, DELETE COMMENTS v ---------->
 
-//get trips associated with a user -- WORKS
-router.get("/account/trips", isLoggedIn, async (req, res) => {
+// <---------- ^ CREATE, FETCH, UPDATE, DELETE COMMENTS ^ ---------->
+
+// <---------- v CREATE, FETCH, UPDATE, DELETE LIKES v ---------->
+
+// <---------- ^ CREATE, FETCH, UPDATE, DELETE LIKES ^ ---------->
+
+
+
+
+
+// <---------- v ADMIN ONLY ROUTES v ---------->
+
+//create destination --- 
+router.post("/account/destinations", async (req, res, next) => {
   try {
-    const userId = req.user.userId;
+    const { destinationName } = req.body;
 
-    const userTrips = await prisma.trips.findMany({
-      where: {
-        userId: userId,
-      },
-      include: {
-        destination: true,
-      },
-    });
-
-    res.status(200).json(userTrips);
-  } catch (error) {
-    console.error("Error fetching trips: ", error);
-    res.status(500).json({ error: "Failed to fetch trips!" });
-  }
-});
-
-//creating a trip from loggedin user -- WORKS
-router.post("/account/trips", isLoggedIn, async (req, res) => {
-  const { tripName, destinationId, startDate, endDate } = req.body;
-
-  try {
-    const userId = req.user.userId;
-    console.log(userId);
-
-    const destination = await prisma.destinations.findUnique({
-      where: { id: destinationId },
-    });
-
-    //error handling
-    if (!destination) {
-      return res.status(400).json({ error: "Invalid destination" });
-    }
-
-    //create trip
-    const newTrip = await prisma.trips.create({
-      data: {
-        tripName,
-        destinationId,
-        startDate: new Date(startDate),
-        endDate: new Date(endDate),
-        userId,
-      },
-    });
-
-    res.status(201).json(newTrip);
-  } catch (error) {
-    console.log("error creating trip: ", error);
-
-    res.status(500).json({ error: "Failed to create trip!" });
-  }
-});
-
-//update existing trip with logged in user -- WORKS
-router.put("/account/trips/:id", isLoggedIn, async (req, res) => {
-  const { id } = req.params;
-  const { tripName, destinationId, startDate, endDate } = req.body;
-
-  try {
-    const userId = req.user.userId;
-
-    //check if trip exists
-    const trip = await prisma.trips.findUnique({
-      where: { id: parseInt(id) },
-    });
-
-    //error handling
-    if (!trip) {
-      return res.status(404).json({ error: "Trip not found" });
-    }
-
-    //error handling
-    if (trip.userId !== userId) {
-      return res
-        .status(403)
-        .json({ error: "Unauthorized to update this trip" });
-    }
-
-    //error handling
-    if (destinationId) {
-      const destination = await prisma.destinations.findUnique({
-        where: { id: destinationId },
+    if (!destinationName) {
+      return next({
+        status: 404,
+        message: "Destination name required",
       });
-      if (!destination) {
-        return res.status(400).json({ error: "Invalid destination" });
-      }
     }
 
-    //Update Trip
-    const updatedTrip = await prisma.trips.update({
-      where: { id: parseInt(id) },
-      data: {
-        tripName: tripName || trip.tripName, //keep existing if not changed
-        destinationId: destinationId || trip.destinationId, //keep existing if not changed
-        startDate: startDate ? new Date(startDate) : trip.startDate, //keep existing if not changed
-        endDate: endDate ? new Date(endDate) : trip.endDate, //keep existing if not changed
-      },
+    const destination = await prisma.destinations.create({
+      data: { destinationName: destinationName },
     });
-
-    res.status(200).json(updatedTrip);
+    res.json(destination);
   } catch (error) {
-    console.error("Error updating trip: ", error);
-    res.status(500).json({ error: "Failed to update trip" });
+    next(error);
   }
 });
 
-//Delete a trip from existing user --WORKS
-router.delete("/account/trips/:id", isLoggedIn, async (req, res) => {
-  const { id } = req.params;
-
+//delete destination by id --- 
+router.delete("/account/destinations/:id", async (req, res, next) => {
   try {
-    const userId = req.user.userId;
+    const id = +req.params.id;
 
-    //check if trip exists
-    const trip = await prisma.trips.findUnique({
-      where: { id: parseInt(id) },
+    const destinationExists = await prisma.destinations.findUnique({
+      where: { id },
     });
 
-    //error handling
-    if (!trip) {
-      return res.status(404).json({ error: "Trip not found" });
+    if (!destinationExists) {
+      return next({
+        status: 404,
+        message: `Could not find destination by id: ${id}`,
+      });
     }
 
-    if (trip.userId !== userId) {
-      return res.status(403).json({ error: "Unauthorized to delete trip" });
-    }
+    await prisma.destinations.delete({ where: { id } });
 
-    //delete trip
-    await prisma.trips.delete({
-      where: { id: parseInt(id) },
-    });
-
-    res.status(200).json({ message: "Trip deleted successfully" });
+    res.sendStatus(204);
   } catch (error) {
-    console.error("Error deleting trip: ", error);
-    res.status(500).json({ error: "failed to delete trip" });
+    next(error);
   }
 });
-// <---------- ^ CREATE, FETCH, UPDATE, DELETE TRIPS ^ ---------->
+// <---------- ^ ADMIN ONLY ROUTES ^ ---------->
