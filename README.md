@@ -12,23 +12,31 @@ Scalability: could be used to plan a trip as simple as going to the grocery stor
 
 # Routes
 
-- auth.js
-- POST /api/auth/register
-- POST /api/auth/login
-- GET /api/auth/account
+auth.js (logged in user)
 
-- user.js
+- POST /api/auth/register (register)
+- POST /api/auth/login (login)
+- GET /api/auth/account (view account)
+- PATCH /api/auth/account (edit account)
+- DELETE /api/auth/account (delete account)
+
+- POST /api/auth/account/posts (create post)
+- GET /api/auth/account/posts (get posts)
+- PATCH /api/auth/account/posts/:id (edit post)
+- DELETE /api/auth/account/posts/:id (delete post)
+
+user.js
 - GET /api/users 
 - GET /api/users/:id/trips
 - GET /api/users/:id/trips/:id
 - GET /api/users/:id/posts
 - GET /api/users/:id/posts/:id
 
-- destinations.js
+destinations.js
 - GET /api/destinations
 - GET /api/destinations/:id
 
-- posts.js
+posts.js
 - GET /api/posts
 - GET /api/posts/:id
 - GET /api/posts/:id/comments

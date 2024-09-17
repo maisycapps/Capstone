@@ -145,8 +145,35 @@ router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
 router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
 
   const { id } = req.params;
-  
-}
+
+  try {
+    const userId = req.user.userId;
+
+    //check if trip exists
+    const post = await prisma.posts.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    if (post.userId !== userId) {
+      return res.status(403).json({ error: "Unauthorized to delete post" });
+    }
+
+    //delete post
+    await prisma.posts.delete({
+      where: { id: parseInt(id) },
+    });
+
+    res.status(200).json({ message: "Post deleted successfully" });
+
+  } catch (error) {
+    console.error("Error deleting post: ", error);
+    res.status(500).json({ error: "failed to delete post" });
+  }
+});
 
 
 
