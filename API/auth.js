@@ -55,6 +55,42 @@ router.get("/account/posts", isLoggedIn, async (req, res, next) => {
   }
 });
 
+// create a new post -- WIP-MC
+router.post("/account/posts", isLoggedIn, async (req, res, next) => {
+    console.log("req.body for POST to Posts", req.body)
+    const { text, destinationId } = req.body;
+  
+    try {
+      const userId = req.user.userId;
+      console.log("userId for POST to Posts", userId);
+  
+      const destination = await prisma.destinations.findUnique({
+        where: { id: destinationId },
+      });
+      console.log("destinationId for POST to Posts", destinationId)
+  
+      //error handling
+      if (!destination) {
+        return res.status(400).json({ error: "Invalid destination" });
+      }
+  
+      //create post
+      const newPost = await prisma.posts.create({
+        data: {
+          text,
+          destinationId,
+          userId,
+        },
+      });
+  
+      res.status(201).json(newPost);
+    } catch (error) {
+      console.log("error creating post: ", error);
+  
+      res.status(500).json({ error: "Failed to create post!" });
+    }
+  });
+
 //update existing user -- needs testing -- WORKS-MC
 router.patch("/account", isLoggedIn, async (req, res, next) => {
 
@@ -72,8 +108,8 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
       });
     }
 
-    const { firstName, lastName, userName, email } = req.body;
-    if (!firstName || !lastName || !userName || !email) {
+    const { firstName, lastName, userName, email, bio } = req.body;
+    if (!firstName || !lastName || !userName || !email || !bio) {
       return next({
         status: 404,
         message: "Fields are required",
@@ -87,6 +123,7 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
         lastName: lastName,
         userName: userName,
         email: email,
+        bio: bio,
       },
     });
     res.json(user);
@@ -236,7 +273,7 @@ router.put("/account/trips/:id", isLoggedIn, async (req, res) => {
   }
 });
 
-//Delete a trip from existing user WORKS-MC
+//Delete a trip from existing user WORKS-MC (cascading delete also works if a user is deleted, so are the user's trips)
 router.delete("/account/trips/:id", isLoggedIn, async (req, res) => {
   const { id } = req.params;
 
