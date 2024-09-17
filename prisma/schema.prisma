@@ -26,16 +26,11 @@ model Users {
   posts Posts[] 
   likes Likes[] 
   trips Trips[] // one-to-many relationship with Trip
-
-  // STILL WORKING ON SOCIAL
   followedBy Follows[] @relation("followedBy") //user's followers
   following Follows[] @relation("following") //users user is following
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
-// STILL WORKING ON SOCIAL
 model Follows {
   followedBy Users @relation("followedBy", fields: [followedById], references: [id])
   followedById Int
@@ -44,8 +39,6 @@ model Follows {
 
   @@id([followingId, followedById])
 }
-
-// model Friends
 model Trips {
   id Int @id @default(autoincrement())
   tripName String
