@@ -8,6 +8,9 @@ import Gallery from "./Pages/Gallery";
 import "./App.css";
 import Post from "./Components/Post";
 import Overview from "./Components/Overview";
+import Login from "./Components/Login";
+import Register from "./Components/Register";
+import Account from "./Components/Account";
 
 function App() {
   return (
@@ -21,6 +24,9 @@ function App() {
 
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/user" element={<Post />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/account" element={<Account />} />
       </Routes>
     </div>
   );
