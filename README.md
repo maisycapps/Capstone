@@ -85,6 +85,9 @@ posts.js (not logged in user)
 
 # MC notes
 
+General Q's:
+- Is our package-lock.json supposed to be so long....? 
+
 Social: User friendships
 
 Frontend: Following / Follower
