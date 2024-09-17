@@ -54,40 +54,38 @@ router.get("/account/posts", isLoggedIn, async (req, res, next) => {
 
 // create a new post -- WORKS-MC
 router.post("/account/posts", isLoggedIn, async (req, res, next) => {
-    
-    const { text, destinationId } = req.body;
-  
-    try {
-      const userId = req.user.userId;
-  
-      const destination = await prisma.destinations.findUnique({
-        where: { id: destinationId },
-      });
-  
-      //error handling
-      if (!destination) {
-        return res.status(400).json({ error: "Invalid destination" });
-      }
-  
-      //create post
-      const newPost = await prisma.posts.create({
-        data: {
-          text,
-          destinationId,
-          userId,
-        },
-      });
-  
-      res.status(201).json(newPost);
-    } catch (error) {
-      console.log("error creating post: ", error);
-      res.status(500).json({ error: "Failed to create post!" });
+  const { text, destinationId } = req.body;
+
+  try {
+    const userId = req.user.userId;
+
+    const destination = await prisma.destinations.findUnique({
+      where: { id: destinationId },
+    });
+
+    //error handling
+    if (!destination) {
+      return res.status(400).json({ error: "Invalid destination" });
     }
+
+    //create post
+    const newPost = await prisma.posts.create({
+      data: {
+        text,
+        destinationId,
+        userId,
+      },
+    });
+
+    res.status(201).json(newPost);
+  } catch (error) {
+    console.log("error creating post: ", error);
+    res.status(500).json({ error: "Failed to create post!" });
+  }
 });
 
 // update existing post with logged in user --WORKS-MC
 router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
-  
   const { id } = req.params;
   const { text, destinationId } = req.body;
 
@@ -98,15 +96,15 @@ router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
     const post = await prisma.posts.findUnique({
       where: { id: parseInt(id) },
     });
-    
+
     if (!post) {
-      return res.status(404).json({ error: "Post not found"});
+      return res.status(404).json({ error: "Post not found" });
     }
 
-    if (post.userId !== userId){
+    if (post.userId !== userId) {
       return res
-      .status(403)
-      .json({error: "Unauthorized to update this post"});
+        .status(403)
+        .json({ error: "Unauthorized to update this post" });
     }
 
     if (!text && destinationId) {
@@ -129,7 +127,7 @@ router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
       where: { id: parseInt(id) },
       data: {
         text: text,
-        destinationId: destinationId
+        destinationId: destinationId,
       },
     });
     res.json(updatedPost);
@@ -142,19 +140,13 @@ router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
 
 // delete existing post with logged in user --WIP-MC
 router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
-
   const { id } = req.params;
-  
-}
-
-
+});
 
 //update existing user -- needs testing -- WORKS-MC
 router.patch("/account", isLoggedIn, async (req, res, next) => {
-
   try {
     const id = +req.user.userId;
-
 
     const userExists = await prisma.users.findUnique({ where: { id } });
 
@@ -191,7 +183,6 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
 
 //delete logged in users account -- needs testing -- WORKS-MC
 router.delete("/account", isLoggedIn, async (req, res, next) => {
-
   try {
     const id = req.user.userId;
 
@@ -208,7 +199,6 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
 
     await prisma.users.delete({ where: { id: parseInt(id) } });
     res.sendStatus(204);
-
   } catch (error) {
     console.error("Error deleting user: ", error);
     res.status(500).json({ error: "failed to delete user" });
@@ -278,7 +268,6 @@ router.post("/account/trips", isLoggedIn, async (req, res) => {
 
 //update existing trip with logged in user -- WORKS
 router.put("/account/trips/:id", isLoggedIn, async (req, res) => {
-
   const { id } = req.params;
   const { tripName, destinationId, startDate, endDate } = req.body;
 
@@ -315,7 +304,7 @@ router.put("/account/trips/:id", isLoggedIn, async (req, res) => {
     //Update Trip
     const updatedTrip = await prisma.trips.update({
       where: { id: parseInt(id) },
-      data: { 
+      data: {
         tripName: tripName || trip.tripName, //keep existing if not changed
         destinationId: destinationId || trip.destinationId, //keep existing if not changed
         startDate: startDate ? new Date(startDate) : trip.startDate, //keep existing if not changed
