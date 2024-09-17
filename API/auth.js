@@ -31,6 +31,76 @@ router.get("/account", isLoggedIn, async (req, res, next) => {
 
 // <---------- v EDIT USER ACCOUNT ROUTES v ---------->
 
+//update existing user -- needs testing -- WORKS-MC
+router.patch("/account", isLoggedIn, async (req, res, next) => {
+
+  try {
+    const id = +req.user.userId;
+
+
+    const userExists = await prisma.users.findUnique({ where: { id } });
+
+    if (!userExists) {
+      return next({
+        status: 400,
+        message: `Could not find user with is ${id}`,
+      });
+    }
+
+    const { firstName, lastName, userName, email, bio } = req.body;
+    if (!firstName || !lastName || !userName || !email || !bio) {
+      return next({
+        status: 404,
+        message: "Fields are required",
+      });
+    }
+
+    const user = await prisma.users.update({
+      where: { id },
+      data: {
+        firstName: firstName,
+        lastName: lastName,
+        userName: userName,
+        email: email,
+        bio: bio,
+      },
+    });
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
+//delete logged in users account -- needs testing -- WORKS-MC
+router.delete("/account", isLoggedIn, async (req, res, next) => {
+
+  try {
+    const id = req.user.userId;
+
+    const userExists = await prisma.users.findUnique({
+      where: { id },
+    });
+
+    if (!userExists) {
+      return next({
+        status: 400,
+        message: `Could not find user with id ${id}`,
+      });
+    }
+
+    await prisma.users.delete({ where: { id: parseInt(id) } });
+    res.sendStatus(204);
+
+  } catch (error) {
+    console.error("Error deleting user: ", error);
+    res.status(500).json({ error: "failed to delete user" });
+    next(error);
+  }
+});
+// <---------- ^ EDIT USER ACCOUNT ROUTES ^ ---------->
+
+// <---------- v CREATE, FETCH, UPDATE, DELETE POSTS v ---------->
+
 //get posts associated with a user -- needs testing --WORKS-MC
 router.get("/account/posts", isLoggedIn, async (req, res, next) => {
   try {
@@ -175,75 +245,7 @@ router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
   }
 });
 
-
-
-//update existing user -- needs testing -- WORKS-MC
-router.patch("/account", isLoggedIn, async (req, res, next) => {
-
-  try {
-    const id = +req.user.userId;
-
-
-    const userExists = await prisma.users.findUnique({ where: { id } });
-
-    if (!userExists) {
-      return next({
-        status: 400,
-        message: `Could not find user with is ${id}`,
-      });
-    }
-
-    const { firstName, lastName, userName, email, bio } = req.body;
-    if (!firstName || !lastName || !userName || !email || !bio) {
-      return next({
-        status: 404,
-        message: "Fields are required",
-      });
-    }
-
-    const user = await prisma.users.update({
-      where: { id },
-      data: {
-        firstName: firstName,
-        lastName: lastName,
-        userName: userName,
-        email: email,
-        bio: bio,
-      },
-    });
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
-});
-
-//delete logged in users account -- needs testing -- WORKS-MC
-router.delete("/account", isLoggedIn, async (req, res, next) => {
-
-  try {
-    const id = req.user.userId;
-
-    const userExists = await prisma.users.findUnique({
-      where: { id },
-    });
-
-    if (!userExists) {
-      return next({
-        status: 400,
-        message: `Could not find user with id ${id}`,
-      });
-    }
-
-    await prisma.users.delete({ where: { id: parseInt(id) } });
-    res.sendStatus(204);
-
-  } catch (error) {
-    console.error("Error deleting user: ", error);
-    res.status(500).json({ error: "failed to delete user" });
-    next(error);
-  }
-});
-// <---------- ^ EDIT USER ACCOUNT ROUTES ^ ---------->
+// <---------- ^ CREATE, FETCH, UPDATE, DELETE POSTS ^ ---------->
 
 // <---------- v CREATE, FETCH, UPDATE, DELETE TRIPS v ---------->
 
