@@ -1,4 +1,4 @@
-import styles from "./SideBar.module.css";
+import styles from "../styles/SideBar.module.css";
 import Profile from "./Profile";
 function SideBar() {
   return (

@@ -4,7 +4,6 @@ const {
   createUser,
   authenticate,
   isLoggedIn,
-  fetchTrips,
   getDestinations,
 } = require("../controllers/authController");
 
@@ -160,7 +159,6 @@ router.post("/account/posts", isLoggedIn, async (req, res, next) => {
 
 // update existing post with logged in user --WORKS
 router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
-  
   const { id } = req.params;
   const { text, destinationId, postImg  } = req.body;
 
@@ -171,15 +169,15 @@ router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
     const post = await prisma.posts.findUnique({
       where: { id: parseInt(id) },
     });
-    
+
     if (!post) {
-      return res.status(404).json({ error: "Post not found"});
+      return res.status(404).json({ error: "Post not found" });
     }
 
-    if (post.userId !== userId){
+    if (post.userId !== userId) {
       return res
-      .status(403)
-      .json({error: "Unauthorized to update this post"});
+        .status(403)
+        .json({ error: "Unauthorized to update this post" });
     }
 
     if (!text && destinationId) {
@@ -216,7 +214,6 @@ router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
 
 // delete existing post with logged in user --WORKS
 router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
-
   const { id } = req.params;
 
   try {
@@ -311,7 +308,6 @@ router.post("/account/trips", isLoggedIn, async (req, res) => {
 
 //update existing trip with logged in user -- WORKS
 router.put("/account/trips/:id", isLoggedIn, async (req, res) => {
-
   const { id } = req.params;
   const { tripName, destinationId, startDate, endDate } = req.body;
 
@@ -348,7 +344,7 @@ router.put("/account/trips/:id", isLoggedIn, async (req, res) => {
     //Update Trip
     const updatedTrip = await prisma.trips.update({
       where: { id: parseInt(id) },
-      data: { 
+      data: {
         tripName: tripName || trip.tripName, //keep existing if not changed
         destinationId: destinationId || trip.destinationId, //keep existing if not changed
         startDate: startDate ? new Date(startDate) : trip.startDate, //keep existing if not changed

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-// import "./NavBar.css";
+// import "../styles/NavBar.css";
 import { CodeIcon, HamburgerMenuClose, HamburgerMenuOpen } from "./Icons";
 
 function NavBar() {

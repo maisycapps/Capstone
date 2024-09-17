@@ -46,7 +46,7 @@ posts.js
 # Database revisions/discussion
 
 - New schema, fix relations for post, trips, destinations. Add relations for comments and posts.
- Cant seed trips, schema needs fixing. Potentially friends?
+  Cant seed trips, schema needs fixing. Potentially friends?
 
 - /auth/account GET, POST, DELETE needs review
 - Trips GET, POST, DELETE is only for AUTH USER so no need for individual route?
@@ -54,15 +54,28 @@ posts.js
 
 # ------ ^ Database Notes ^ ------
 
+<!-- MC notes -->
+
+# MC topics. Need team go-ahead before doing:
+
 # MC notes
 
+Social: User friendships
+
 Frontend: Following / Follower
+
 - Logged in users should have access to a seach bar to search other users by name
+  -Can follow another user
 - Can follow another user (maybe a frontend button "follow" w/ onClick callback that sets the clicked-on user's id as a followingId in the auth user's following array && makes the auth user set to followerId in the receiving user's followers array)
 
+Social: Trips with multiple users
+
+- If both users follow eachother, they can add eachother to trips (also modeled after tripDestinations relationship)
+
 "Friends" Query
+
 - MC todo: implement query to determine if users follow one another. If mutual, either considered a "friend" and can be displayed as such (will ref db schema: if followedBy === following)
 
-
 Optimization?
+
 - Best practices thought: Make all "update" functions PATCH instead of PUT? Ie, in auth.js, router.put"/account/trips/:id" lines 222-230 wouldn't need || statements
