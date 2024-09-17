@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id Int @id @default(autoincrement())
+  firstName String
+  lastName String
+  userName String @unique
+  email String
+  password String
+  bio String?
+  // profileImg StringUrl
+  role Role @default(USER)
+  posts Posts[] 
+  likes Likes[] 
+  trips Trips[] // one-to-many relationship with Trip
+  followedBy Follows[] @relation("followedBy") //user's followers
+  following Follows[] @relation("following") //users user is following
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+model Follows {
+  followedBy Users @relation("followedBy", fields: [followedById], references: [id])
+  followedById Int
+  following Users @relation("following", fields: [followingId], references: [id])
+  followingId Int
+
+  @@id([followingId, followedById])
+}
+model Trips {
+  id Int @id @default(autoincrement())
+  tripName String
+  startDate DateTime @default(now())
+  endDate DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)//if user deleted trips are deleted
+  userId Int // Foreign key to User
+  destination Destinations @relation(fields: [destinationId], references: [id])
+  destinationId Int 
+}
+model Destinations {
+  id Int @id @default(autoincrement())
+  destinationName String @unique
+  //destinationImg []
+  createdAt DateTime @default(now())
+  posts Posts[]
+  trips Trips[] 
+}
+
+model Posts {
+  id Int @id @default(autoincrement())
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)//if user deleted posts are deleted
+  userId Int @unique //author of post
+  destination Destinations @relation(fields: [destinationId], references: [id])
+  destinationId Int 
+  text String
+  //image url
+  likes Likes[] 
+  comments Comments[] 
+  //postImg T3 goal: users can upload images and post them
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Comments {
+  id Int @id @default(autoincrement())
+  userId Int @unique //author of comment
+  post Posts @relation(fields: [postId], references: [id], onDelete: Cascade)//if posts deleted comments are deleted
+  postId Int @unique 
+  text String 
+  createdAt DateTime @default(now())
+}
+
+model Likes {
+  id Int @id @default(autoincrement())
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)//if user deleted likes are deleted
+  userId Int @unique //author of like
+  post Posts @relation(fields: [postId], references: [id], onDelete: Cascade)//if posts deleted likes are deleted
+  postId Int @unique //post like is related to
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  USER
+  ADMIN
+}
