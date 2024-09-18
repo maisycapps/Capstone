@@ -37,9 +37,12 @@ POSTS
 
 COMMENTS
 - POST /api/auth/account/posts/:id/comments (create a comment on a specific post)
+- PATCH /api/auth/account/posts/:id/comments/:id (edit auth user's specific comment on a specific post)
+- DELETE /api/auth/account/posts/:id/comments/:id (delete auth user's specific comment on a specific post)
 
 LIKES
 - POST /api/auth/account/posts/:id/likes (create a like on a specific post)
+- DELETE /api/auth/account/posts/:id/likes/:id (delete auth user's like on a specific post)
 
 ADMIN ONLY?
 - POST /api/auth/account/destinations (create destination)

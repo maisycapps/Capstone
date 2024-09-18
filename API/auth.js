@@ -394,7 +394,7 @@ router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
 
 // <---------- v CREATE, FETCH, UPDATE, DELETE COMMENTS v ---------->
 
-// create a new comment --WORKS
+// create a new comment on a post --WORKS
 router.post("/account/posts/:id/comments", isLoggedIn, async (req, res, next) => {
   
   const { id } = req.params;
@@ -436,14 +436,107 @@ router.post("/account/posts/:id/comments", isLoggedIn, async (req, res, next) =>
   }
 });
 
-//get comments associated with a post --
+//get auth user's comments
+router.get("/account/comments", isLoggedIn, async (req, res, next) => {
+  try {
+    const id = req.user.userId;
 
+    const user = await prisma.users.findUnique({ where: { id } });
 
+    if (!user) {
+      return next({
+        status: 404,
+        message: `Could not find user by ${id}`,
+      });
+    }
 
-//edit comments --
+    const comments = await prisma.comments.findMany({ where: { userId: id } });
 
-//delete comment --
+    res.json(comments);
+  } catch (error) {
+    next(error);
+  }
+});
 
+//edit auth user's specific comment on a specific post --WORKS
+router.patch("/account/posts/:postId/comments/:id", isLoggedIn, async (req, res, next) => {
+  const { postId, id } = req.params;
+
+  const { text } = req.body;
+  console.log("req.body", req.body)
+
+  try {
+    const userId = req.user.userId;
+
+    //check if post exists
+    const post = await prisma.posts.findUnique({
+      where: { id: parseInt(postId)},
+    });
+    
+    //error handling
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    if (!req.body) {
+      return next({
+        status: 404,
+        message: "Fields are required",
+      });
+    }
+
+    const updatedComment = await prisma.comments.update({
+      where: { id: parseInt(id) },
+      data: {
+        text: text,
+      },
+    });
+    res.json(updatedComment);    
+  } catch (error) {
+    console.error("Error updating this comment: ", error);
+    res.status(500).json({ error: "failed to update comment" });
+    next(error);
+  }
+});
+
+//delete auth user's specific comment on a specific post --WORKS
+router.delete("/account/posts/:postId/comments/:id", isLoggedIn, async (req, res, next) => {
+  const { postId, id } = req.params;
+
+  try {
+    const userId = req.user.userId;
+
+    //check if trip exists
+    const post = await prisma.posts.findUnique({
+      where: { id: parseInt(postId) },
+    });
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    //check if comment exists
+    const comment = await prisma.comments.findUnique({        
+      where: { id: parseInt(id) },
+   });
+
+   //error handling
+   if (comment.userId !== userId) {
+    return res.status(403).json({ error: "Unauthorized to delete comment" });
+    }
+
+    //delete comment
+    await prisma.comments.delete({
+      where: { id: parseInt(id) },
+    });
+
+    res.status(200).json({ message: "Comment deleted successfully" });
+
+  } catch (error) {
+    console.error("Error deleting comment: ", error);
+    res.status(500).json({ error: "failed to delete comment" });
+  }
+});
 
 // <---------- ^ CREATE, FETCH, UPDATE, DELETE COMMENTS ^ ---------->
 
