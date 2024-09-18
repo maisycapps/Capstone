@@ -33,7 +33,6 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// ----- cant test until schema is fixed -----
 //get posts associated with a user
 router.get("/:id/posts", async (req, res, next) => {
   try {
