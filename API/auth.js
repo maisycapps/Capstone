@@ -128,7 +128,6 @@ router.post("/account/trips", isLoggedIn, async (req, res) => {
 
   try {
     const userId = req.user.userId;
-    console.log(userId);
 
     const destination = await prisma.destinations.findUnique({
       where: { id: destinationId },
@@ -247,28 +246,6 @@ router.delete("/account/trips/:id", isLoggedIn, async (req, res) => {
 
 // <---------- v CREATE, FETCH, UPDATE, DELETE POSTS v ---------->
 
-//get posts associated with a user --WORKS
-router.get("/account/posts", isLoggedIn, async (req, res, next) => {
-  try {
-    const id = req.user.userId;
-
-    const user = await prisma.users.findUnique({ where: { id } });
-
-    if (!user) {
-      return next({
-        status: 404,
-        message: `Could not find user by ${id}`,
-      });
-    }
-
-    const posts = await prisma.posts.findMany({ where: { userId: id } });
-
-    res.json(posts);
-  } catch (error) {
-    next(error);
-  }
-});
-
 // create a new post -- WORKS
 router.post("/account/posts", isLoggedIn, async (req, res, next) => {
     
@@ -301,6 +278,28 @@ router.post("/account/posts", isLoggedIn, async (req, res, next) => {
       console.log("error creating post: ", error);
       res.status(500).json({ error: "Failed to create post!" });
     }
+});
+
+//get posts associated with logged in user --WORKS
+router.get("/account/posts", isLoggedIn, async (req, res, next) => {
+  try {
+    const id = req.user.userId;
+
+    const user = await prisma.users.findUnique({ where: { id } });
+
+    if (!user) {
+      return next({
+        status: 404,
+        message: `Could not find user by ${id}`,
+      });
+    }
+
+    const posts = await prisma.posts.findMany({ where: { userId: id } });
+
+    res.json(posts);
+  } catch (error) {
+    next(error);
+  }
 });
 
 // update existing post with logged in user --WORKS
@@ -394,6 +393,57 @@ router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
 // <---------- ^ CREATE, FETCH, UPDATE, DELETE POSTS ^ ---------->
 
 // <---------- v CREATE, FETCH, UPDATE, DELETE COMMENTS v ---------->
+
+// create a new comment --WORKS
+router.post("/account/posts/:id/comments", isLoggedIn, async (req, res, next) => {
+  
+  const { id } = req.params;
+  const { text } = req.body;
+
+  try {
+    const userId = req.user.userId;
+
+    //check if post exists
+    const post = await prisma.posts.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    //error handling
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    if (!req.body) {
+      return next({
+        status: 404,
+        message: "Fields are required",
+      });
+    }
+
+    //create comment
+    const newComment = await prisma.comments.create({
+      data: {
+        text, 
+        postId: parseInt(id),
+        userId,
+      },
+    });
+
+    res.status(201).json(newComment);
+  } catch (error) {
+    console.log("error creating comment: ", error);
+    res.status(500).json({ error: "Failed to create comment!" });
+  }
+});
+
+//get comments associated with a post --
+
+
+
+//edit comments --
+
+//delete comment --
+
 
 // <---------- ^ CREATE, FETCH, UPDATE, DELETE COMMENTS ^ ---------->
 
