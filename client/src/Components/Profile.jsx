@@ -1,5 +1,5 @@
 import italy from "./Images/italy.jpg";
-import styles from "./Profile.module.css";
+import styles from "/styles/Profile.module.css";
 function Profile() {
   return (
     <div className={styles.profileCard}>
