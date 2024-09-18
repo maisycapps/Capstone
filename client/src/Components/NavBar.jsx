@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-// import "./NavBar.css";
+// import "../styles/NavBar.css";
 import { CodeIcon, HamburgerMenuClose, HamburgerMenuOpen } from "./Icons";
 
 function NavBar() {
@@ -12,7 +12,7 @@ function NavBar() {
       <nav className="navbar">
         <div className="nav-container">
           <NavLink exact to="/" className="nav-logo">
-            <span>CodeBucks</span>
+            <span>Tripy</span>
             {/* <i className="fas fa-code"></i> */}
             <span className="icon">
               <CodeIcon />
@@ -56,12 +56,12 @@ function NavBar() {
             <li className="nav-item">
               <NavLink
                 exact
-                to="/signup"
+                to="/register"
                 activeClassName="active"
                 className="nav-links"
                 onClick={handleClick}
               >
-                Sign Up
+                Register
               </NavLink>
             </li>
             <li className="nav-item">

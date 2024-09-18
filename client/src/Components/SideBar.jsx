@@ -1,5 +1,5 @@
-import styles from "/styles/SideBar.module.css";
-import Profile from "./Profile";
+import styles from "../styles/SideBar.module.css";
+import Profile from "./Account";
 function SideBar() {
   return (
     <div className={styles.sideBarContainer}>

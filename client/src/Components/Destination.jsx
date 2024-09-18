@@ -1,5 +1,5 @@
 import italy from "./Images/italy.jpg";
-import styles from "/styles/Destination.module.css";
+import styles from "../styles/Destination.module.css";
 function Destination() {
   return (
     <div className={styles.destinationContainer}>

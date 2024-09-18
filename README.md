@@ -12,28 +12,59 @@ Scalability: could be used to plan a trip as simple as going to the grocery stor
 
 # Routes
 
-auth.js
+auth.js (logged in user)
 
-- POST /api/auth/register
-- POST /api/auth/login
-- GET /api/auth/account
+LOGIN & REGISTER
+- POST /api/auth/register (register)
+- POST /api/auth/login (login)
 
-user.js
+ACCOUNT
+- GET /api/auth/account (view account)
+- PATCH /api/auth/account (edit account)
+- DELETE /api/auth/account (delete account)
 
-- GET /api/users
-- GET /api/users/:id/trips
-- GET /api/users/:id/trips/:id
-- GET /api/users/:id/posts
-- GET /api/users/:id/posts/:id
+TRIPS
+- POST /api/auth/account/trips (create trip)
+- GET /api/auth/account/trips (get trips)
+- PATCH /api/auth/account/trips/:id (edit trip)
+- DELETE /api/auth/account/trips/:id (delete trip)
 
-- destinations.js
-- GET /api/destinations
-- GET /api/destinations/:id
+POSTS
+- POST /api/auth/account/posts (create post)
+- GET /api/auth/account/posts (get posts)
+- PATCH /api/auth/account/posts/:id (edit post)
+- DELETE /api/auth/account/posts/:id (delete post)
 
-- posts.js
-- GET /api/posts
-- GET /api/posts/:id
-- GET /api/posts/:id/comments
+COMMENTS
+- POST /api/auth/account/posts/:id/comments (create a comment on a specific post)
+
+LIKES
+- POST /api/auth/account/posts/:id/likes (create a like on a specific post)
+
+ADMIN ONLY?
+- POST /api/auth/account/destinations (create destination)
+- DELETE /api/auth/account/destinations/:id (delete destination)
+- GET /api/auth/account/users/:id/trips (view a specific user's trips)
+- GET /api/auth/account/users/:id/trips/:id (view a specific user's specific trip)
+
+user.js (not logged in user)
+
+- GET /api/users (view all users)
+- GET /api/users/:id (view a specific user)
+- GET /api/users/:id/posts (view a specific user's posts)
+- GET /api/users/:id/posts/:id (view a specific user's specific post)
+
+destinations.js (not logged in user)
+
+- GET /api/destinations (view all destinations)
+- GET /api/destinations/:id (view a specific destination)
+
+posts.js (not logged in user)
+
+- GET /api/posts (view all posts)
+- GET /api/posts/:id (view a specific post)
+- GET /api/posts/:id/comments (view a specific post's comments)
+- GET /api/posts/:id/likes (view a specific post's likes)
 
 - ^ not final ^
 
@@ -53,6 +84,9 @@ user.js
 # MC topics. Need team go-ahead before doing:
 
 # MC notes
+
+General Q's:
+- Is our package-lock.json supposed to be so long....? 
 
 Social: User friendships
 

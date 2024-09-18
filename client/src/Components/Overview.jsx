@@ -1,7 +1,7 @@
 import SideBar from "./SideBar";
 import MainContent from "./MainContent";
 import Friends from "./Friends";
-import styles from "/styles/Overview.module.css";
+import styles from "../styles/Overview.module.css";
 
 function Overview() {
   return (

@@ -3,7 +3,7 @@ module.exports = router;
 
 const prisma = require("../prisma");
 
-// ----- cant test until schema is fixed -----
+
 
 //get all posts
 router.get("/", async (req, res, next) => {
@@ -34,4 +34,3 @@ router.get("/:id", async (req, res, next) => {
     next(error);
   }
 });
-

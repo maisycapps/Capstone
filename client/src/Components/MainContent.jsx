@@ -1,4 +1,4 @@
-import styles from "/styles/MainContent.module.css";
+import styles from "../styles/MainContent.module.css";
 import Destination from "./Destination";
 import Post from "./Post";
 

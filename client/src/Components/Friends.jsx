@@ -1,5 +1,5 @@
 import italy from "./Images/italy.jpg";
-import styles from "/styles/Friends.module.css";
+import styles from "../styles/Friends.module.css";
 function Friends() {
   return (
     <div className={styles.friendsContainer}>
