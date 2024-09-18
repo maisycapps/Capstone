@@ -397,7 +397,7 @@ router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
 // create a new comment on a post --WORKS
 router.post("/account/posts/:id/comments", isLoggedIn, async (req, res, next) => {
   
-  const { id } = req.params;
+  const { id } = req.params; //post id
   const { text } = req.body;
 
   try {
@@ -460,7 +460,7 @@ router.get("/account/comments", isLoggedIn, async (req, res, next) => {
 
 //edit auth user's specific comment on a specific post --WORKS
 router.patch("/account/posts/:postId/comments/:id", isLoggedIn, async (req, res, next) => {
-  const { postId, id } = req.params;
+  const { postId, id } = req.params; //post id, comment id
 
   const { text } = req.body;
   console.log("req.body", req.body)
@@ -501,7 +501,7 @@ router.patch("/account/posts/:postId/comments/:id", isLoggedIn, async (req, res,
 
 //delete auth user's specific comment on a specific post --WORKS
 router.delete("/account/posts/:postId/comments/:id", isLoggedIn, async (req, res, next) => {
-  const { postId, id } = req.params;
+  const { postId, id } = req.params; //post id, comment id
 
   try {
     const userId = req.user.userId;
@@ -542,6 +542,102 @@ router.delete("/account/posts/:postId/comments/:id", isLoggedIn, async (req, res
 
 // <---------- v CREATE, FETCH, UPDATE, DELETE LIKES v ---------->
 
+// create a like on a post --WORKS
+router.post("/account/posts/:id/likes", isLoggedIn, async (req, res, next) => {
+  
+  const { id } = req.params; //post id
+
+  try {
+    const userId = req.user.userId;
+
+    //check if post exists
+    const post = await prisma.posts.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    //error handling
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    //create like
+    const newLike = await prisma.likes.create({
+      data: {
+        postId: parseInt(id),
+        userId: parseInt(userId),
+      },
+    });
+
+    res.status(201).json(newLike);
+  } catch (error) {
+    console.log("error creating like: ", error);
+    res.status(500).json({ error: "Failed to create like!" });
+  }
+});
+
+//get auth user's likes --WORKS
+router.get("/account/likes", isLoggedIn, async (req, res, next) => {
+  try {
+    const id = req.user.userId;
+
+    const user = await prisma.users.findUnique({ where: { id } });
+
+    if (!user) {
+      return next({
+        status: 404,
+        message: `Could not find user by ${id}`,
+      });
+    }
+
+    const likes = await prisma.likes.findMany({ where: { userId: id } });
+
+    res.json(likes);
+  } catch (error) {
+    console.error("Error getting likes: ", error);
+    res.status(500).json({ error: "failed to get likes" });
+    next(error);
+  }
+});
+
+//delete auth user's like on a specific post --WORKS
+router.delete("/account/posts/:postId/likes/:id", isLoggedIn, async (req, res, next) => {
+  const { postId, id } = req.params; //post id, comment id
+
+  try {
+    const userId = req.user.userId;
+
+    //check if post exists
+    const post = await prisma.posts.findUnique({
+      where: { id: parseInt(postId) },
+    });
+
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    //check if like exists
+    const like = await prisma.likes.findUnique({        
+      where: { id: parseInt(id) },
+   });
+
+   //error handling
+   if (like.userId !== userId) {
+    return res.status(403).json({ error: "Unauthorized to delete like" });
+    }
+
+    //delete comment
+    await prisma.likes.delete({
+      where: { id: parseInt(id) },
+    });
+
+    res.status(200).json({ message: "Like deleted successfully" });
+
+  } catch (error) {
+    console.error("Error deleting like: ", error);
+    res.status(500).json({ error: "failed to delete like" });
+  }
+});
+
 // <---------- ^ CREATE, FETCH, UPDATE, DELETE LIKES ^ ---------->
 
 
@@ -550,10 +646,12 @@ router.delete("/account/posts/:postId/comments/:id", isLoggedIn, async (req, res
 
 // <---------- v ADMIN ONLY ROUTES v ---------->
 
-//create destination --- 
-router.post("/account/destinations", async (req, res, next) => {
+//create destination --- need to add more data fields
+router.post("/account/destinations", isLoggedIn, async (req, res, next) => {
+  const { destinationName } = req.body;
+  
   try {
-    const { destinationName } = req.body;
+    const userId = req.user.userId;
 
     if (!destinationName) {
       return next({
@@ -571,13 +669,54 @@ router.post("/account/destinations", async (req, res, next) => {
   }
 });
 
-//delete destination by id --- 
-router.delete("/account/destinations/:id", async (req, res, next) => {
+//edit destination --- need to test & add more data fields
+router.patch("/account/destinations/:id", isLoggedIn, async (req, res, next) => {
+  const { id } = req.params.id;
+  const { destinationName } = req.body;
+  
   try {
-    const id = +req.params.id;
+    const userId = req.user.userId;
 
     const destinationExists = await prisma.destinations.findUnique({
-      where: { id },
+      where: { id: parseInt(id) },
+    });
+
+    if (!destinationExists) {
+      return next({
+        status: 404,
+        message: `Could not find destination by id: ${id}`,
+      });
+    }
+
+    if (!req.body) {
+      return next({
+        status: 404,
+        message: "Fields are required",
+      });
+    }
+
+
+    const updatedDestination = await prisma.destinations.update({
+      where: { id: parseInt(id) },
+      data: { destinationName: destinationName },
+    });
+    res.json(updatedDestination);
+  } catch (error) {
+    console.error("Error updating this destination: ", error);
+    res.status(500).json({ error: "failed to update destination" });
+    next(error);
+  }
+});
+
+//delete destination by id --- 
+router.delete("/account/destinations/:id", isLoggedIn, async (req, res, next) => {
+  const { id } = req.params.id;
+  
+  try {
+    const userId = req.user.userId;
+
+    const destinationExists = await prisma.destinations.findUnique({
+      where: { id: parseInt(id) },
     });
 
     if (!destinationExists) {
