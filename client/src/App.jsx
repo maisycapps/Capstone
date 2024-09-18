@@ -11,11 +11,33 @@ import Overview from "./Components/Overview";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
 import Account from "./Components/Account";
+import { isAuthenticated } from "./UtilityFiles/auth";
+import { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  //checks if user is logged in on intial render
+  useEffect(() => {
+    setLoggedIn(isAuthenticated());
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isAuthenticated()) {
+        setLoggedIn(false); //logs user out if token is expired
+        localStorage.removeItem("token"); //clears token from local storage
+        window.location.href = "/login"; //redirects to login page
+      }
+    }, 60000); //checks every 60 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div>
-      <NavBar />
+      <NavBar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
 
       <Routes>
         <Route path="/" element={<Overview />} />
@@ -24,9 +46,15 @@ function App() {
 
         <Route path="/gallery" element={<Gallery />} />
         <Route path="/user" element={<Post />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/account" element={<Account />} />
+        <Route path="/login" element={<Login setLoggedIn={setLoggedIn} />} />
+        <Route
+          path="/register"
+          element={<Register setLoggedIn={setLoggedIn} />}
+        />
+        <Route
+          path="/account"
+          element={loggedIn ? <Account /> : <Navigate to="/login" />}
+        />
       </Routes>
     </div>
   );

@@ -32,10 +32,8 @@ router.get("/account", isLoggedIn, async (req, res, next) => {
 
 //update existing user -- WORKS
 router.patch("/account", isLoggedIn, async (req, res, next) => {
-
   try {
     const id = +req.user.userId;
-
 
     const userExists = await prisma.users.findUnique({ where: { id } });
 
@@ -46,7 +44,7 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
       });
     }
 
-    const { firstName, lastName, userName, email, bio, profileImg} = req.body;
+    const { firstName, lastName, userName, email, bio, profileImg } = req.body;
     if (!firstName || !lastName || !userName || !email || !bio || !profileImg) {
       return next({
         status: 404,
@@ -62,7 +60,7 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
         userName: userName,
         email: email,
         bio: bio,
-        profileImg: profileImg
+        profileImg: profileImg,
       },
     });
     res.json(user);
@@ -73,7 +71,6 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
 
 //delete logged in users account --WORKS
 router.delete("/account", isLoggedIn, async (req, res, next) => {
-
   try {
     const id = req.user.userId;
 
@@ -90,7 +87,6 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
 
     await prisma.users.delete({ where: { id: parseInt(id) } });
     res.sendStatus(204);
-
   } catch (error) {
     console.error("Error deleting user: ", error);
     res.status(500).json({ error: "failed to delete user" });
@@ -271,42 +267,41 @@ router.get("/account/posts", isLoggedIn, async (req, res, next) => {
 
 // create a new post -- WORKS
 router.post("/account/posts", isLoggedIn, async (req, res, next) => {
-    
-    const { text, destinationId, postImg } = req.body;
-  
-    try {
-      const userId = req.user.userId;
-  
-      const destination = await prisma.destinations.findUnique({
-        where: { id: destinationId },
-      });
-  
-      //error handling
-      if (!destination) {
-        return res.status(400).json({ error: "Invalid destination" });
-      }
-  
-      //create post
-      const newPost = await prisma.posts.create({
-        data: {
-          text,
-          destinationId,
-          postImg, 
-          userId,
-        },
-      });
-  
-      res.status(201).json(newPost);
-    } catch (error) {
-      console.log("error creating post: ", error);
-      res.status(500).json({ error: "Failed to create post!" });
+  const { text, destinationId, postImg } = req.body;
+
+  try {
+    const userId = req.user.userId;
+
+    const destination = await prisma.destinations.findUnique({
+      where: { id: destinationId },
+    });
+
+    //error handling
+    if (!destination) {
+      return res.status(400).json({ error: "Invalid destination" });
     }
+
+    //create post
+    const newPost = await prisma.posts.create({
+      data: {
+        text,
+        destinationId,
+        postImg,
+        userId,
+      },
+    });
+
+    res.status(201).json(newPost);
+  } catch (error) {
+    console.log("error creating post: ", error);
+    res.status(500).json({ error: "Failed to create post!" });
+  }
 });
 
 // update existing post with logged in user --WORKS
 router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
   const { id } = req.params;
-  const { text, destinationId, postImg  } = req.body;
+  const { text, destinationId, postImg } = req.body;
 
   try {
     const userId = req.user.userId;
@@ -347,7 +342,7 @@ router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
       data: {
         text: text,
         destinationId: destinationId,
-        postImg: postImg 
+        postImg: postImg,
       },
     });
     res.json(updatedPost);
@@ -384,7 +379,6 @@ router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
     });
 
     res.status(200).json({ message: "Post deleted successfully" });
-
   } catch (error) {
     console.error("Error deleting post: ", error);
     res.status(500).json({ error: "failed to delete post" });
@@ -401,13 +395,9 @@ router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
 
 // <---------- ^ CREATE, FETCH, UPDATE, DELETE LIKES ^ ---------->
 
-
-
-
-
 // <---------- v ADMIN ONLY ROUTES v ---------->
 
-//create destination --- 
+//create destination ---
 router.post("/account/destinations", async (req, res, next) => {
   try {
     const { destinationName } = req.body;
@@ -428,7 +418,7 @@ router.post("/account/destinations", async (req, res, next) => {
   }
 });
 
-//delete destination by id --- 
+//delete destination by id ---
 router.delete("/account/destinations/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;

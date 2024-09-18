@@ -1,29 +1,67 @@
 import styles from "../styles/Post.module.css";
 import italy from "./Images/italy.jpg";
 import { FiMoreVertical } from "react-icons/fi";
-function Post() {
-  return (
-    <div className={styles.postContainer}>
-      <div className={styles.postCard}>
-        <div className={styles.top}>
-          <img src={italy} alt="" />
-          <FiMoreVertical />
-        </div>
-        <img src={italy} alt="" />
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus,
-          voluptates cum. Perferendis aliquam dolores tenetur non aperiam, totam
-          illo quae vel aliquid, sed repellat. Illo non veniam culpa esse
-          possimus.
-          <div className={styles.btn}>
-            <button>lIKE</button>
-            <button>COMMENT</button>
-            <button>SHARE</button>
-          </div>
-        </p>
-      </div>
-    </div>
-  );
-}
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-export default Post;
+const Posts = () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    //fetch posts from backend
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/posts");
+        setPosts(response.data);
+      } catch (error) {
+        console.error("Error fetching posts: ", error);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  return (
+    <>
+      <div className={styles.postContainer}>
+        <div className={styles.postCard}>
+          <div className={styles.top}>
+            <img src={italy} alt="" />
+            <FiMoreVertical />
+          </div>
+          <img src={italy} alt="" />
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus,
+            voluptates cum. Perferendis aliquam dolores tenetur non aperiam,
+            totam illo quae vel aliquid, sed repellat. Illo non veniam culpa
+            esse possimus.
+            <div className={styles.btn}>
+              <button>lIKE</button>
+              <button>COMMENT</button>
+              <button>SHARE</button>
+            </div>
+          </p>
+        </div>
+      </div>
+
+      {/* ------ v subjected to change v ------ */}
+      <div>
+        <h2>Posts</h2>
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <div key={post.id}>
+              <h3>{post.destinations.destinationName}</h3>
+              <img src={post.postImg} alt="user img" />
+              <p>{post.user.userName}</p>
+              <p>{post.text}</p>
+            </div>
+          ))
+        ) : (
+          <p>No Posts available</p>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default Posts;
