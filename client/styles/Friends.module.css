@@ -8,7 +8,9 @@
   height: fit-content;
   display: flex;
   margin: 20px;
-  border: 2px solid red;
+  /* border: 2px solid red; */
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
   border-radius: 15px;
 }
 

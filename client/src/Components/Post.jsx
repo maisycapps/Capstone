@@ -29,6 +29,7 @@ function Post() {
       <div className={styles.commentSection}>
         <img src={italy} alt="" className={styles.profileComment} />
         <input type="text" placeholder="Write You Comment here" />
+        <button className={styles.commentPost}>Post</button>
       </div>
       <p className={styles.timestamp}>9:42 pm Sep 17, 2024</p>
     </div>
