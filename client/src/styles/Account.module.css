@@ -1,0 +1,22 @@
+.accountCard {
+  height: 400px;
+  border: 2px solid blue;
+}
+.account {
+  margin-top: 20px;
+  display: grid;
+  place-items: center;
+}
+
+.accountCard img {
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+}
+
+.accountCard h1 {
+  font-size: 26px;
+  font-weight: bold;
+}

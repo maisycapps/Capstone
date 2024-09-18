@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Users {
+  id         Int       @id @default(autoincrement())
+  firstName  String
+  lastName   String
+  userName   String    @unique
+  email      String
+  password   String
+  bio        String?
+  profileImg String?
+  role       Role      @default(USER)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  followedBy Follows[] @relation("followedBy")
+  following  Follows[] @relation("following")
+  likes      Likes[]
+  posts      Posts[]
+  trips      Trips[]
+}
+
+model Follows {
+  followedById Int
+  followingId  Int
+  followedBy   Users @relation("followedBy", fields: [followedById], references: [id])
+  following    Users @relation("following", fields: [followingId], references: [id])
+
+  @@id([followingId, followedById])
+}
+
+model Trips {
+  id            Int          @id @default(autoincrement())
+  tripName      String
+  startDate     DateTime     @default(now())
+  endDate       DateTime
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  userId        Int
+  destinationId Int
+  destination   Destinations @relation(fields: [destinationId], references: [id])
+  user          Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Destinations {
+  id              Int      @id @default(autoincrement())
+  destinationName String   @unique
+  destinationImg  String?
+  createdAt       DateTime @default(now())
+  posts           Posts[]
+  trips           Trips[]
+}
+
+model Posts {
+  id            Int          @id @default(autoincrement())
+  userId        Int
+  destinationId Int
+  text          String
+  postImg       String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  comments      Comments[]
+  likes         Likes[]
+  destination   Destinations @relation(fields: [destinationId], references: [id])
+  user          Users        @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Comments {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  postId    Int
+  text      String
+  createdAt DateTime @default(now())
+  post      Posts    @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model Likes {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  postId    Int
+  createdAt DateTime @default(now())
+  post      Posts    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  USER
+  ADMIN
+}
