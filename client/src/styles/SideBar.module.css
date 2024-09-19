@@ -1,7 +1,8 @@
 .sideBarContainer {
   /* width: 20%; */
   height: 100vh;
-  border: 2px solid red;
+  /* border: 2px solid red; */
+  box-shadow: rgba(100, 100, 111, 0.3) 0px 7px 29px 0px;
 }
 .list {
   display: block;
@@ -9,7 +10,9 @@
 }
 
 .sideList {
-  border: 2px solid blue;
+  /* border: 2px solid blue; */
+  font-size: 26px;
+  font-weight: bold;
   border-radius: 15px;
   padding: 20px;
   justify-content: center;

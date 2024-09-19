@@ -1,47 +1,142 @@
-.postContainer {
+.container {
+  width: 70%;
+  background-color: #fff;
+  border-radius: 3%;
+  padding: 25px;
+
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.header {
+  display: flex;
+}
+.header .name {
+  height: fit-content;
+  display: flex;
   width: 100%;
-  height: 100%;
-  display: grid;
-  place-items: center;
+  padding: 20px;
 }
 
-.postCard {
-  width: 600px;
-  height: 400px;
-  margin-top: 5px;
-  display: block;
-  justify-content: center;
-  border: 2px solid black;
-
-  /* border-radius: 40px; */
-  /* width: 90%;
-  height: 400px;
-  display: grid;
-  justify-content: center;
-  border-bottom: 2px solid green; */
+.header .name .profile {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
 }
-.top {
+
+.header .name ul {
+  position: relative;
+  left: 14px;
+  top: 5px;
+}
+.header .name ul li {
+  list-style: none;
+}
+
+.name ul li:nth-child(1) {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.name ul li:nth-child(2) {
+  font-size: 18px;
+  color: black;
+}
+.header .name .moreIcon {
+  border: 2px solid red;
+  float: right;
+}
+
+.header .name .status {
+  width: 14px;
+  height: 14px;
+  position: relative;
+  left: 14px;
+  border-radius: 50%;
+  background-color: green;
+  top: 8px;
+}
+
+.header .img {
+  width: 25px;
+  height: 25px;
+  position: relative;
+  top: 5px;
+}
+
+.container p {
+  margin-top: 25px;
+  text-align: justify;
+  line-height: 1.5;
+  color: rgb(65, 65, 65);
+}
+
+.container .picture {
+  display: flex;
+  margin: auto;
+  width: 100%;
+  height: 220px;
+  border-radius: 2%;
+}
+
+.container .timestamp {
+  font-size: 12px;
+  color: rgb(145, 145, 145);
+}
+
+.container .btn {
+  width: 100%;
+  height: 45px;
+  display: flex;
+  border: 2px thin #1877f2;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+}
+
+.container button {
+  width: 150px;
+  height: 40px;
+  font-size: 18px;
+
+  padding: 5px;
+  border: none;
+  margin: 20px;
+  border-radius: 1px thin #1877f2;
+}
+.container button span {
+  margin-left: 10px;
+}
+.commentSection {
+  display: flex;
+  width: 100%;
+  padding: 10px;
+}
+.profileComment {
+  width: 50px;
+  height: 50px;
+  height: fit-content;
+  display: flex;
+  margin-right: 5px;
+  border-radius: 50%;
+}
+input {
   width: 100%;
   height: 50px;
-  display: flex;
-  border-bottom: 2px solid green;
+  border-radius: 5px;
+  font-size: 16px;
 }
-.top img {
-  /* display: block; */
-  width: 100px;
-  height: 90px;
-  float: left;
-  border-radius: 45%;
+
+.commentPost {
+  color: #333;
+  background-color: #fff;
+  border-radius: 5px;
+  margin-left: 5px;
+  height: 50px;
+  font-size: 25px;
+  margin-bottom: 10px;
 }
-.postCard img {
-  width: 100%;
-  height: 50%;
-}
-.postCard p {
-  width: 100%;
-  height: 300px;
-}
-.postCard .btn {
-  display: flex;
-  border: 2px solid red;
+
+.commentPost:hover {
+  background-color: #1877f2;
+  color: #fff;
 }
