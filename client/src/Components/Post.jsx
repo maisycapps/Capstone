@@ -1,11 +1,17 @@
+import { useState } from "react";
 import styles from "../styles/Post.module.css";
 import italy from "./Images/italy.jpg";
-import { FiMoreVertical } from "react-icons/fi";
+import { MdMoreVert } from "react-icons/md";
+import { FaRegComments } from "react-icons/fa";
+import { AiOutlineLike } from "react-icons/ai";
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
+  const [countLikes, setCountLikes] = useState(0);
+  const [countComments, setCountComments] = useState(0);
 
   useEffect(() => {
     //fetch posts from backend
@@ -21,6 +27,12 @@ const Posts = () => {
     fetchPosts();
   }, []);
 
+  function handleCountLikes() {
+    setCountLikes(() => countLikes + 1);
+  }
+  function handleCountComments() {
+    setCountComments(() => countComments + 1);
+  }
   return (
     <>
       <div className={styles.postContainer}>

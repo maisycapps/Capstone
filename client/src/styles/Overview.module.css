@@ -1,24 +1,4 @@
 .OverviewContainer {
   display: grid;
-  grid-template-columns: 30% 50% 20%;
+  grid-template-columns: 20% 60% 20%;
 }
-
-/* .sidebar {
-  width: 30%;
-  height: 100vh;
-  border: 2px solid red;
-}
-
-.mainContent {
-  width: 50%;
-  height: 100vh;
-
-  border: 2px solid blue;
-}
-
-.friends {
-  width: 20%;
-  height: 100vh;
-
-  border: 2px solid green;
-} */

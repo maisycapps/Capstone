@@ -1,27 +1,49 @@
 .friendsContainer {
   display: block;
-  height: 100vh;
-  border: 2px solid black;
   justify-content: center;
-  align-items: center;
 }
-.friendCard {
-  width: 100%;
-  height: 100px;
-  margin-top: 5px;
+.friendsContainer .friendCard {
+  width: 90%;
+  padding: 15px;
+  height: fit-content;
   display: flex;
-  justify-content: center;
-  border: 2px solid black;
-  border-radius: 40px;
+  margin: 20px;
+  /* border: 2px solid red; */
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+  border-radius: 15px;
 }
 
-.friendCard img {
-  width: 100px;
-  height: 90px;
-  border-radius: 45%;
+.friendsContainer .friendCard .profile {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
 }
 
-.friendCard h1 {
-  font-family: "Courier New", Courier, monospace sans-serif;
-  font-size: 15px;
+.friendsContainer .friendCard ul {
+  position: relative;
+  left: 14px;
+  top: 5px;
+}
+.friendsContainer .friendCard ul li {
+  list-style: none;
+}
+
+.friendCard ul li:nth-child(1) {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.friendCard ul li:nth-child(2) {
+  font-size: 18px;
+  color: black;
+}
+.friendCard .status {
+  width: 14px;
+  height: 14px;
+  position: relative;
+  left: 14px;
+  border-radius: 50%;
+  background-color: green;
+  top: 8px;
 }
