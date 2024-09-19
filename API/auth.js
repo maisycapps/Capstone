@@ -30,7 +30,10 @@ router.get("/account", isLoggedIn, async (req, res, next) => {
 
 // <---------- v EDIT USER ACCOUNT ROUTES v ---------->
 
-//update existing user -- WORKS
+// Create user = Register
+// Get user = Login
+
+//Update auth user -- WORKS (doesn't need ID param)
 router.patch("/account", isLoggedIn, async (req, res, next) => {
 
   try {
@@ -71,7 +74,7 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
   }
 });
 
-//delete logged in users account --WORKS
+//Delete auth account --WORKS (doesn't need ID param)
 router.delete("/account", isLoggedIn, async (req, res, next) => {
 
   try {
@@ -101,7 +104,7 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
 
 // <---------- v CREATE, FETCH, UPDATE, DELETE TRIPS v ---------->
 
-//get trips associated with a user -- WORKS
+//get auth user trips -- WORKS
 router.get("/account/trips", isLoggedIn, async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -122,7 +125,7 @@ router.get("/account/trips", isLoggedIn, async (req, res) => {
   }
 });
 
-//creating a trip from loggedin user -- WORKS
+//create auth user trip -- WORKS
 router.post("/account/trips", isLoggedIn, async (req, res) => {
   const { tripName, destinationId, startDate, endDate } = req.body;
 
@@ -157,7 +160,7 @@ router.post("/account/trips", isLoggedIn, async (req, res) => {
   }
 });
 
-//update existing trip with logged in user -- WORKS
+//Update auth user trip -- WORKS
 router.put("/account/trips/:id", isLoggedIn, async (req, res) => {
   const { id } = req.params;
   const { tripName, destinationId, startDate, endDate } = req.body;
@@ -210,7 +213,7 @@ router.put("/account/trips/:id", isLoggedIn, async (req, res) => {
   }
 });
 
-//Delete a trip from existing user --WORKS
+//Delete auth user trip --WORKS
 router.delete("/account/trips/:id", isLoggedIn, async (req, res) => {
   const { id } = req.params;
 
@@ -246,7 +249,7 @@ router.delete("/account/trips/:id", isLoggedIn, async (req, res) => {
 
 // <---------- v CREATE, FETCH, UPDATE, DELETE POSTS v ---------->
 
-// create a new post -- WORKS
+// create auth user post -- WORKS
 router.post("/account/posts", isLoggedIn, async (req, res, next) => {
     
     const { text, destinationId, postImg } = req.body;
@@ -280,7 +283,7 @@ router.post("/account/posts", isLoggedIn, async (req, res, next) => {
     }
 });
 
-//get posts associated with logged in user --WORKS
+//get auth user's posts --WORKS
 router.get("/account/posts", isLoggedIn, async (req, res, next) => {
   try {
     const id = req.user.userId;
@@ -302,7 +305,7 @@ router.get("/account/posts", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// update existing post with logged in user --WORKS
+//Update auth user's post --WORKS
 router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
   const { id } = req.params;
   const { text, destinationId, postImg  } = req.body;
@@ -364,7 +367,7 @@ router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
   try {
     const userId = req.user.userId;
 
-    //check if trip exists
+    //check if post exists
     const post = await prisma.posts.findUnique({
       where: { id: parseInt(id) },
     });
@@ -394,7 +397,7 @@ router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
 
 // <---------- v CREATE, FETCH, UPDATE, DELETE COMMENTS v ---------->
 
-// create a new comment on a post --WORKS
+// create auth user comment on a post --WORKS
 router.post("/account/posts/:id/comments", isLoggedIn, async (req, res, next) => {
   
   const { id } = req.params; //post id
@@ -458,7 +461,7 @@ router.get("/account/comments", isLoggedIn, async (req, res, next) => {
   }
 });
 
-//edit auth user's specific comment on a specific post --WORKS
+//Update auth user's specific comment on a specific post --WORKS
 router.patch("/account/posts/:postId/comments/:id", isLoggedIn, async (req, res, next) => {
   const { postId, id } = req.params; //post id, comment id
 
@@ -506,7 +509,7 @@ router.delete("/account/posts/:postId/comments/:id", isLoggedIn, async (req, res
   try {
     const userId = req.user.userId;
 
-    //check if trip exists
+    //check if post exists
     const post = await prisma.posts.findUnique({
       where: { id: parseInt(postId) },
     });
@@ -640,10 +643,6 @@ router.delete("/account/posts/:postId/likes/:id", isLoggedIn, async (req, res, n
 
 // <---------- ^ CREATE, FETCH, UPDATE, DELETE LIKES ^ ---------->
 
-
-
-
-
 // <---------- v ADMIN ONLY ROUTES v ---------->
 
 //create destination --- need to add more data fields
@@ -733,4 +732,6 @@ router.delete("/account/destinations/:id", isLoggedIn, async (req, res, next) =>
     next(error);
   }
 });
+
+
 // <---------- ^ ADMIN ONLY ROUTES ^ ---------->
