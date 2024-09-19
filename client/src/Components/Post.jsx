@@ -93,7 +93,7 @@ const Posts = () => {
         </div>
         <p className={styles.timestamp}>9:42 pm Sep 17, 2024</p>
       </div>
-      ); }{/* ------ v subjected to change v ------ */}
+      {/* ------ v subjected to change v ------ */}
       <div>
         <h2>Posts</h2>
         {posts.length > 0 ? (
