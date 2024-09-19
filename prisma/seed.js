@@ -2,7 +2,7 @@ const { faker } = require("@faker-js/faker");
 
 const prisma = require("../prisma");
 
-// seeds users
+//seeds users
 const user = Array.from({ length: 30 }).map(() => ({
   firstName: faker.person.firstName(),
   lastName: faker.person.lastName(),
@@ -10,7 +10,15 @@ const user = Array.from({ length: 30 }).map(() => ({
   email: faker.internet.email(),
   password: faker.internet.password(),
   bio: faker.person.bio(),
-  profileImg: faker.image.urlLoremFlickr({ width: 300,height: 300, category: 'portraits' })
+  profileImg: faker.image.urlLoremFlickr({ width: 300,height: 300, category: 'portraits' }),
+  //tried to seed followedBy and following- can't grab followData seed nums to do so accurately. 
+}));
+
+//seeds follows
+const followData = Array.from({ length: 20 }).map(() => ({
+  followedById: faker.number.int({ min: 1, max: 15 }), 
+  //different numerical ranges so seeded users can't follow themselves
+  followingId: faker.number.int({ min: 16, max: 30 })
 }));
 
 //seeds destinations
@@ -51,6 +59,7 @@ const likeData = Array.from({ length: 30 }).map(() => ({
 
 const seed = async () => {
   await prisma.users.createMany({ data: user });
+  await prisma.follows.createMany({ data: followData });
   await prisma.destinations.createMany({ data: destinationData });
   await prisma.trips.createMany({ data: tripsData });
   await prisma.posts.createMany({ data: postData });
