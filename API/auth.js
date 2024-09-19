@@ -24,6 +24,7 @@ router.post("/login", authenticate);
 //Get auth user account - see authControllers folder
 router.get("/account", isLoggedIn, async (req, res, next) => {
   try {
+    // should also get all user info other than token payload? 
     res.send(req.user);
   } catch (error) {
     next(error);
@@ -97,7 +98,7 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
 
 // <---------- v ACCOUNT FOLLOWS v ---------->
 
-//Create auth user follows --WORKS!!!!!!!!!!
+//Create auth user follow (follow someone) --WORKS
 router.post("/account/users/:id/follows", isLoggedIn, async (req, res) => {
   const { id } = req.params; //user to follow's id > followingId
   console.log("user to follow", parseInt(id));
@@ -119,23 +120,59 @@ router.post("/account/users/:id/follows", isLoggedIn, async (req, res) => {
     const newFollows = await prisma.follows.create({
       data: {
         followingId: parseInt(id),
-        followedById: parseInt(userId),
+        followedById: parseInt(userId)
       },
     });
 
     res.status(201).json(newFollows);
-    console.log("USER FOLLOWED SUCCESS");
   } catch (error) {
     console.log("error following user: ", error);
     res.status(500).json({ error: "Failed to follow user!" });
   }
 });
 
-//Get auth user follows
+//Get auth user follows (finds anytime the auth user is either followed or following)
+router.get("/account/follows", isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.user.userId;
 
-//Update auth user follows(see readme route notes!)
+    const userFollows = await prisma.follows.findMany({
+      where: { 
+        OR: [
+          { followedById: userId },
+          { followingId: userId }
+        ]
+       }
+    })
 
-//Delete auth user follows (see readme route notes!)
+    res.status(200).json(userFollows);
+  } catch (error) {
+    console.error("Error fetching follows: ", error);
+    res.status(500).json({ error: "Failed to fetch follows!" });
+  }
+})
+
+//Delete auth user follow (unfollow someone)
+router.delete("/account/users/:id/follows", isLoggedIn, async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const userId = req.user.userId;
+
+    //delete follow
+    await prisma.follows.deleteMany({
+      where: { 
+        followedById: userId ,
+        followingId: parseInt(id)
+       }
+    });
+
+    res.status(200).json({ message: "Follow deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting follow: ", error);
+    res.status(500).json({ error: "failed to delete follow" });
+  }
+});
 
 // <---------- ^ ACCOUNT FOLLOWS ^ ---------->
 

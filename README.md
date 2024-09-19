@@ -27,7 +27,7 @@ ACCOUNT
 - DELETE /api/auth/account (delete account)
 
 FOLLOWS
-- POST /api/auth/account/users/:id/follows (create a follow aka follow)
+- POST /api/auth/account/users/:id/follows (create a follow)
 - GET /api/auth/account/follows (view all follow data)
 - PATCH /api/auth/account/follows/:id (edit follow - prob best used to 'unfollow')
 - DELETE /api/auth/account/follows/:id (delete follow - this is unfollows AND removes the other user as a follower if they are)
