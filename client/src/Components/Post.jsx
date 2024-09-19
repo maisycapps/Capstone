@@ -9,8 +9,8 @@ import axios from "axios";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
-  // const [countLikes, setCountLikes] = useState(0);
-  // const [countComments, setCountComments] = useState(0);
+  const [countLikes, setCountLikes] = useState(0);
+  const [countComments, setCountComments] = useState(0);
 
   useEffect(() => {
     //fetch posts from backend
@@ -26,12 +26,12 @@ const Posts = () => {
     fetchPosts();
   }, []);
 
-  // function handleCountLikes() {
-  //   setCountLikes(() => countLikes + 1);
-  // }
-  // function handleCountComments() {
-  //   setCountComments(() => countComments + 1);
-  // }
+  function handleCountLikes() {
+    setCountLikes(() => countLikes + 1);
+  }
+  function handleCountComments() {
+    setCountComments(() => countComments + 1);
+  }
   return (
     <>
       <div className={styles.postContainer}>
