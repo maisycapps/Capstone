@@ -11,15 +11,17 @@ const prisma = require("../prisma");
 const bcrypt = require("bcrypt");
 
 //testing route not final
-router.get("/destinations", getDestinations);
+router.get("/destinations", getDestinations); // what was this route for? -MC
 
-//create new user route - see authControllers folder
+// <---------- v USER ACCOUNT v ---------->
+
+//Create new user - see authControllers folder
 router.post("/register", createUser);
 
-//authentication function route - see authControllers folder
+//Check auth user - see authControllers folder
 router.post("/login", authenticate);
 
-//isLoggedIn function route - see authControllers folder
+//Get auth user account - see authControllers folder
 router.get("/account", isLoggedIn, async (req, res, next) => {
   try {
     res.send(req.user);
@@ -27,11 +29,6 @@ router.get("/account", isLoggedIn, async (req, res, next) => {
     next(error);
   }
 });
-
-// <---------- v EDIT USER ACCOUNT ROUTES v ---------->
-
-// Create user = Register
-// Get user = Login
 
 //Update auth user -- WORKS (doesn't need ID param)
 router.patch("/account", isLoggedIn, async (req, res, next) => {
@@ -100,9 +97,54 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
     next(error);
   }
 });
-// <---------- ^ EDIT USER ACCOUNT ROUTES ^ ---------->
+// <---------- ^ USER ACCOUNT ^ ---------->
 
-// <---------- v CREATE, FETCH, UPDATE, DELETE TRIPS v ---------->
+// <---------- v ACCOUNT FOLLOWS v ---------->
+
+//Create auth user follows --WORKS!!!!!!!!!!
+router.post("/account/users/:id/follows", isLoggedIn, async (req, res) => {
+
+  const { id } = req.params; //user to follow's id > followingId
+  console.log("user to follow", parseInt(id))
+
+  try {
+    const userId = req.user.userId; // auth user > followedById
+    console.log("auth user", req.user.userId)
+
+    const userToFollow = await prisma.users.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    //error handling
+    if (!userToFollow) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    //create follow
+    const newFollows = await prisma.follows.create({
+      data: {
+        followingId: parseInt(id),
+        followedById: parseInt(userId)
+      },
+    });
+
+    res.status(201).json(newFollows);
+    console.log("USER FOLLOWED SUCCESS")
+  } catch (error) {
+    console.log("error following user: ", error);
+    res.status(500).json({ error: "Failed to follow user!" });
+  }
+});
+
+//Get auth user follows
+
+//Update auth user follows(see readme route notes!)
+
+//Delete auth user follows (see readme route notes!)
+
+// <---------- ^ ACCOUNT FOLLOWS ^ ---------->
+
+// <---------- v ACCOUNT TRIPS v ---------->
 
 //get auth user trips -- WORKS
 router.get("/account/trips", isLoggedIn, async (req, res) => {
@@ -245,9 +287,9 @@ router.delete("/account/trips/:id", isLoggedIn, async (req, res) => {
     res.status(500).json({ error: "failed to delete trip" });
   }
 });
-// <---------- ^ CREATE, FETCH, UPDATE, DELETE TRIPS ^ ---------->
+// <---------- ^ ACCOUNT TRIPS ^ ---------->
 
-// <---------- v CREATE, FETCH, UPDATE, DELETE POSTS v ---------->
+// <---------- v ACCOUNT POSTS v ---------->
 
 // create auth user post -- WORKS
 router.post("/account/posts", isLoggedIn, async (req, res, next) => {
@@ -393,9 +435,9 @@ router.delete("/account/posts/:id", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// <---------- ^ CREATE, FETCH, UPDATE, DELETE POSTS ^ ---------->
+// <---------- ^ ACCOUNT POSTS ^ ---------->
 
-// <---------- v CREATE, FETCH, UPDATE, DELETE COMMENTS v ---------->
+// <---------- v ACCOUNT COMMENTS v ---------->
 
 // create auth user comment on a post --WORKS
 router.post("/account/posts/:id/comments", isLoggedIn, async (req, res, next) => {
@@ -541,9 +583,9 @@ router.delete("/account/posts/:postId/comments/:id", isLoggedIn, async (req, res
   }
 });
 
-// <---------- ^ CREATE, FETCH, UPDATE, DELETE COMMENTS ^ ---------->
+// <---------- ^ ACCOUNT COMMENTS ^ ---------->
 
-// <---------- v CREATE, FETCH, UPDATE, DELETE LIKES v ---------->
+// <---------- v ACCOUNT LIKES v ---------->
 
 // create a like on a post --WORKS
 router.post("/account/posts/:id/likes", isLoggedIn, async (req, res, next) => {
@@ -641,7 +683,7 @@ router.delete("/account/posts/:postId/likes/:id", isLoggedIn, async (req, res, n
   }
 });
 
-// <---------- ^ CREATE, FETCH, UPDATE, DELETE LIKES ^ ---------->
+// <---------- ^ ACCOUNT LIKES ^ ---------->
 
 // <---------- v ADMIN ONLY ROUTES v ---------->
 

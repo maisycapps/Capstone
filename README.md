@@ -26,6 +26,12 @@ ACCOUNT
 - PATCH /api/auth/account (edit account)
 - DELETE /api/auth/account (delete account)
 
+FOLLOWS
+- POST /api/auth/account/follows (create a follow aka follow)
+- GET /api/auth/account/follows (view all follow data)
+- PATCH /api/auth/account/follows/:id (edit follow - prob best used to 'unfollow')
+- DELETE /api/auth/account/follows/:id (delete follow - this is unfollows AND removes the other user as a follower if they are)
+
 TRIPS
 - POST /api/auth/account/trips (create trip)
 - GET /api/auth/account/trips (get trips)
@@ -48,12 +54,6 @@ LIKES
 - POST /api/auth/account/posts/:id/likes (create a like on a specific post)
 - GET /api/auth/account/likes (get likes)
 - DELETE /api/auth/account/posts/:id/likes/:id (delete auth user's like on a specific post)
-
-FOLLOWERS
-- POST /api/auth/account/followers (create a follow aka follow)
-- GET /api/auth/account/followers (view all follow data)
-- PATCH /api/auth/account/followers/:id (edit follow - prob best used to 'unfollow')
-- DELETE /api/auth/account/followers/:id (delete follow - this is unfollows AND removes the other user as a follower if they are)
 
 #### admin (logged in)
 - POST /api/auth/account/destinations (create destination)
@@ -85,11 +85,14 @@ FOLLOWERS
 
 # discussion: routes
 
-Admin only routes --- discuss if we need these two:
+#### what is auth.js line 14 for?: "//testing route not final"
+- router.get("/destinations", getDestinations)
+
+#### Admin only routes --- do we want these two? 
 - GET /api/auth/account/users/:id/trips (view a specific user's trips)
 - GET /api/auth/account/users/:id/trips/:id (view a specific user's specific trip)
 
-Admin only routes --- any other's we want built?
+#### Admin only routes --- are there other routes required/wanted?
 
 
 
