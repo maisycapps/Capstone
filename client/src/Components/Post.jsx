@@ -1,7 +1,19 @@
+import { useState } from "react";
 import styles from "../styles/Post.module.css";
 import italy from "./Images/italy.jpg";
-// import { FiMoreVertical } from "react-icons/fi";
+import { MdMoreVert } from "react-icons/md";
+import { FaRegComments } from "react-icons/fa";
+import { AiOutlineLike } from "react-icons/ai";
+
 function Post() {
+  const [countLikes, setCountLikes] = useState(0);
+  const [countComments, setCountComments] = useState(0);
+  function handleCountLikes() {
+    setCountLikes(() => countLikes + 1);
+  }
+  function handleCountComments() {
+    setCountComments(() => countComments + 1);
+  }
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -12,6 +24,7 @@ function Post() {
             <li>Online</li>
           </ul>
           <div className={styles.status}></div>
+          <MdMoreVert className={styles.moreIcon} />
         </div>
       </div>
       <img src={italy} alt="" className={styles.picture} />
@@ -22,9 +35,16 @@ function Post() {
         sapiente placeat quae dignissimos.
       </p>
       <div className={styles.btn}>
-        <button>Like</button>
-        <button>Comment</button>
-        <button>Repost</button>
+        <button onClick={handleCountLikes}>
+          <AiOutlineLike />
+          Like<span>{countLikes}</span>
+        </button>
+
+        <button onClick={handleCountComments}>
+          <FaRegComments />
+          Comment<span>{countComments}</span>
+        </button>
+        {/* <button>Repost</button> */}
       </div>
       <div className={styles.commentSection}>
         <img src={italy} alt="" className={styles.profileComment} />

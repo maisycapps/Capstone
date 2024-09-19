@@ -41,6 +41,10 @@
   font-size: 18px;
   color: black;
 }
+.header .name .moreIcon {
+  border: 2px solid red;
+  float: right;
+}
 
 .header .name .status {
   width: 14px;
@@ -90,7 +94,7 @@
 }
 
 .container button {
-  width: 100px;
+  width: 150px;
   height: 40px;
   font-size: 18px;
 
@@ -98,6 +102,9 @@
   border: none;
   margin: 20px;
   border-radius: 1px thin #1877f2;
+}
+.container button span {
+  margin-left: 10px;
 }
 .commentSection {
   display: flex;
