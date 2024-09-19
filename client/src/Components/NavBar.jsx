@@ -3,8 +3,17 @@ import { NavLink } from "react-router-dom";
 // import "../styles/NavBar.css";
 import { CodeIcon, HamburgerMenuClose, HamburgerMenuOpen } from "./Icons";
 
-function NavBar() {
+function NavBar({ loggedIn, setLoggedIn }) {
   const [click, setClick] = useState(false);
+
+  //logs user out
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    //update state to reflect logged out status
+    setLoggedIn(false);
+    //redirects them to the home page
+    window.location.href = "/";
+  };
 
   const handleClick = () => setClick(!click);
   return (
@@ -53,29 +62,58 @@ function NavBar() {
                 Gallery
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink
-                exact
-                to="/register"
-                activeClassName="active"
-                className="nav-links"
-                onClick={handleClick}
-              >
-                Register
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                exact
-                to="/login"
-                activeClassName="active"
-                className="nav-links"
-                onClick={handleClick}
-              >
-                Log In
-              </NavLink>
-            </li>
+            {/* <-------- v conditionally render if user is logged in v --------> */}
+            {loggedIn ? (
+              <>
+                <li className="nav-item">
+                  <NavLink
+                    exact
+                    to="/account"
+                    activeClassName="active"
+                    className="nav-links"
+                    onClick={handleClick}
+                  >
+                    Account
+                  </NavLink>
+                </li>
+                <li
+                  exact
+                  activeClassName="active"
+                  className="nav-links"
+                  onClick={(handleClick, handleLogout)}
+                >
+                  Logout
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <NavLink
+                    exact
+                    to="/register"
+                    activeClassName="active"
+                    className="nav-links"
+                    onClick={handleClick}
+                  >
+                    Register
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink
+                    exact
+                    to="/login"
+                    activeClassName="active"
+                    className="nav-links"
+                    onClick={handleClick}
+                  >
+                    Log In
+                  </NavLink>
+                </li>
+              </>
+            )}
+            {/* <-------- ^ conditionally render if user is logged in ^ --------> */}
           </ul>
+          {/* <------- v Not sure whats happeing here v --------> */}
           <div className="nav-icon" onClick={handleClick}>
             {/* <i className={click ? "fas fa-times" : "fas fa-bars"}></i> */}
 
@@ -89,6 +127,7 @@ function NavBar() {
               </span>
             )}
           </div>
+          {/* <------- ^ Not sure whats happeing here ^ --------> */}
         </div>
       </nav>
     </>
