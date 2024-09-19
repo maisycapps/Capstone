@@ -24,7 +24,7 @@ router.post("/login", authenticate);
 //Get auth user account - see authControllers folder
 router.get("/account", isLoggedIn, async (req, res, next) => {
   try {
-    // should also get all user info other than token payload? 
+    // should also get all user info in addition to the token payload? 
     res.send(req.user);
   } catch (error) {
     next(error);
