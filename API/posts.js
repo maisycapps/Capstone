@@ -3,12 +3,14 @@ module.exports = router;
 
 const prisma = require("../prisma");
 
-
-
 //get all posts
 router.get("/", async (req, res, next) => {
   try {
-    const posts = await prisma.posts.findMany();
+    const posts = await prisma.posts.findMany({
+      include: {
+        user: true, //includes user to display the author
+      },
+    });
     res.json(posts);
   } catch (error) {
     next(error);

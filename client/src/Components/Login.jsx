@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../styles/Login-Register.module.css";
 
-const Login = () => {
+const Login = ({ setLoggedIn }) => {
   //useStates
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -27,6 +27,9 @@ const Login = () => {
 
       //save token to local storage
       localStorage.setItem("token", token);
+
+      //authinticate state
+      setLoggedIn(true);
 
       //nav to account
       navigate("/account");
