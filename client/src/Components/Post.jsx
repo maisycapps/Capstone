@@ -4,7 +4,6 @@ import italy from "./Images/italy.jpg";
 import { MdMoreVert } from "react-icons/md";
 import { FaRegComments } from "react-icons/fa";
 import { AiOutlineLike } from "react-icons/ai";
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
