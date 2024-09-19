@@ -6,14 +6,14 @@ import { FaRegComments } from "react-icons/fa";
 import { AiOutlineLike } from "react-icons/ai";
 
 function Post() {
-  const [countLikes, setCountLikes] = useState(0);
-  const [countComments, setCountComments] = useState(0);
-  function handleCountLikes() {
-    setCountLikes(() => countLikes + 1);
-  }
-  function handleCountComments() {
-    setCountComments(() => countComments + 1);
-  }
+  // const [countLikes, setCountLikes] = useState(0);
+  // const [countComments, setCountComments] = useState(0);
+  // function handleCountLikes() {
+  //   setCountLikes(() => countLikes + 1);
+  // }
+  // function handleCountComments() {
+  //   setCountComments(() => countComments + 1);
+  // }
   return (
     <div className={styles.container}>
       <div className={styles.header}>
