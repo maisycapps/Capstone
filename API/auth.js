@@ -48,8 +48,8 @@ router.get("/account/users", isLoggedIn, async (req, res) => {
 
     res.status(200).json(account);
   } catch (error) {
-    console.error("Error fetching follows: ", error);
-    res.status(500).json({ error: "Failed to fetch follows!" });
+    console.error("Error fetching user's data: ", error);
+    res.status(500).json({ error: "Failed to fetch user's data!" });
   }
 });
 
