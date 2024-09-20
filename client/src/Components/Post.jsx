@@ -8,6 +8,7 @@ import React, { useState, useEffect } from "react";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
+  const [destinationId, setDestinationId] = useState("");
   const [countLikes, setCountLikes] = useState(0);
   const [countComments, setCountComments] = useState(0);
 
@@ -15,7 +16,9 @@ const Posts = () => {
     //fetch posts from backend
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/posts");
+        const response = await axios.get("http://localhost:3000/api/posts", {
+          destinationId,
+        });
         setPosts(response.data);
       } catch (error) {
         console.error("Error fetching posts: ", error);
@@ -97,10 +100,24 @@ const Posts = () => {
         {posts.length > 0 ? (
           posts.map((post) => (
             <div key={post.id}>
-              <h3>{post.destinations.destinationName}</h3>
-              <img src={post.postImg} alt="user img" />
+              {/* display destination name */}
+              <h3>
+                {post.destination
+                  ? post.destination.destinationName
+                  : "No destination"}
+              </h3>
+              {/* dispay destination img */}
+              <img
+                src={post.postImg}
+                alt="Post Img"
+                style={{ width: "300px", height: "300px" }}
+              />
+              {/* post created by user */}
               <p>{post.user.userName}</p>
+              {/* post bio */}
               <p>{post.text}</p>
+              <p>likes: {post.likes ? post.likes.length : ""}</p>
+              <p>Comments: {post.comments ? post.comments.length : ""}</p>
             </div>
           ))
         ) : (

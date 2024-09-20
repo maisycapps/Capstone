@@ -17,6 +17,7 @@ const createPost = () => {
           "http://localhost:3000/api/destinations"
         );
         setDestinations(response.data);
+        console.log("Destinations", response.data);
       } catch (error) {
         console.error("Error fetching destinations", error);
       }
