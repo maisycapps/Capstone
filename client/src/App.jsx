@@ -49,7 +49,7 @@ function App() {
         <Route path="/login" element={<Login setLoggedIn={setLoggedIn} />} />
         <Route
           path="/register"
-          element={<Register setLoggedIn={setLoggedIn} />}
+          element={<Register loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
         />
         <Route
           path="/account"
