@@ -9,8 +9,6 @@ import React, { useState, useEffect } from "react";
 const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [destinationId, setDestinationId] = useState("");
-  const [countLikes, setCountLikes] = useState(0);
-  const [countComments, setCountComments] = useState(0);
 
   useEffect(() => {
     //fetch posts from backend
@@ -28,34 +26,67 @@ const Posts = () => {
     fetchPosts();
   }, []);
 
-  function handleCountLikes() {
-    setCountLikes(() => countLikes + 1);
-  }
-  function handleCountComments() {
-    setCountComments(() => countComments + 1);
-  }
+  //funtion to handle likes
+  const handleLikes = async (postId) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      await axios.post(
+        `http://localhost:3000/api/auth/account/posts/${postId}/likes`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      //update UI after liking post
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === postId
+            ? { ...post, likes: [...post.likes, { id: postId }] }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("Error liking post: ", error);
+    }
+  };
+
+  //function to handle adding comment
+  const handleComment = async (postId, commentText) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/auth/account/posts/${postId}/comments`,
+        {
+          text: commentText,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      //update UI after adding comment
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === postId
+            ? { ...post, comments: [...post.comments, response.data] }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("error adding comment: ", error);
+    }
+  };
+
   return (
     <>
-      {/* <div className={styles.postContainer}>
-        <div className={styles.postCard}>
-          <div className={styles.top}>
-            <img src={italy} alt="" />
-            <FiMoreVertical />
-          </div>
-          <img src={italy} alt="" />
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus,
-            voluptates cum. Perferendis aliquam dolores tenetur non aperiam,
-            totam illo quae vel aliquid, sed repellat. Illo non veniam culpa
-            esse possimus.
-            <div className={styles.btn}>
-              <button>lIKE</button>
-              <button>COMMENT</button>
-              <button>SHARE</button>
-            </div>
-          </p>
-        </div>
-      </div>
+      {/* 
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.name}>
@@ -94,6 +125,7 @@ const Posts = () => {
         </div>
         <p className={styles.timestamp}>9:42 pm Sep 17, 2024</p>
       </div> */}
+
       {/* ------ v subjected to change v ------ */}
       <div>
         <h2>Posts</h2>
@@ -118,6 +150,23 @@ const Posts = () => {
               <p>{post.text}</p>
               <p>likes: {post.likes ? post.likes.length : ""}</p>
               <p>Comments: {post.comments ? post.comments.length : ""}</p>
+
+              {/* like button */}
+              <button onClick={() => handleLikes(post.id)}>Like</button>
+
+              {/* comment button */}
+              <div>
+                <input
+                  type="text"
+                  placeholder="Add a comment"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleComment(post.id, e.target.value);
+                      e.target.value = ""; //clear input after submission
+                    }
+                  }}
+                />
+              </div>
             </div>
           ))
         ) : (

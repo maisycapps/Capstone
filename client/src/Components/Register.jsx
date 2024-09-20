@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../styles/Register.module.css";
 
-const Register = () => {
+const Register = ({ loggedIn, setLoggedIn }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [userName, setUserName] = useState("");
@@ -37,6 +37,9 @@ const Register = () => {
       //store token in local storage
       const { token } = loginResponse.data;
       localStorage.setItem("token", token);
+      if (token) {
+        setLoggedIn(true);
+      }
 
       navigate("/account");
     } catch (error) {
