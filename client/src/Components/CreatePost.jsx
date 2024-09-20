@@ -41,7 +41,7 @@ const createPost = () => {
         }
       );
 
-      navigate("/posts"); // redirects to posts page -- not sure on this redirect for our routes
+      navigate("/account/posts"); // redirects to posts page -- not sure on this redirect for our routes
     } catch (error) {
       setError("Failed to create post, Please try again.");
     }
@@ -53,6 +53,33 @@ const createPost = () => {
       <div>
         <h2>Create a Post</h2>
         <form onSubmit={handleSubmit}>
+          {/* list of destinations */}
+          <div>
+            <label>Destination:</label>
+            <select
+              value={destinationId}
+              onChange={(e) => setDestinationId(e.target.value)}
+              required
+            >
+              <option value="">Select a Destination</option>
+              {destinations.map((destination) => (
+                <option key={destination.id} value={destination.id}>
+                  {destination.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          {/* image input URL */}
+          <div>
+            <label>Image URL:</label>
+            <input
+              type="text"
+              value={postImg}
+              onChange={(e) => setPostImg(e.target.value)}
+              required
+            />
+          </div>
+          {/* post text */}
           <div>
             <label>Post Text:</label>
             <textarea
@@ -68,3 +95,5 @@ const createPost = () => {
     </>
   );
 };
+
+export default createPost;

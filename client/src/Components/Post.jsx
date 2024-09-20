@@ -5,7 +5,6 @@ import italy from "./Images/italy.jpg";
 // import { FaRegComments } from "react-icons/fa";
 // import { AiOutlineLike } from "react-icons/ai";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
