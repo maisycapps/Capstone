@@ -6,7 +6,11 @@ const prisma = require("../prisma");
 //get all destinations --- WORKS
 router.get("/", async (req, res, next) => {
   try {
-    const destinations = await prisma.destinations.findMany();
+    const destinations = await prisma.destinations.findMany({
+      orderBy: {
+        name: "asc",
+      },
+    });
     res.json(destinations);
   } catch (error) {
     next(error);

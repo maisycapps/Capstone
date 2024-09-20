@@ -9,6 +9,9 @@ router.get("/", async (req, res, next) => {
     const posts = await prisma.posts.findMany({
       include: {
         user: true, //includes user to display the author
+        destination: true,
+        comments: true,
+        likes: true,
       },
     });
     res.json(posts);
