@@ -1,4 +1,5 @@
 import styles from "../styles/Post.module.css";
+import axios from "axios";
 import italy from "./Images/italy.jpg";
 // import { MdMoreVert } from "react-icons/md";
 // import { FaRegComments } from "react-icons/fa";
@@ -72,11 +73,11 @@ const Posts = () => {
           doloribus voluptas a quasi vero deserunt molestiae eveniet commodi
           sapiente placeat quae dignissimos.
         </p>
-        <div className={styles.btn}>
-          <button onClick={handleCountLikes}>
-            <AiOutlineLike />
-            Like<span>{countLikes}</span>
-          </button>
+//         {/* <div className={styles.btn}>
+//           <button onClick={handleCountLikes}>
+//             <AiOutlineLike />
+//             Like<span>{countLikes}</span>
+//           </button>
 
           <button onClick={handleCountComments}>
             <FaRegComments />
