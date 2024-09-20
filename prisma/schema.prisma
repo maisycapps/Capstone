@@ -19,8 +19,8 @@ model Users {
   role       Role      @default(USER)
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
-  followedBy Follows[] @relation("followedBy")
-  following  Follows[] @relation("following")
+  followedBy Follows[] @relation("followedBy") // Who this user follows. Here this user's ID = followedById   
+  following  Follows[] @relation("following") // Who this user is followed by. Here this user's ID = followingId 
   likes      Likes[]
   posts      Posts[]
   trips      Trips[]

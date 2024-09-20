@@ -22,7 +22,8 @@ LOGIN & REGISTER
 #### user (logged in)
 
 ACCOUNT
-- GET /api/auth/account (view account)
+- GET /api/auth/account (get token payload)
+- GET /api/auth/account/users (view user's entire dataset aka account)
 - PATCH /api/auth/account (edit account)
 - DELETE /api/auth/account (delete account)
 
@@ -81,21 +82,6 @@ LIKES
 - GET /api/posts/:id (view a specific post)
 - GET /api/posts/:id/comments (view a specific post's comments)
 - GET /api/posts/:id/likes (view a specific post's likes)
-
-
-# discussion: routes
-
-#### what is auth.js line 14 for?: "//testing route not final"
-- router.get("/destinations", getDestinations)
-
-#### Admin only routes --- do we want these two? 
-- GET /api/auth/account/users/:id/trips (view a specific user's trips)
-- GET /api/auth/account/users/:id/trips/:id (view a specific user's specific trip)
-
-#### Admin only routes --- are there other routes required/wanted?
-
-
-
 
 # discussion: "social" functions
 

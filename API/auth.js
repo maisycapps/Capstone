@@ -21,15 +21,38 @@ router.post("/register", createUser);
 //Check auth user - see authControllers folder
 router.post("/login", authenticate);
 
-//Get auth user account - see authControllers folder
+//Get auth user's token payload - see authControllers folder
 router.get("/account", isLoggedIn, async (req, res, next) => {
-  try {
-    // should also get all user info in addition to the token payload? 
+  try { 
     res.send(req.user);
   } catch (error) {
     next(error);
   }
 });
+
+//Get entirety of auth user's data
+router.get("/account/users", isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const account = await prisma.users.findMany({
+      where: { id: userId },
+      include: {
+        followedBy: true, // Who auth user follows. Here auth user = followedById   
+        following: true, // Who auth user is followed by. Here auth user = followingId   
+        likes: true,        
+        posts: true,         
+        trips: true,         
+      },
+    })
+
+    res.status(200).json(account);
+  } catch (error) {
+    console.error("Error fetching follows: ", error);
+    res.status(500).json({ error: "Failed to fetch follows!" });
+  }
+})
+
 
 //Update auth user -- WORKS (doesn't need ID param)
 router.patch("/account", isLoggedIn, async (req, res, next) => {
@@ -370,7 +393,13 @@ router.get("/account/posts", isLoggedIn, async (req, res, next) => {
       });
     }
 
-    const posts = await prisma.posts.findMany({ where: { userId: id } });
+    const posts = await prisma.posts.findMany({ 
+      where: { userId: id }, 
+      include: {    
+        likes: true,        
+        comments: true,                
+      },
+    });
 
     res.json(posts);
   } catch (error) {

@@ -1,14 +1,41 @@
 import italy from "./Images/italy.jpg";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import styles from "../styles/Account.module.css";
-function Account() {
+
+// can't test w/o pulling updated css. vite breaking without login css updates. -MC
+const Account = () => {
+  const [user, setUser] = useState(null); 
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetching user authentication data
+        const response = await axios.get(`http://localhost:3000/api/auth/account/users`);
+        const accountData = response.data;
+        setUser(accountData);
+
+      } catch (error) {
+        console.error("Error fetching user account data", error);
+      }
+    };
+
+    fetchData();
+  }, []); 
+
   return (
     <div className={styles.accountCard}>
-      <div className={styles.account}>
-        <img src={italy} alt="User Account" />
-        <h1>CAPSTON</h1>
-      </div>
+      {user? ( 
+        <div className={styles.account}>
+          <img src={italy} alt="User Account" />
+          <h3>Welcome to your account, {user.firstName} {user.lastName}</h3>
+          
+        </div>
+      ) : (
+        <p>Loading account details...</p>
+      )}
     </div>
   );
-}
+};
 
 export default Account;
