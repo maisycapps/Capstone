@@ -50,26 +50,27 @@ const Posts = () => {
           doloribus voluptas a quasi vero deserunt molestiae eveniet commodi
           sapiente placeat quae dignissimos.
         </p>
-        {/* <div className={styles.btn}>
-          <button onClick={handleCountLikes}>
-            <AiOutlineLike />
-            Like<span>{countLikes}</span>
-          </button>
+//         {/* <div className={styles.btn}>
+//           <button onClick={handleCountLikes}>
+//             <AiOutlineLike />
+//             Like<span>{countLikes}</span>
+//           </button>
 
-          <button onClick={handleCountComments}>
-            <FaRegComments />
-            Comment<span>{countComments}</span>
-          </button> */}
-        {/* <button>Repost</button> */}
-        {/* </div>
-        <div className={styles.commentSection}>
-          <img src={italy} alt="" className={styles.profileComment} />
-          <input type="text" placeholder="Write You Comment here" />
-          <button className={styles.commentPost}>Post</button>
-        </div>
-        <p className={styles.timestamp}>9:42 pm Sep 17, 2024</p>
-      </div> */}
-        );
+//           <button onClick={handleCountComments}>
+//             <FaRegComments />
+//             Comment<span>{countComments}</span>
+//           </button> */}
+//         {/* <button>Repost</button> */}
+//         {/* </div>
+//         <div className={styles.commentSection}>
+//           <img src={italy} alt="" className={styles.profileComment} />
+//           <input type="text" placeholder="Write You Comment here" />
+//           <button className={styles.commentPost}>Post</button>
+//         </div>
+//         <p className={styles.timestamp}>9:42 pm Sep 17, 2024</p>
+// 
+//       </div> */}
+//         );
         {/* ------ v subjected to change v ------ */}
         <div>
           <h2>Posts</h2>
@@ -86,6 +87,24 @@ const Posts = () => {
             <p>No Posts available</p>
           )}
         </div>
+=======
+      </div>
+      {/* ------ v subjected to change v ------ */}
+      <div>
+        <h2>Posts</h2>
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <div key={post.id}>
+              <h3>{post.destinations.destinationName}</h3>
+              <img src={post.postImg} alt="user img" />
+              <p>{post.user.userName}</p>
+              <p>{post.text}</p>
+            </div>
+          ))
+        ) : (
+          <p>No Posts available</p>
+        )}
+
       </div>
     </>
   );
