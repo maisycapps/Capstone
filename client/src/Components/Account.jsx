@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "../styles/Account.module.css";
 
-// can't test w/o pulling updated css. vite breaking without login css updates. -MC
 const Account = () => {
   const [user, setUser] = useState(null); 
 

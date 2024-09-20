@@ -51,8 +51,7 @@ router.get("/account/users", isLoggedIn, async (req, res) => {
     console.error("Error fetching follows: ", error);
     res.status(500).json({ error: "Failed to fetch follows!" });
   }
-})
-
+});
 
 //Update auth user -- WORKS (doesn't need ID param)
 router.patch("/account", isLoggedIn, async (req, res, next) => {
