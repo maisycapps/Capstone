@@ -20,7 +20,7 @@ function NavBar({ loggedIn, setLoggedIn }) {
     <>
       <nav className="navbar">
         <div className="nav-container">
-          <NavLink exact to="/" className="nav-logo">
+          <NavLink to="/" className="nav-logo">
             <span>Tripy</span>
             {/* <i className="fas fa-code"></i> */}
             <span className="icon">
@@ -31,7 +31,6 @@ function NavBar({ loggedIn, setLoggedIn }) {
           <ul className={click ? "nav-menu active" : "nav-menu"}>
             <li className="nav-item">
               <NavLink
-                exact
                 to="/"
                 activeClassName="active"
                 className="nav-links"
@@ -42,7 +41,6 @@ function NavBar({ loggedIn, setLoggedIn }) {
             </li>
             <li className="nav-item">
               <NavLink
-                exact
                 to="/about"
                 activeClassName="active"
                 className="nav-links"
@@ -53,7 +51,6 @@ function NavBar({ loggedIn, setLoggedIn }) {
             </li>
             <li className="nav-item">
               <NavLink
-                exact
                 to="/gallery"
                 activeClassName="active"
                 className="nav-links"
@@ -67,7 +64,6 @@ function NavBar({ loggedIn, setLoggedIn }) {
               <>
                 <li className="nav-item">
                   <NavLink
-                    exact
                     to="/account"
                     activeClassName="active"
                     className="nav-links"
@@ -77,7 +73,6 @@ function NavBar({ loggedIn, setLoggedIn }) {
                   </NavLink>
                 </li>
                 <li
-                  exact
                   activeClassName="active"
                   className="nav-links"
                   onClick={(handleClick, handleLogout)}
@@ -89,7 +84,6 @@ function NavBar({ loggedIn, setLoggedIn }) {
               <>
                 <li className="nav-item">
                   <NavLink
-                    exact
                     to="/register"
                     activeClassName="active"
                     className="nav-links"
@@ -100,7 +94,6 @@ function NavBar({ loggedIn, setLoggedIn }) {
                 </li>
                 <li className="nav-item">
                   <NavLink
-                    exact
                     to="/login"
                     activeClassName="active"
                     className="nav-links"

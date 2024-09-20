@@ -30,7 +30,7 @@ function App() {
         localStorage.removeItem("token"); //clears token from local storage
         window.location.href = "/login"; //redirects to login page
       }
-    }, 60000); //checks every 60 seconds
+    }, 600000); //checks every 60 seconds
 
     return () => clearInterval(interval);
   }, []);
