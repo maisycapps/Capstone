@@ -4,8 +4,26 @@ import { useNavigate } from "react-router-dom";
 
 const createPost = () => {
   const [text, setText] = useState("");
+  const [destinations, setDestinations] = useState([]);
+  const [destinationId, setDestinationId] = useState("");
+  const [postImg, setPostImg] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchDestinations = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/destinations"
+        );
+        setDestinations(response.data);
+      } catch (error) {
+        console.error("Error fetching destinations", error);
+      }
+    };
+
+    fetchDestinations();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,7 +33,7 @@ const createPost = () => {
       const token = localStorage.getItem("token");
       await axios.post(
         "http://localhost:3000/api/posts",
-        { text },
+        { text, postImg, destinationId },
         {
           headers: {
             Authorization: `Bearer ${token}`,

@@ -1,9 +1,8 @@
-import { useState } from "react";
 import styles from "../styles/Post.module.css";
 import italy from "./Images/italy.jpg";
-import { MdMoreVert } from "react-icons/md";
-import { FaRegComments } from "react-icons/fa";
-import { AiOutlineLike } from "react-icons/ai";
+// import { MdMoreVert } from "react-icons/md";
+// import { FaRegComments } from "react-icons/fa";
+// import { AiOutlineLike } from "react-icons/ai";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -34,7 +33,7 @@ const Posts = () => {
   }
   return (
     <>
-      <div className={styles.postContainer}>
+      {/* <div className={styles.postContainer}>
         <div className={styles.postCard}>
           <div className={styles.top}>
             <img src={italy} alt="" />
@@ -84,14 +83,14 @@ const Posts = () => {
             Comment<span>{countComments}</span>
           </button>
           {/* <button>Repost</button> */}
-        </div>
+      {/* </div>
         <div className={styles.commentSection}>
           <img src={italy} alt="" className={styles.profileComment} />
           <input type="text" placeholder="Write You Comment here" />
           <button className={styles.commentPost}>Post</button>
         </div>
         <p className={styles.timestamp}>9:42 pm Sep 17, 2024</p>
-      </div>
+      </div> */}
       {/* ------ v subjected to change v ------ */}
       <div>
         <h2>Posts</h2>
