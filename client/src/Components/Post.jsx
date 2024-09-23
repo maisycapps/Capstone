@@ -9,6 +9,7 @@ import React, { useState, useEffect } from "react";
 const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [destinationId, setDestinationId] = useState("");
+  console.log(posts);
 
   useEffect(() => {
     //fetch posts from backend

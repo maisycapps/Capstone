@@ -35,6 +35,7 @@ const isLoggedIn = async (req, res, next) => {
 
 //create user function
 const createUser = async (req, res, next) => {
+  console.log("math");
   try {
     const { firstName, lastName, userName, email, password } = req.body;
 
@@ -46,6 +47,7 @@ const createUser = async (req, res, next) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(hashedPassword);
 
     const newUser = await prisma.users.create({
       data: {
@@ -56,6 +58,7 @@ const createUser = async (req, res, next) => {
         password: hashedPassword,
       },
     });
+    console.log(newUser);
     res.status(201).json(newUser);
   } catch (error) {
     next(error);
