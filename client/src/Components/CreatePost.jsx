@@ -16,8 +16,9 @@ const createPost = () => {
         const response = await axios.get(
           "http://localhost:3000/api/destinations"
         );
-        setDestinations(response.data);
         console.log("Destinations", response.data);
+        setDestinations(response.data);
+        
       } catch (error) {
         console.error("Error fetching destinations", error);
       }
