@@ -1,7 +1,9 @@
+import Des from "../Components/Des";
 function Gallery() {
   return (
     <main>
-      <h1>GALLERY</h1>
+      {/* <h1>GALLERY</h1> */}
+      <Des />
     </main>
   );
 }
