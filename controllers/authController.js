@@ -39,10 +39,7 @@ const createUser = async (req, res, next) => {
     const { firstName, lastName, userName, email, password } = req.body;
 
     if (!firstName || !lastName || !userName || !email || !password) {
-      return next({
-        status: 404,
-        message: "All fields are required.",
-      });
+      return res.status(400).json({ message: "All fields are required." });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);

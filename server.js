@@ -13,7 +13,8 @@ app.use("/api", apiRoutes);
 
 //error handling
 app.use((error, req, res, next) => {
-  res.status(res.status || 500).send({ error: error });
+  const statusCode = error.statusCode || 500;
+  res.status(statusCode).json({ message: "Internal server status" });
 });
 
 //server status log
