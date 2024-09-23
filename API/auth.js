@@ -536,7 +536,7 @@ router.post(
 
       res.status(201).json(newComment);
     } catch (error) {
-      console.log("error creating comment: ", error);
+      console.log("error creating comment: ", error.message, error.stack);
       res.status(500).json({ error: "Failed to create comment!" });
     }
   }
@@ -660,10 +660,9 @@ router.delete(
 // create a like on a post --WORKS
 router.post("/account/posts/:id/likes", isLoggedIn, async (req, res, next) => {
   const { id } = req.params; //post id
+  const userId = req.user.userId;
 
   try {
-    const userId = req.user.userId;
-
     //check if post exists
     const post = await prisma.posts.findUnique({
       where: { id: parseInt(id) },
@@ -674,18 +673,37 @@ router.post("/account/posts/:id/likes", isLoggedIn, async (req, res, next) => {
       return res.status(404).json({ error: "Post not found" });
     }
 
-    //create like
-    const newLike = await prisma.likes.create({
-      data: {
+    //check if user already liked the post
+    const alreadyLiked = await prisma.likes.findFirst({
+      where: {
+        userId: userId,
         postId: parseInt(id),
-        userId: parseInt(userId),
       },
     });
 
-    res.status(201).json(newLike);
+    //adds like or deletes like based off if user already liked
+    if (alreadyLiked) {
+      await prisma.likes.delete({
+        where: {
+          id: alreadyLiked.id,
+        },
+      });
+
+      return res.status(200).json({ message: "Post unliked successfully" });
+    } else {
+      //create like
+      const newLike = await prisma.likes.create({
+        data: {
+          postId: parseInt(id),
+          userId: parseInt(userId),
+        },
+      });
+
+      res.status(201).json(newLike);
+    }
   } catch (error) {
     console.log("error creating like: ", error);
-    res.status(500).json({ error: "Failed to create like!" });
+    res.status(500).json({ error: "Failed to like/unlike post!" });
   }
 });
 

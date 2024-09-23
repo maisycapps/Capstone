@@ -24,6 +24,7 @@ model Users {
   likes      Likes[]
   posts      Posts[]
   trips      Trips[]
+  comments Comments[]
 }
 
 model Follows {
@@ -73,6 +74,7 @@ model Posts {
 
 model Comments {
   id        Int      @id @default(autoincrement())
+  user      Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   postId    Int
   text      String
