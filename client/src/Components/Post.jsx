@@ -8,16 +8,30 @@ import React, { useState, useEffect } from "react";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
-  const [destinationId, setDestinationId] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState(null);
 
   useEffect(() => {
     //fetch posts from backend
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/posts", {
-          destinationId,
-        });
+        const response = await axios.get("http://localhost:3000/api/posts");
         setPosts(response.data);
+
+        //fetch logged in users ID
+        const token = localStorage.getItem("token");
+        if (token) {
+          const userResponse = await axios.get(
+            "http://localhost:3000/api/auth/account",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setUserId(userResponse.data.id);
+          setUserName(userResponse.data.userName);
+        }
       } catch (error) {
         console.error("Error fetching posts: ", error);
       }
@@ -29,6 +43,11 @@ const Posts = () => {
   //funtion to handle likes
   const handleLikes = async (postId) => {
     const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("You need to be logged in to like a post");
+      return;
+    }
 
     try {
       await axios.post(
@@ -45,7 +64,7 @@ const Posts = () => {
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
           post.id === postId
-            ? { ...post, likes: [...post.likes, { id: postId }] }
+            ? { ...post, likes: [...post.likes, { id: userId }] }
             : post
         )
       );
@@ -57,6 +76,11 @@ const Posts = () => {
   //function to handle adding comment
   const handleComment = async (postId, commentText) => {
     const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("You need to be logged in to leave a comment");
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -70,6 +94,7 @@ const Posts = () => {
           },
         }
       );
+      console.log("Response data: ", response.data);
 
       //update UI after adding comment
       setPosts((prevPosts) =>
@@ -130,45 +155,62 @@ const Posts = () => {
       <div>
         <h2>Posts</h2>
         {posts.length > 0 ? (
-          posts.map((post) => (
-            <div key={post.id}>
-              {/* display destination name */}
-              <h3>
-                {post.destination
-                  ? post.destination.destinationName
-                  : "No destination"}
-              </h3>
-              {/* dispay destination img */}
-              <img
-                src={post.postImg}
-                alt="Post Img"
-                style={{ width: "300px", height: "300px" }}
-              />
-              {/* post created by user */}
-              <p>{post.user.userName}</p>
-              {/* post bio */}
-              <p>{post.text}</p>
-              <p>likes: {post.likes ? post.likes.length : ""}</p>
-              <p>Comments: {post.comments ? post.comments.length : ""}</p>
+          posts.map((post) => {
+            const hasLiked = post.likes.some((like) => like.userId === userId);
 
-              {/* like button */}
-              <button onClick={() => handleLikes(post.id)}>Like</button>
-
-              {/* comment button */}
-              <div>
-                <input
-                  type="text"
-                  placeholder="Add a comment"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleComment(post.id, e.target.value);
-                      e.target.value = ""; //clear input after submission
-                    }
-                  }}
+            return (
+              <div key={post.id}>
+                {/* display destination name */}
+                <h3>
+                  {post.destination
+                    ? post.destination.destinationName
+                    : "No destination"}
+                </h3>
+                {/* dispay destination img */}
+                <img
+                  src={post.postImg}
+                  alt="Post Img"
+                  style={{ width: "300px", height: "300px" }}
                 />
+                {/* post created by user */}
+                <p>{post.user.userName}</p>
+                {/* post bio */}
+                <p>{post.text}</p>
+                <p>likes: {post.likes ? post.likes.length : ""}</p>
+                <p>Comments: {post.comments ? post.comments.length : ""}</p>
+
+                {/* like button */}
+                <button onClick={() => handleLikes(post.id)}>
+                  {hasLiked ? "Unlike" : "Like"}
+                </button>
+
+                {/* comment button */}
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Add a comment"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleComment(post.id, e.target.value);
+                        e.target.value = ""; //clear input after submission
+                      }
+                    }}
+                  />
+                  {/* render comments for each post */}
+                  {post.comments.map((comment) => {
+                    return (
+                      <div key={comment.id}>
+                        <p>
+                          {comment.user ? comment.user.userName : userName}:{" "}
+                          {comment.text}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))
+            );
+          })
         ) : (
           <p>No Posts available</p>
         )}

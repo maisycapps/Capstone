@@ -10,12 +10,17 @@ router.get("/", async (req, res, next) => {
       include: {
         user: true, //includes user to display the author
         destination: true,
-        comments: true,
+        comments: {
+          include: {
+            user: true,
+          },
+        },
         likes: true,
       },
     });
     res.json(posts);
   } catch (error) {
+    console.error("Error fetching posts: ", error);
     next(error);
   }
 });
