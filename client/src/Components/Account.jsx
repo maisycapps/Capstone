@@ -6,10 +6,14 @@ import CreatePost from "./CreatePost";
 
 const Account = () => {
   const [user, setUser] = useState(null); 
+  const [posts, setPosts] = useState([]);
+
+  //conditionally rendered views based on mini nav clicks
   const [seePosts, setSeePosts] = useState(false);
   const [seeFollowers, setSeeFollowers] = useState(false);
   const [seeFollowing, setSeeFollowing] = useState(false);
   const [seeSettings, setSeeSettings] = useState(false);
+  const [seeTrips, setSeeTrips] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,16 +30,19 @@ const Account = () => {
         const accountData = await response.data[0];
         console.log(accountData)
         setUser(accountData);
+        setPosts(accountData.posts);
         setSeePosts(true)
 
       } catch (error) {
         console.error("Error fetching user account data", error);
 
       }
-  };
-
+    };
     fetchData();
+
   }, []); 
+
+
 
   return (
     <>
@@ -52,7 +59,7 @@ const Account = () => {
           {user.bio ? <><p>Bio:</p> <p>{user.bio}</p></> : null}
 
           <p>Posts</p>
-          <p>{user.posts.length}</p>
+          <p>{posts.length}</p>
 
           {/* who the user follows*/}  
           <p>Following</p>
@@ -73,32 +80,43 @@ const Account = () => {
         setSeePosts(true),
         setSeeFollowers(false),
         setSeeFollowing(false),
-        setSeeSettings(false)}}>Posts</p>
+        setSeeSettings(false),
+        setSeeTrips(false)}}>Posts</p>
 
       <p onClick={(e) => { 
         setSeePosts(false),
         setSeeFollowers(true),
         setSeeFollowing(false),
-        setSeeSettings(false)}}>Followers</p>
+        setSeeSettings(false),
+        setSeeTrips(false)}}>Followers</p>
 
       <p onClick={(e) => { 
         setSeePosts(false),
         setSeeFollowers(false),
         setSeeFollowing(true),
-        setSeeSettings(false)}}>Following</p>
+        setSeeSettings(false),
+        setSeeTrips(false)}}>Following</p>
 
       <p onClick={(e) => { 
         setSeePosts(false),
         setSeeFollowers(false),
         setSeeFollowing(false),
-        setSeeSettings(true)}}>Settings</p>
+        setSeeSettings(false),
+        setSeeTrips(true)}}>Trips</p>
+
+      <p onClick={(e) => { 
+        setSeePosts(false),
+        setSeeFollowers(false),
+        setSeeFollowing(false),
+        setSeeSettings(true),
+        setSeeTrips(false)}}>Edit Account</p>
 
       {/* CONDITIONALLY RENDERED - USER'S POSTS (default) */}
       { seePosts ? (        
         <>
           <div>
-            {user.posts.length > 0 ? (
-            user.posts.map((post) => (
+            {posts.length > 0 ? (
+            posts.map((post) => (
             <div key={post.id}>
               {/* destination name */}
               <h3>
@@ -107,19 +125,53 @@ const Account = () => {
                 : "No destination"}
               </h3>
 
-              {/* dispay destination img */}
+              {/* destination img */}
               <img
               src={post.postImg}
               alt="Post Img"
               style={{ width: "300px", height: "300px" }}
               />
 
+              {/* post auther */}
+              <p>{user.userName}</p>
+
               {/* post text */}
               <p>{post.text}</p>
               <p>likes: {post.likes ? post.likes.length : ""}</p>
               <p>Comments: {post.comments ? post.comments.length : ""}</p>
 
-            </div>
+              {/* like button */}
+              {/* <button onClick={() => handleLikes(post.id)}>
+                  {hasLiked ? "Unlike" : "Like"}
+              </button> */}
+
+              {/* comment button */}
+              {/* <div>
+                <input
+                  type="text"
+                  placeholder="Add a comment"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        handleComment(post.id, e.target.value);
+                        e.target.value = ""; //clear input after submission
+                    }
+                  }}
+                /> */}
+                  
+                {/* render comments for each post */}
+                {post.comments.map((comment) => {
+                  return (
+                    <div key={comment.id}>
+                        <p>
+                          {comment.user ? comment.user.userName : userName}:{" "}
+                          {comment.text}
+                        </p>
+                    </div>
+                  );
+                })}
+              </div>
+
+         
             ))
             ) : (
             <>
@@ -155,10 +207,63 @@ const Account = () => {
         ):( null )}
 
       {/* CONDITIONALLY RENDERED - WHO USER IS FOLLOWING */}
-      { seeFollowing ? <p>Following</p> : null}
+      { seeFollowing ? (        
+        <>
+          <div>
+            {user.followedBy.length > 0 ? (
+            user.followedBy.map((following) => (
+            <div key={following.id}>
+              
+              {/* follower's username */}
+              <p>{following.userName}</p>
+
+              {/* follower's name */}
+              <p>{following.firstName} {follower.lastName}</p>
+            </div>
+            ))
+            ) : (
+            <>
+              <p>Not Following Anyone Yet</p>
+            </>
+            )}
+          </div>
+        </> 
+        ):( null )}
 
       {/* CONDITIONALLY RENDERED - ACCOUNT SETTINGS */}
-      { seeSettings ? <p>Settings</p> : null}
+      { seeSettings ? (
+        <>
+        <p>Account Settings</p>
+        </> 
+       ) : ( null )}
+
+      {/* CONDITIONALLY RENDERED - USER'S TRIPS */}
+      { seeTrips ? (        
+        <>
+          <div>
+            {user.trips.length > 0 ? (
+            user.trips.map((trip) => (
+            <div key={trip.id}>
+              
+              {/* trip name */}
+              <p>{trip.tripName}</p>
+
+              {/* destination */}
+              <p>Where: {trip.destinationId}</p>
+
+              {/* dates */}
+              <p>Dates: {trip.startDate}-{trip.endDate}</p>
+
+            </div>
+            ))
+            ) : (
+            <>
+              <p>No Trips Yet</p>
+            </>
+            )}
+          </div>
+        </> 
+        ):( null )}
    
     </div>
     </>
