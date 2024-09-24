@@ -24,15 +24,17 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (!isAuthenticated()) {
-        setLoggedIn(false); //logs user out if token is expired
-        localStorage.removeItem("token"); //clears token from local storage
-        window.location.href = "/login"; //redirects to login page
-      }
-    }, 600000); //checks every 60 seconds
+    if (isAuthenticated()) {
+      const interval = setInterval(() => {
+        if (!isAuthenticated()) {
+          setLoggedIn(false); // Log user out if token is expired
+          localStorage.removeItem("token"); // Clear token from local storage
+          window.location.href = "/login"; // Redirect to login page
+        }
+      }, 60000); // Check every 60 seconds
 
-    return () => clearInterval(interval);
+      return () => clearInterval(interval);
+    }
   }, []);
 
   return (

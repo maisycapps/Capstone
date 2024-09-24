@@ -676,7 +676,7 @@ router.post("/account/posts/:id/likes", isLoggedIn, async (req, res, next) => {
     //check if user already liked the post
     const alreadyLiked = await prisma.likes.findFirst({
       where: {
-        userId: userId,
+        userId: parseInt(userId),
         postId: parseInt(id),
       },
     });
@@ -689,7 +689,9 @@ router.post("/account/posts/:id/likes", isLoggedIn, async (req, res, next) => {
         },
       });
 
-      return res.status(200).json({ message: "Post unliked successfully" });
+      return res
+        .status(200)
+        .json({ message: "Post unliked successfully", action: "unlike" });
     } else {
       //create like
       const newLike = await prisma.likes.create({
@@ -699,7 +701,9 @@ router.post("/account/posts/:id/likes", isLoggedIn, async (req, res, next) => {
         },
       });
 
-      res.status(201).json(newLike);
+      return res
+        .status(201)
+        .json({ message: "Post liked successfully", action: "like" });
     }
   } catch (error) {
     console.log("error creating like: ", error);
