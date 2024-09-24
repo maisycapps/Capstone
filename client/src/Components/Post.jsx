@@ -13,6 +13,7 @@ const Posts = () => {
   const [userName, setUserName] = useState(null);
   const navigate = useNavigate();
 
+
   useEffect(() => {
     //fetch posts from backend
     const fetchPosts = async () => {
