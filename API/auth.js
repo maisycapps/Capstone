@@ -111,7 +111,7 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
       });
     }
 
-    await prisma.users.delete({ where: { id: parseInt(id) } });
+    await prisma.users.delete({ where: { id } });
     res.sendStatus(204);
   } catch (error) {
     console.error("Error deleting user: ", error);

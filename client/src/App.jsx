@@ -55,7 +55,7 @@ function App() {
         />
         <Route
           path="/account/*"
-          element={loggedIn ? <Account /> : <Navigate to="/login" />}
+          element={loggedIn ? <Account setLoggedIn={setLoggedIn} /> : <Navigate to="/login" />}
         />
       </Routes>
     </div>

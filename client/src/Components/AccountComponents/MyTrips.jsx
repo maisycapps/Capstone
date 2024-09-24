@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import CreateTrip from '../CreateTrip';
 
 const MyTrips = ({user}) => {
 
-  const [destinationNames, setDestinationNames] = useState({})
+  const [destinationNames, setDestinationNames] = useState({});
+  const [newTripForm, setNewTripForm] = useState(false);
 
   useEffect(() => {
 
@@ -50,6 +52,8 @@ const MyTrips = ({user}) => {
             ) : (
               <>
                 <p>No Trips Yet</p>
+                <button onClick={setNewTripForm(true)}>Create your first Trip</button>
+                {newTripForm === true ? <CreateTrip /> : null}
               </>
           )}
         </div>

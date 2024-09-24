@@ -1,6 +1,13 @@
+import CreatePost from '../CreatePost';
+import { useState } from 'react';
+
 const MyPosts = ({user}) => {
+
+  const [newPostForm, setNewPostForm] = useState(false);
+
   return (  
     <>
+
       <h3>Posts</h3>
       <div>
         {user.posts.length > 0 ? (
@@ -58,7 +65,13 @@ const MyPosts = ({user}) => {
               </div>
                  
             </div>
-            ))) : (<p>No Posts Yet</p>)
+            ))) : ( 
+            <>
+              <p>No Posts Yet</p>
+              <button onClick={() => setNewPostForm(true)}>Create your first post</button>
+              {newPostForm === true ? <CreatePost setNewPostForm={setNewPostForm} /> : null}
+            </>
+            )
           }
       </div>
     </>

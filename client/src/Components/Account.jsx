@@ -13,7 +13,7 @@ import MyPosts from "./AccountComponents/MyPosts";
 import MyTrips from "./AccountComponents/MyTrips";
 import Settings from "./AccountComponents/Settings";
 
-const Account = () => {
+const Account = ({ setLoggedIn }) => {
   const [user, setUser] = useState(null); 
 
   //Settings Dependency
@@ -59,19 +59,22 @@ const Account = () => {
 
             <h2>{user.firstName} {user.lastName}</h2>  
 
-            {user.bio ? <><p>Bio:</p> <p>{user.bio}</p></> : null}
-
-            <p>Posts</p>
-            <p>{user.posts.length}</p>
+            {user.bio ? <><p>{user.bio}</p></> : null}
 
             {/* who the user follows*/}  
-            <p>Following</p>
+            <p><b>Following</b></p>
             <p>{user.followedBy.length}</p>
 
 
             {/* who the user is followed by*/}
-            <p>Followers</p>
+            <p><b>Followers</b></p>
             <p>{user.following.length}</p>
+
+            <p><b>Posts</b></p>
+            <p>{user.posts.length}</p>
+
+            <p><b>Trips</b></p>
+            <p>{user.trips.length}</p>
 
             {/* ACCOUNT NAV BAR */}
             <AccountNav />
@@ -82,7 +85,7 @@ const Account = () => {
               <Route path="following" element={<Following user={user}/>}/>
               <Route path="myposts" element={<MyPosts user={user}/>}/>
               <Route path="mytrips" element={<MyTrips user={user}/>}/>
-              <Route path="settings" element={<Settings user={user} setUpdatedUser={setUpdatedUser}/>}/>
+              <Route path="settings" element={<Settings user={user} setUpdatedUser={setUpdatedUser} setLoggedIn={setLoggedIn}/>}/>
             </Routes>
             
 

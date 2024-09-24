@@ -4,6 +4,7 @@ import axios from "axios";
 const Following = ({user}) => {
 
   const [followingNames, setFollowingNames] = useState({});
+  const [seeUsers, setSeeUsers] = useState(false)
 
   useEffect(() => {
     
@@ -48,6 +49,9 @@ const Following = ({user}) => {
           ) : (
               <>
                 <p>Not Following Anyone Yet</p>
+                <button onClick={() => setSeeUsers(true)}>Browse users to follow</button>
+                {seeUsers === true ? /* view all users component*/ null : null}
+
               </>
           )}
       </ul>

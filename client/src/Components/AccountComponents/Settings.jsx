@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Settings = ({user, setUpdatedUser}) => {
+const Settings = ({user, setUpdatedUser, setLoggedIn}) => {
 
     const navigate = useNavigate();
 
@@ -44,11 +44,12 @@ const Settings = ({user, setUpdatedUser}) => {
 
         try {
           const token = localStorage.getItem("token");
+          console.log("token", token)
           const id = user.id;
-
+          console.log("id", id)
+        
           await axios.delete(
             "http://localhost:3000/api/auth/account",
-            { id },
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -56,7 +57,7 @@ const Settings = ({user, setUpdatedUser}) => {
             }
           );
           console.log("account successfully deleted")
-          navigate("/")
+          setLoggedIn(false)
         } catch (error) {
             console.error(error)
         }
