@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import styles from "../../styles/Account.module.css"
 
 const Followers = ({user}) => {
 

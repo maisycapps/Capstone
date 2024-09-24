@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const CreateTrip = () => {
+const CreateTrip = ({ setNewTripForm, setUpdatedUser }) => {
   const [destinations, setDestinations] = useState([]);
   const [tripName, setTripName] = useState("");
   const [destinationId, setDestinationId] = useState("");
@@ -56,7 +56,8 @@ const CreateTrip = () => {
       );
 
       console.log("Trip created successfully", response.data);
-
+      setNewTripForm(false)
+      setUpdatedUser(true)
       //navigates to trips page for for the logged in user
       navigate("/account/mytrips");
     } catch (error) {

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const CreatePost = () => {
+const CreatePost = ({ setNewPostForm }) => {
   const [text, setText] = useState("");
   const [destinations, setDestinations] = useState([]);
   const [destinationId, setDestinationId] = useState("");
@@ -44,8 +44,8 @@ const CreatePost = () => {
       );
       setNewPostForm(false);
       console.log("Post created successfully", response.data);
-
-      navigate("/account/myposts"); // redirects to posts page -- not sure on this redirect for our routes
+      
+      // navigate("/account/myposts"); // redirects to posts page -- not sure on this redirect for our routes
     } catch (error) {
       setError("Failed to create post, Please try again.");
     }

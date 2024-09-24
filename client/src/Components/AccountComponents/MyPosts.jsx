@@ -1,9 +1,35 @@
 import CreatePost from '../CreatePost';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const MyPosts = ({user}) => {
+const MyPosts = ({ user, setUpdatedUser }) => {
 
+  const [destinationNames, setDestinationNames] = useState({});
   const [newPostForm, setNewPostForm] = useState(false);
+
+  useEffect(() => {
+
+    const getDestinationName = async(destinationId) => {
+
+      try {
+        if(!destinationNames[destinationId]) {
+
+          const response = await axios.get(`http://localhost:3000/api/destinations/${destinationId}`);
+          const result = await response.data;
+            setDestinationNames((prevNames) => ({
+            ...prevNames, [destinationId]: result.destinationName,
+            }));
+        }
+      } catch (error) {
+        console.error(error)
+      }
+   };
+   
+   user.posts.forEach((post) => {
+    getDestinationName(post.destinationId);
+   })
+
+  }, []);
 
   return (  
     <>
@@ -14,11 +40,15 @@ const MyPosts = ({user}) => {
             user.posts.map((post) => (
 
             <div key={post.id}>
-          
+              <img src={user.profileImg}/>
+              <p>{user.userName}</p>
+
               <p>
-              {post.destination
-                ? post.destination.destinationName
-                : "No destination"}
+              {post.destinationId ? (
+               <>
+                <p><b>Destination: </b> {destinationNames[post.destinationId]} </p>
+               </>
+              ) : ( "No destination" )}
               </p>
 
               <img
@@ -27,9 +57,8 @@ const MyPosts = ({user}) => {
               style={{ width: "300px", height: "300px" }}
               />
 
-              <p>{user.userName}</p>
-
-              <p>{post.text}</p>
+              <p><b>{user.userName}</b> {post.text}</p>
+              <p>{new Date(post.createdAt).toLocaleDateString()}</p>
               <p>likes: {post.likes ? post.likes.length : ""}</p>
               <p>comments: {post.comments ? post.comments.length : ""}</p>
            
@@ -69,7 +98,7 @@ const MyPosts = ({user}) => {
             <>
               <p>No Posts Yet</p>
               <button onClick={() => setNewPostForm(true)}>Create your first post</button>
-              {newPostForm === true ? <CreatePost setNewPostForm={setNewPostForm} /> : null}
+              {newPostForm === true ? <CreatePost setNewPostForm={setNewPostForm} setUpdatedUser={setUpdatedUser}/> : null}
             </>
             )
           }

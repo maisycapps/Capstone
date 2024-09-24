@@ -15,9 +15,10 @@ import MyTrips from "./AccountComponents/MyTrips";
 import Settings from "./AccountComponents/Settings";
 
 const Account = ({ setLoggedIn }) => {
+
   const [user, setUser] = useState(null); 
 
-  //Settings Dependency
+  //Re-Rendering Dependency
   const [updatedUser, setUpdatedUser] = useState(false);
 
 
@@ -42,7 +43,6 @@ const Account = ({ setLoggedIn }) => {
       }
     };
     fetchData();
-    setUpdatedUser(false);
 
   }, [updatedUser]); 
 
@@ -52,7 +52,9 @@ const Account = ({ setLoggedIn }) => {
     <>
       <div className={styles.accountCard}>
         
-        {user ? ( 
+        {user ? 
+          ( //IF THERE IS A USER
+          <>  
           <div className={styles.account}>
 
             {user.profileImg ? (
@@ -62,12 +64,12 @@ const Account = ({ setLoggedIn }) => {
 
             {user.bio ? <><p>{user.bio}</p></> : null}
 
-            {/* who the user follows*/}  
+            {/* WHO THE USER FOLLOWS*/}  
             <p><b>Following</b></p>
             <p>{user.followedBy.length}</p>
 
 
-            {/* who the user is followed by*/}
+            {/* WHO THE USER IS FOLLOWED BY*/}
             <p><b>Followers</b></p>
             <p>{user.following.length}</p>
 
@@ -76,29 +78,31 @@ const Account = ({ setLoggedIn }) => {
 
             <p><b>Trips</b></p>
             <p>{user.trips.length}</p>
-
-            {/* ACCOUNT NAV BAR */}
-            <AccountNav />
             
+          </div>
+          
+          <div className={styles.accountNav}>
+            <AccountNav />
+          </div>
+          
+
             {/* CURRENT URL LOCATION /ACCOUNT */}
             <Routes>
               <Route path="followers" element={<Followers user={user}/>}/>
               <Route path="following" element={<Following user={user}/>}/>
-              <Route path="myposts" element={<MyPosts user={user}/>}/>
-              <Route path="mytrips" element={<MyTrips user={user}/>}/>
+              <Route path="myposts" element={<MyPosts user={user} setUpdatedUser={setUpdatedUser}/>}/>
+              <Route path="mytrips" element={<MyTrips user={user} setUpdatedUser={setUpdatedUser}/>}/>
               <Route path="settings" element={<Settings user={user} setUpdatedUser={setUpdatedUser} setLoggedIn={setLoggedIn}/>}/>
             </Routes>
-            
-
-          </div>
+          </>
           ) : (
-          <p>Loading account details...</p>
-        )}
-    <div className={styles.accountCard}>
-      <div className={styles.account}>
-        <img src={italy} alt="User Account" />
-        <h1>CAPSTONE</h1>
-      </div>
+          //IF USER IS LOADING
+          <div className={styles.loading}>
+              <p>Loading account details...</p>
+          </div>      
+          )
+        }
+      </div>  
     </>
   )
 }
