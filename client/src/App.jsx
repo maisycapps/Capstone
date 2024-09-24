@@ -54,7 +54,7 @@ function App() {
           element={<Register loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
         />
         <Route
-          path="/account"
+          path="/account/*"
           element={loggedIn ? <Account /> : <Navigate to="/login" />}
         />
       </Routes>
