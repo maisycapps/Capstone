@@ -8,6 +8,7 @@ const CreateTrip = () => {
   const [destinationId, setDestinationId] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   //fetch destinations from backend for dropdown menu
@@ -59,7 +60,7 @@ const CreateTrip = () => {
       //navigates to trips page for for the logged in user
       navigate("/account/mytrips");
     } catch (error) {
-      console.error("Error creating trip: ", error);
+      setError("Failed to create Trip, Please try again.");
     }
   };
 
@@ -117,7 +118,7 @@ const CreateTrip = () => {
               required
             />
           </div>
-
+          {error && <p style={{ color: "red" }}>{error}</p>}
           <button type="submit">Create Trip</button>
         </form>
       </div>
