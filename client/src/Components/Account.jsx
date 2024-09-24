@@ -28,7 +28,6 @@ const Account = () => {
           },
       });
         const accountData = await response.data[0];
-        console.log(accountData)
         setUser(accountData);
         setPosts(accountData.posts);
         setSeePosts(true)
@@ -138,7 +137,7 @@ const Account = () => {
               {/* post text */}
               <p>{post.text}</p>
               <p>likes: {post.likes ? post.likes.length : ""}</p>
-              <p>Comments: {post.comments ? post.comments.length : ""}</p>
+              <p>comments: {post.comments ? post.comments.length : ""}</p>
 
               {/* like button */}
               {/* <button onClick={() => handleLikes(post.id)}>
@@ -157,9 +156,10 @@ const Account = () => {
                     }
                   }}
                 /> */}
-                  
+
                 {/* render comments for each post */}
-                {post.comments.map((comment) => {
+                {post.comments ? (
+                  post.comments.map((comment) => {
                   return (
                     <div key={comment.id}>
                         <p>
@@ -168,7 +168,7 @@ const Account = () => {
                         </p>
                     </div>
                   );
-                })}
+                })) : (null)}
               </div>
 
          
@@ -188,7 +188,8 @@ const Account = () => {
           <div>
             {user.following.length > 0 ? (
             user.following.map((follower) => (
-            <div key={follower.id}>
+               //need to generate unique keys
+            <div >
               
               {/* follower's username */}
               <p>{follower.userName}</p>
@@ -212,13 +213,14 @@ const Account = () => {
           <div>
             {user.followedBy.length > 0 ? (
             user.followedBy.map((following) => (
-            <div key={following.id}>
+              //need to generate unique keys
+            <div >
               
               {/* follower's username */}
               <p>{following.userName}</p>
 
               {/* follower's name */}
-              <p>{following.firstName} {follower.lastName}</p>
+              <p>{following.firstName} {following.lastName}</p>
             </div>
             ))
             ) : (
@@ -252,7 +254,8 @@ const Account = () => {
               <p>Where: {trip.destinationId}</p>
 
               {/* dates */}
-              <p>Dates: {trip.startDate}-{trip.endDate}</p>
+              <p>Start Date: {trip.startDate}</p>
+              <p>End Date: {trip.endDate}</p>
 
             </div>
             ))
