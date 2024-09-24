@@ -1,20 +1,22 @@
 .container {
-  width: 70%;
   background-color: #fff;
-  border-radius: 3%;
-  padding: 25px;
-
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  display: flex;
+  justify-content: center;
 }
 
-.header {
-  display: flex;
+.container .header {
+  height: 65%;
+  width: 65%;
+  border: 2px solid red;
+  border-radius: 20px;
+  box-shadow: rgba(100, 100, 111, 0.5) 0px 7px 29px 0px;
 }
 .header .name {
   height: fit-content;
   display: flex;
   width: 100%;
   padding: 20px;
+  border: 2px solid red;
 }
 
 .header .name .profile {
@@ -71,9 +73,10 @@
 }
 
 .container .picture {
-  display: flex;
+  display: grid;
+  place-items: center;
   margin: auto;
-  width: 100%;
+  width: 75%;
   height: 220px;
   border-radius: 2%;
 }

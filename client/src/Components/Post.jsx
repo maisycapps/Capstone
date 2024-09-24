@@ -1,9 +1,9 @@
 import styles from "../styles/Post.module.css";
 import axios from "axios";
 import italy from "./Images/italy.jpg";
-// import { MdMoreVert } from "react-icons/md";
-// import { FaRegComments } from "react-icons/fa";
-// import { AiOutlineLike } from "react-icons/ai";
+import { MdMoreVert } from "react-icons/md";
+import { FaRegComments } from "react-icons/fa";
+import { AiOutlineLike } from "react-icons/ai";
 import React, { useState, useEffect } from "react";
 
 const Posts = () => {
@@ -108,7 +108,7 @@ const Posts = () => {
           sapiente placeat quae dignissimos.
         </p>
 //         {/* <div className={styles.btn}>
-//           <button onClick={handleCountLikes}>
+//           <button>
 //             <AiOutlineLike />
 //             Like<span>{countLikes}</span>
 //           </button>
@@ -128,51 +128,61 @@ const Posts = () => {
       </div> */}
 
       {/* ------ v subjected to change v ------ */}
-      <div>
-        <h2>Posts</h2>
-        {posts.length > 0 ? (
-          posts.map((post) => (
-            <div key={post.id}>
-              {/* display destination name */}
-              <h3>
-                {post.destination
-                  ? post.destination.destinationName
-                  : "No destination"}
-              </h3>
-              {/* dispay destination img */}
-              <img
-                src={post.postImg}
-                alt="Post Img"
-                style={{ width: "300px", height: "300px" }}
-              />
-              {/* post created by user */}
-              <p>{post.user.userName}</p>
-              {/* post bio */}
-              <p>{post.text}</p>
-              <p>likes: {post.likes ? post.likes.length : ""}</p>
-              <p>Comments: {post.comments ? post.comments.length : ""}</p>
-
-              {/* like button */}
-              <button onClick={() => handleLikes(post.id)}>Like</button>
-
-              {/* comment button */}
-              <div>
-                <input
-                  type="text"
-                  placeholder="Add a comment"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleComment(post.id, e.target.value);
-                      e.target.value = ""; //clear input after submission
-                    }
-                  }}
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div className={styles.name}>
+            <img src={italy} alt="" className={styles.profile} />
+            <ul>
+              <li>mathew</li>
+            </ul>
+          </div>
+          <h2>Posts</h2>
+          {posts.length > 0 ? (
+            posts.map((post) => (
+              <div key={post.id}>
+                <h3>
+                  {post.destination
+                    ? post.destination.destinationName
+                    : "No destination"}
+                </h3>
+                <img
+                  src={post.postImg}
+                  className={styles.picture}
+                  alt="Post Img"
+                  style={{ width: "400px", height: "400px" }}
                 />
+                {/* post created by user */}
+                <p>{post.user.userName}</p>
+                {/* post bio */}
+                <p>{post.text}</p>
+
+                <button>
+                  Comments: {post.comments ? post.comments.length : ""}
+                </button>
+
+                <button onClick={() => handleLikes(post.id)}>
+                  <AiOutlineLike />
+                  Like: {post.likes ? post.likes.length : ""}
+                </button>
+                <div className={styles.commentSection}>
+                  <input
+                    type="text"
+                    placeholder="Add a comment"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleComment(post.id, e.target.value);
+                        e.target.value = ""; //clear input after submission
+                      }
+                    }}
+                  />
+                  <button className={styles.commentPost}>Post</button>
+                </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p>No Posts available</p>
-        )}
+            ))
+          ) : (
+            <p>No Posts available</p>
+          )}
+        </div>
       </div>
     </>
   );
