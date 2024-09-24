@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "../styles/Account.module.css";
 
+
 import { Routes, Route } from "react-router-dom";
 
 //ACCOUNT SUBCOMPONENTS (for routes)
@@ -93,6 +94,10 @@ const Account = ({ setLoggedIn }) => {
           ) : (
           <p>Loading account details...</p>
         )}
+    <div className={styles.accountCard}>
+      <div className={styles.account}>
+        <img src={italy} alt="User Account" />
+        <h1>CAPSTONE</h1>
       </div>
     </>
   )

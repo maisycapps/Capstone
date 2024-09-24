@@ -8,12 +8,18 @@ router.get("/", async (req, res, next) => {
   try {
     const destinations = await prisma.destinations.findMany({
       orderBy: {
-        name: "asc",
+        destinationName: "asc",
+      },
+      select: {
+        id: true,
+        destinationName: true,
+        destinationImg: true,
       },
     });
     res.json(destinations);
   } catch (error) {
-    next(error);
+    console.error("Error fetching destinations:", error); // Log error
+    res.status(500).json({ error: "Failed to fetch destinations" });
   }
 });
 
@@ -22,7 +28,14 @@ router.get("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
 
-    const destination = await prisma.destinations.findUnique({ where: { id } });
+    const destination = await prisma.destinations.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        destinationName: true,
+        destinationImg: true,
+      },
+    });
 
     if (!destination) {
       return next({
@@ -33,6 +46,7 @@ router.get("/:id", async (req, res, next) => {
 
     res.json(destination);
   } catch (error) {
-    next(error);
+    console.error("Error fetching destinations:", error); // Log error
+    res.status(500).json({ error: "Failed to fetch destinations" });
   }
 });

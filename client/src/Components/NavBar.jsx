@@ -51,12 +51,12 @@ function NavBar({ loggedIn, setLoggedIn }) {
             </li>
             <li className="nav-item">
               <NavLink
-                to="/gallery"
+                to="/destinations"
                 activeClassName="active"
                 className="nav-links"
                 onClick={handleClick}
               >
-                Gallery
+                Destinations
               </NavLink>
             </li>
             {/* <-------- v conditionally render if user is logged in v --------> */}
