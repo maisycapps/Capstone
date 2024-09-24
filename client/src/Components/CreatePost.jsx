@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const createPost = () => {
+const CreatePost = () => {
   const [text, setText] = useState("");
   const [destinations, setDestinations] = useState([]);
   const [destinationId, setDestinationId] = useState("");
@@ -32,9 +32,9 @@ const createPost = () => {
     try {
       //send post to the database
       const token = localStorage.getItem("token");
-      await axios.post(
-        "http://localhost:3000/api/posts",
-        { text, postImg, destinationId },
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/account/posts",
+        { text, postImg, destinationId: parseInt(destinationId) },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -42,7 +42,9 @@ const createPost = () => {
         }
       );
 
-      navigate("/account/posts"); // redirects to posts page -- not sure on this redirect for our routes
+      console.log("Post created successfully", response.data);
+
+      navigate("/account/myposts"); // redirects to posts page -- not sure on this redirect for our routes
     } catch (error) {
       setError("Failed to create post, Please try again.");
     }
@@ -56,8 +58,9 @@ const createPost = () => {
         <form onSubmit={handleSubmit}>
           {/* list of destinations */}
           <div>
-            <label>Destination:</label>
+            <label htmlFor="destination">Destination:</label>
             <select
+              id="destination"
               value={destinationId}
               onChange={(e) => setDestinationId(e.target.value)}
               required
@@ -65,7 +68,7 @@ const createPost = () => {
               <option value="">Select a Destination</option>
               {destinations.map((destination) => (
                 <option key={destination.id} value={destination.id}>
-                  {destination.name}
+                  {destination.destinationName}
                 </option>
               ))}
             </select>
@@ -97,4 +100,4 @@ const createPost = () => {
   );
 };
 
-export default createPost;
+export default CreatePost;
