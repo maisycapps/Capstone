@@ -8,6 +8,7 @@ const MyTrips = ({user}) => {
   useEffect(() => {
 
     const getDestinationName = async(destinationId) => {
+
       try {
         if(!destinationNames[destinationId]) {
 
@@ -30,7 +31,7 @@ const MyTrips = ({user}) => {
    
   return ( 
     <> 
-      <p>MyTrips</p>
+      <h3>Trips</h3>
         
         <div>
           {user.trips.length > 0 ? (

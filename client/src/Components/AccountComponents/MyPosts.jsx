@@ -1,17 +1,18 @@
 const MyPosts = ({user}) => {
   return (  
     <>
+      <h3>Posts</h3>
       <div>
         {user.posts.length > 0 ? (
             user.posts.map((post) => (
 
             <div key={post.id}>
           
-              <h3>
+              <p>
               {post.destination
                 ? post.destination.destinationName
                 : "No destination"}
-              </h3>
+              </p>
 
               <img
               src={post.postImg}
