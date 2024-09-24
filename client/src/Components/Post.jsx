@@ -5,11 +5,14 @@ import italy from "./Images/italy.jpg";
 // import { FaRegComments } from "react-icons/fa";
 // import { AiOutlineLike } from "react-icons/ai";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState(null);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     //fetch posts from backend
@@ -45,12 +48,12 @@ const Posts = () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      alert("You need to be logged in to like a post");
+      navigate("/login");
       return;
     }
 
     try {
-      await axios.post(
+      const response = await axios.post(
         `http://localhost:3000/api/auth/account/posts/${postId}/likes`,
         {},
         {
@@ -60,11 +63,25 @@ const Posts = () => {
         }
       );
 
+      console.log(response.data);
+
+      const action = response.data.action;
+
+      if (!action) {
+        console.error("action is undefined in the response");
+      }
+
       //update UI after liking post
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
           post.id === postId
-            ? { ...post, likes: [...post.likes, { id: userId }] }
+            ? {
+                ...post,
+                likes:
+                  action === "like"
+                    ? [...post.likes, { id: userId }] //add like if action is 'like"
+                    : post.likes.filter((like) => like.userId !== userId), //Remove like if logged in user has liked the post
+              }
             : post
         )
       );
@@ -78,7 +95,7 @@ const Posts = () => {
     const token = localStorage.getItem("token");
 
     if (!token) {
-      alert("You need to be logged in to leave a comment");
+      navigate("/login");
       return;
     }
 
