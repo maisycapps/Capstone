@@ -5,20 +5,35 @@ import { MdMoreVert } from "react-icons/md";
 import { FaRegComments } from "react-icons/fa";
 import { AiOutlineLike } from "react-icons/ai";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
-  const [destinationId, setDestinationId] = useState("");
-  console.log(posts);
+  const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     //fetch posts from backend
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/posts", {
-          destinationId,
-        });
+        const response = await axios.get("http://localhost:3000/api/posts");
         setPosts(response.data);
+
+        //fetch logged in users ID
+        const token = localStorage.getItem("token");
+        if (token) {
+          const userResponse = await axios.get(
+            "http://localhost:3000/api/auth/account",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setUserId(userResponse.data.id);
+          setUserName(userResponse.data.userName);
+        }
       } catch (error) {
         console.error("Error fetching posts: ", error);
       }
@@ -31,8 +46,13 @@ const Posts = () => {
   const handleLikes = async (postId) => {
     const token = localStorage.getItem("token");
 
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
     try {
-      await axios.post(
+      const response = await axios.post(
         `http://localhost:3000/api/auth/account/posts/${postId}/likes`,
         {},
         {
@@ -42,11 +62,25 @@ const Posts = () => {
         }
       );
 
+      console.log(response.data);
+
+      const action = response.data.action;
+
+      if (!action) {
+        console.error("action is undefined in the response");
+      }
+
       //update UI after liking post
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
           post.id === postId
-            ? { ...post, likes: [...post.likes, { id: postId }] }
+            ? {
+                ...post,
+                likes:
+                  action === "like"
+                    ? [...post.likes, { id: userId }] //add like if action is 'like"
+                    : post.likes.filter((like) => like.userId !== userId), //Remove like if logged in user has liked the post
+              }
             : post
         )
       );
@@ -58,6 +92,11 @@ const Posts = () => {
   //function to handle adding comment
   const handleComment = async (postId, commentText) => {
     const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/login");
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -71,6 +110,7 @@ const Posts = () => {
           },
         }
       );
+      console.log("Response data: ", response.data);
 
       //update UI after adding comment
       setPosts((prevPosts) =>
@@ -128,43 +168,40 @@ const Posts = () => {
       </div> */}
 
       {/* ------ v subjected to change v ------ */}
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <div className={styles.name}>
-            <img src={italy} alt="" className={styles.profile} />
-            <ul>
-              <li>mathew</li>
-            </ul>
-          </div>
-          <h2>Posts</h2>
-          {posts.length > 0 ? (
-            posts.map((post) => (
+      <div>
+        <h2>Posts</h2>
+        {posts.length > 0 ? (
+          posts.map((post) => {
+            const hasLiked = post.likes.some((like) => like.userId === userId);
+
+            return (
               <div key={post.id}>
+                {/* display destination name */}
                 <h3>
                   {post.destination
                     ? post.destination.destinationName
                     : "No destination"}
                 </h3>
+                {/* dispay destination img */}
                 <img
                   src={post.postImg}
-                  className={styles.picture}
                   alt="Post Img"
-                  style={{ width: "400px", height: "400px" }}
+                  style={{ width: "300px", height: "300px" }}
                 />
                 {/* post created by user */}
                 <p>{post.user.userName}</p>
                 {/* post bio */}
                 <p>{post.text}</p>
+                <p>likes: {post.likes ? post.likes.length : ""}</p>
+                <p>Comments: {post.comments ? post.comments.length : ""}</p>
 
-                <button>
-                  Comments: {post.comments ? post.comments.length : ""}
-                </button>
-
+                {/* like button */}
                 <button onClick={() => handleLikes(post.id)}>
-                  <AiOutlineLike />
-                  Like: {post.likes ? post.likes.length : ""}
+                  {hasLiked ? "Unlike" : "Like"}
                 </button>
-                <div className={styles.commentSection}>
+
+                {/* comment button */}
+                <div>
                   <input
                     type="text"
                     placeholder="Add a comment"
@@ -175,14 +212,24 @@ const Posts = () => {
                       }
                     }}
                   />
-                  <button className={styles.commentPost}>Post</button>
+                  {/* render comments for each post */}
+                  {post.comments.map((comment) => {
+                    return (
+                      <div key={comment.id}>
+                        <p>
+                          {comment.user ? comment.user.userName : userName}:{" "}
+                          {comment.text}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-            ))
-          ) : (
-            <p>No Posts available</p>
-          )}
-        </div>
+            );
+          })
+        ) : (
+          <p>No Posts available</p>
+        )}
       </div>
     </>
   );

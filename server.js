@@ -1,9 +1,13 @@
 require("dotenv").config();
-const cors = require("cors");
 const express = require("express");
 const app = express();
 const PORT = 3000;
 const apiRoutes = require("./API/index");
+const cors = require("cors");
+
+//middleware
+app.use(express.json());
+app.use(require("morgan")("dev"));
 
 app.use(
   cors({
@@ -12,16 +16,13 @@ app.use(
   })
 );
 
-//middleware
-app.use(express.json());
-app.use(require("morgan")("dev"));
-
 //API routes
 app.use("/api", apiRoutes);
 
 //error handling
 app.use((error, req, res, next) => {
-  res.status(res.status || 500).send({ error: error });
+  const statusCode = error.statusCode || 500;
+  res.status(statusCode).json({ message: "Internal server status" });
 });
 
 //server status log
