@@ -16,6 +16,10 @@ import Settings from "./AccountComponents/Settings";
 const Account = () => {
   const [user, setUser] = useState(null); 
 
+  //Settings Dependency
+  const [updatedUser, setUpdatedUser] = useState(false);
+
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,8 +41,9 @@ const Account = () => {
       }
     };
     fetchData();
+    setUpdatedUser(false);
 
-  }, []); 
+  }, [updatedUser]); 
 
 
 
@@ -77,7 +82,7 @@ const Account = () => {
               <Route path="following" element={<Following user={user}/>}/>
               <Route path="myposts" element={<MyPosts user={user}/>}/>
               <Route path="mytrips" element={<MyTrips user={user}/>}/>
-              <Route path="settings" element={<Settings user={user}/>}/>
+              <Route path="settings" element={<Settings user={user} setUpdatedUser={setUpdatedUser}/>}/>
             </Routes>
             
 

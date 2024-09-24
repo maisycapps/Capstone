@@ -59,7 +59,7 @@ const MyPosts = ({user}) => {
                  
             </div>
             ))) : (<p>No Posts Yet</p>)
-          };
+          }
       </div>
     </>
   )

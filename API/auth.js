@@ -68,25 +68,28 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
     }
 
     const { firstName, lastName, userName, email, bio, profileImg } = req.body;
-    if (!firstName || !lastName || !userName || !email || !bio || !profileImg) {
+
+    if (!firstName && !lastName && !userName && !email && !bio && !profileImg) {
       return next({
         status: 404,
-        message: "Fields are required",
+        message: "At least one field is required to create an update",
       });
     }
 
-    const user = await prisma.users.update({
+    const updatedData = {};
+
+    if (firstName) updatedData.firstName = firstName;
+    if (lastName) updatedData.lastName = lastName;
+    if (userName) updatedData.userName = userName;
+    if (email) updatedData.email = email;
+    if (bio) updatedData.bio = bio;
+    if (profileImg) updatedData.profileImg = profileImg;
+
+    const updatedUser = await prisma.users.update({
       where: { id },
-      data: {
-        firstName: firstName,
-        lastName: lastName,
-        userName: userName,
-        email: email,
-        bio: bio,
-        profileImg: profileImg,
-      },
+      data: updatedData,
     });
-    res.json(user);
+    res.json(updatedUser);
   } catch (error) {
     next(error);
   }
@@ -95,7 +98,7 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
 //Delete auth account --WORKS (doesn't need ID param)
 router.delete("/account", isLoggedIn, async (req, res, next) => {
   try {
-    const id = req.user.userId;
+    const id = +req.user.userId;
 
     const userExists = await prisma.users.findUnique({
       where: { id },
