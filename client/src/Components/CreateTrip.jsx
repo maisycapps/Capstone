@@ -2,62 +2,86 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const CreatePost = ({ setNewPostForm, setUpdatedUser }) => {
-  const [text, setText] = useState("");
+const CreateTrip = ({ setNewTripForm, setUpdatedUser }) => {
+
   const [destinations, setDestinations] = useState([]);
+  const [tripName, setTripName] = useState("");
   const [destinationId, setDestinationId] = useState("");
-  const [postImg, setPostImg] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  //fetch destinations from backend for dropdown menu
   useEffect(() => {
     const fetchDestinations = async () => {
       try {
         const response = await axios.get(
           "http://localhost:3000/api/destinations"
         );
-        console.log("Destinations", response.data);
         setDestinations(response.data);
       } catch (error) {
-        console.error("Error fetching destinations", error);
+        console.error("Error fetching destinations: ", error);
       }
     };
 
     fetchDestinations();
   }, []);
 
+  //handle for form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    //if no token it will navigate to login
+    // if (!token) {
+    //   nagivate("/login");
+    //   return;
+    // }
+
     try {
-      //send post to the database
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "http://localhost:3000/api/auth/account/posts",
-        { text, postImg, destinationId: parseInt(destinationId) },
+        "http://localhost:3000/api/auth/account/trips",
+        {
+          tripName,
+          destinationId: parseInt(destinationId),
+          startDate,
+          endDate,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      setNewPostForm(false);
-      setUpdatedUser(true);
-      console.log("Post created successfully", response.data);
 
-      // navigate("/account/myposts"); // redirects to posts page -- not sure on this redirect for our routes
+      console.log("Trip created successfully", response.data);
+      setNewTripForm(false)
+      setUpdatedUser(true)
+
+      //navigates to trips page for for the logged in user
+      // navigate("/account/mytrips");
     } catch (error) {
-      setError("Failed to create post, Please try again.");
+      setError("Failed to create Trip, Please try again.");
     }
   };
 
   return (
     <>
-      {/* not finished needs required params */}
       <div>
-        <h2>Create a Post</h2>
+        <h2>Create a Trip</h2>
         <form onSubmit={handleSubmit}>
-          {/* list of destinations */}
+          <div>
+            <label htmlFor="tripName">Trip Name:</label>
+            <input
+              type="text"
+              id="tripName"
+              value={tripName}
+              onChange={(e) => setTripName(e.target.value)}
+              required
+            />
+          </div>
+
           <div>
             <label htmlFor="destination">Destination:</label>
             <select
@@ -74,31 +98,34 @@ const CreatePost = ({ setNewPostForm, setUpdatedUser }) => {
               ))}
             </select>
           </div>
-          {/* image input URL */}
+
           <div>
-            <label>Image URL:</label>
+            <label htmlFor="startDate">Start Date:</label>
             <input
-              type="text"
-              value={postImg}
-              onChange={(e) => setPostImg(e.target.value)}
+              type="date"
+              id="startDate"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
               required
             />
           </div>
-          {/* post text */}
+
           <div>
-            <label>Post Text:</label>
-            <textarea
-              value={text}
-              onChange={(e) => setText(e.target.value)}
+            <label htmlFor="endDate">End Date:</label>
+            <input
+              type="date"
+              id="endDate"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
               required
             />
           </div>
           {error && <p style={{ color: "red" }}>{error}</p>}
-          <button type="submit">Submit Post</button>
+          <button type="submit">Create Trip</button>
         </form>
       </div>
     </>
   );
 };
 
-export default CreatePost;
+export default CreateTrip;

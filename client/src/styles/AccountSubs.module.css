@@ -1,0 +1,89 @@
+/* --------------------------------------ALL ACCOUNT COMPONENTS------------------------------------- */
+
+/* SUBCOMPONENT HEADERS */
+h3 {
+    text-align: center;
+    margin-top: 5px;
+}
+
+/* MAPPED ITEMS LIST - ALL "CARDS" */
+.list {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* INDIVIDAUL MAPPED ITEM "CARDS" */
+.listItemCardHeader {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+    font-size: large ;
+}
+
+.listItemCardHeader > img {
+    height: 70px;
+    width: 70px;
+}
+
+.listItemCard {
+    border: 3px solid rgb(0, 8, 255);
+    padding: 10px;
+    height: 500px;
+    width: 400px;
+}
+
+/* ie. "NO POSTS YET" */
+.defaultContent {
+    padding: 10px;
+}
+
+/* --------------------------------------SETTINGS.JSX-------------------------------------- */
+
+/* FORM LAYOUT */
+.settingsBody {
+    margin-right: 40px;
+    margin-left: 40px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.settingsForm {
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.settingsForm > input {
+    margin-bottom: 5px;
+    width: 500px;
+    height:fit-content;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center; 
+    margin-top: 5px;
+  }
+
+button {
+    width: fit-content;
+}  
+
+.deleteSection {
+    border: 2px solid red;
+    padding: 5px;
+}
+
+/* DELETE ACCOUNT WARNING */
+.deleteSection > .warning {
+    text-align: center;
+    color: red;
+    margin-bottom: 10px;
+    font-style: italic;
+}
+

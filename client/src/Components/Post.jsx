@@ -5,9 +5,12 @@ import { FaRegComments } from "react-icons/fa";
 import { AiOutlineLike } from "react-icons/ai";
 import { useState, useEffect } from "react";
 
-const Posts = () => {
+const Posts = ({ post }) => {
   const [posts, setPosts] = useState([]);
-  const [destinationId, setDestinationId] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState(null);
+  const navigate = useNavigate();
+  const [showComments, setShowComments] = useState(false);
 
   useEffect(() => {
     //fetch posts from backend
@@ -83,57 +86,82 @@ const Posts = () => {
     }
   };
 
+  const handleOnClick = () => {
+    setShowComments((prevShowComments) => !prevShowComments);
+  };
+
   return (
     <>
       {/* ------ v subjected to change v ------ */}
-      <div className={styles.container}>
-        <h2 className={styles.postHeader}>Posts</h2>
+      <div>
+        <h2>Posts</h2>
         {posts.length > 0 ? (
-          posts.map((post) => (
-            <div key={post.id} className={styles.header}>
-              <div className={styles.name}>
-                <img src={italy} alt="" className={styles.profile} />
-                <ul>
-                  <li>mathew</li>
-                </ul>
-              </div>
-              <h3>
-                {post.destination
-                  ? post.destination.destinationName
-                  : "No destination"}
-              </h3>
-              <img
-                src={post.postImg}
-                className={styles.picture}
-                alt="Post Img"
-                style={{ width: "400px", height: "400px" }}
-              />
-              {/* post created by user */}
-              <p>{post.user.userName}</p>
-              {/* post bio */}
-              <p>{post.text}</p>
-              {/* <p>likes: {post.likes ? post.likes.length : ""}</p> */}
-              <button>
-                <FaRegComments />
-                Comments: {post.comments ? post.comments.length : ""}
-              </button>
+          posts.map((post) => {
+            const hasLiked = post.likes.some((like) => like.userId === userId);
 
-              <button onClick={() => handleLikes(post.id)}>
-                <AiOutlineLike />
-                Like: {post.likes ? post.likes.length : ""}
-              </button>
-              <div className={styles.commentSection}>
-                <input
-                  type="text"
-                  placeholder="Add a comment"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleComment(post.id, e.target.value);
-                      e.target.value = ""; //clear input after submission
-                    }
-                  }}
+            return (
+              <div key={post.id}>
+                {/* display destination name */}
+                <h3>
+                  {post.destination
+                    ? post.destination.destinationName
+                    : "No destination"}
+                </h3>
+                {/* dispay destination img */}
+                <img
+                  src={post.postImg}
+                  alt="Post Img"
+                  style={{ width: "300px", height: "300px" }}
                 />
-                <button className={styles.commentPost}>Post</button>
+                {/* post created by user */}
+                <p>{post.user.userName}</p>
+                {/* post bio */}
+                <p>{post.text}</p>
+
+                {/* like button */}
+                <button onClick={() => handleLikes(post.id)}>
+                  {hasLiked
+                    ? `Unlike: ${post.likes ? post.likes.length : ""}`
+                    : `Like: ${post.likes ? post.likes.length : ""}`}
+                </button>
+
+                {/* comment button */}
+                <button onClick={handleOnClick}>
+                  {showComments
+                    ? `Hide Comments: ${
+                        post.comments ? post.comments.length : ""
+                      }`
+                    : `Comments: ${post.comments ? post.comments.length : ""}`}
+                </button>
+
+                {/* conditionally render comments */}
+                {showComments && (
+                  <div>
+                    {/* render comments for each post */}
+                    {post.comments.map((comment) => {
+                      return (
+                        <div key={comment.id}>
+                          <p>
+                            {comment.user ? comment.user.userName : userName}:{" "}
+                            {comment.text}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Add a comment"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleComment(post.id, e.target.value);
+                        e.target.value = ""; //clear input after submission
+                      }
+                    }}
+                  />
+                </div>
               </div>
             </div>
           ))

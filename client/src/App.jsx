@@ -4,7 +4,7 @@ import NavBar from "./Components/NavBar";
 // import Home from "./Pages/Home";
 // import Home from "./Pages/Home";
 import About from "./Pages/About";
-import Gallery from "./Pages/Gallery";
+import Destinations from "./Components/Destinations";
 import "./App.css";
 import Post from "./Components/Post";
 import Overview from "./Components/Overview";
@@ -17,10 +17,13 @@ import { Navigate } from "react-router-dom";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   //checks if user is logged in on intial render
   useEffect(() => {
-    setLoggedIn(isAuthenticated());
+    const loggedInStatus = isAuthenticated();
+    setLoggedIn(loggedInStatus);
+    setLoading(false); //sets loading to false after check is done
   }, []);
 
   useEffect(() => {
@@ -37,16 +40,21 @@ function App() {
     }
   }, []);
 
+  if (loading) {
+    //show loading spinner or message while authentication is checked
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <NavBar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
 
       <Routes>
-        <Route path="/" element={<Overview />} />
+        <Route path="*" element={<Overview />} />
 
         <Route path="/about" element={<About />} />
 
-        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/destinations" element={<Destinations />} />
         <Route path="/user" element={<Post />} />
         <Route path="/login" element={<Login setLoggedIn={setLoggedIn} />} />
         <Route
@@ -54,8 +62,14 @@ function App() {
           element={<Register loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
         />
         <Route
-          path="/account"
-          element={loggedIn ? <Account /> : <Navigate to="/login" />}
+          path="/account/*"
+          element={
+            loggedIn ? (
+              <Account setLoggedIn={setLoggedIn} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
       </Routes>
     </div>
