@@ -108,7 +108,6 @@ const MyPosts = ({ user }) => {
     } catch (error) {
       console.error("error adding comment: ", error);
     }
-    setNewCommentForm(false);
   };
   
 
@@ -150,40 +149,38 @@ const MyPosts = ({ user }) => {
                   style={{ width: "300px", height: "300px" }}
                   />
 
-                  {/* like button */}
+                  <p>
+                    {post.text} {"  "}
+                    {new Date(post.createdAt).toLocaleDateString()}</p>
+                    { post.updatedAt !== post.createdAt ? <p>edited: {new Date(post.updatedAt).toLocaleDateString()}</p> : null}  
+
+                  {/* DYNAMIC LIKE BUTTON */}
                   <button onClick={() => handleLikes(post.id)}>
                     {hasLiked 
                       ? `Unlike ${post.likes ? post.likes.length : ""}` 
                       : `Like ${post.likes ? post.likes.length : ""}` 
                     }
                   </button>
-
-                  <p>comments: {post.comments ? post.comments.length : ""}</p>
-
-                  <p><b>{user.userName}</b> {"  "}
-                    {post.text} {"  "}
-                    {new Date(post.createdAt).toLocaleDateString()}</p>
-                    { post.updatedAt !== post.createdAt ? <p>edited: {new Date(post.updatedAt).toLocaleDateString()}</p> : null}
                   
-                  {post.comments ? (
-                      post.comments.map((comment) => {
-                      return (
-                        <div key={comment.id}>
-                            <p>
-                              <b> { comment.user ? comment.user.userName : "...loading" }</b>{" "}
-                              {comment.text}{"  "}
-                              {new Date(comment.createdAt).toLocaleDateString()}
-                            </p>
-                        </div>
-                      );
-                      })) : (null)}
+                  {/* VIEW COMMENTS BUTTON */}
+                  <button onClick={() => setSeeComments(true)}> Comments {post.comments.length}</button>
+
+                  {seeComments === true && post.comments.length > 0
+                      ? post.comments.map((comment) => {
+                        return (
+                          <div key={comment.id}>
+                              <p>
+                                <b> { comment.user ? comment.user.userName : "...loading" }</b>{" "}
+                                {comment.text}{"  "}
+                                {new Date(comment.createdAt).toLocaleDateString()}
+                              </p>
+                          </div>
+                        );
+                        })
+                      : null}  
                 
                   <div>
 
-                    {/* comment button */}
-                    <button onClick={() => setNewCommentForm(true)}>Comment</button>
-
-                         
                     <input
                       type="text"
                       placeholder="Add a comment"
