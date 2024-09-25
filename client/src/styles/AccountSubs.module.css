@@ -11,7 +11,7 @@ h3 {
     display: flex;
     flex-direction: row;
     gap: 10px;
-    flex-wrap: wrap;
+    flex-flow: wrap;
 }
 
 /* INDIVIDAUL MAPPED ITEM "CARDS" */
@@ -24,6 +24,10 @@ h3 {
     font-size: large ;
 }
 
+.listItemCardHeaderText {
+    flex-direction: column;
+}
+
 .listItemCardHeader > img {
     height: 70px;
     width: 70px;
@@ -31,13 +35,23 @@ h3 {
 
 .listItemCard {
     padding: 10px;
-    height: 500px;
+    min-height: 500px;
     width: 400px;
 }
 
 /* ie. "NO POSTS YET" */
 .defaultContent {
     padding: 10px;
+}
+
+
+/* --------------------------------------MYPOSTS.JSX-------------------------------------- */
+
+.postButtonContainer {
+    display: flex;
+    gap: 5px;
+    padding-bottom: 5px;
+    padding-top: 5px;
 }
 
 /* --------------------------------------SETTINGS.JSX-------------------------------------- */
