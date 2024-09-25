@@ -4,7 +4,7 @@ import NavBar from "./Components/NavBar";
 // import Home from "./Pages/Home";
 // import Home from "./Pages/Home";
 import About from "./Pages/About";
-import Gallery from "./Pages/Gallery";
+import Destinations from "./Components/Destinations";
 import "./App.css";
 import Post from "./Components/Post";
 import Overview from "./Components/Overview";
@@ -46,7 +46,7 @@ function App() {
 
         <Route path="/about" element={<About />} />
 
-        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/destinations" element={<Destinations />} />
         <Route path="/user" element={<Post />} />
         <Route path="/login" element={<Login setLoggedIn={setLoggedIn} />} />
         <Route
@@ -54,8 +54,8 @@ function App() {
           element={<Register loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
         />
         <Route
-          path="/account"
-          element={loggedIn ? <Account /> : <Navigate to="/login" />}
+          path="/account/*"
+          element={loggedIn ? <Account setLoggedIn={setLoggedIn} /> : <Navigate to="/login" />}
         />
       </Routes>
     </div>

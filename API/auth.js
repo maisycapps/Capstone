@@ -21,12 +21,35 @@ router.post("/register", createUser);
 //Check auth user - see authControllers folder
 router.post("/login", authenticate);
 
-//Get auth user account - see authControllers folder
+//Get auth user's token payload - see authControllers folder
 router.get("/account", isLoggedIn, async (req, res, next) => {
-  try {
+  try { 
     res.send(req.user);
   } catch (error) {
     next(error);
+  }
+});
+
+//Get entirety of auth user's data
+router.get("/account/users", isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const account = await prisma.users.findMany({
+      where: { id: userId },
+      include: {
+        followedBy: true, // Who auth user follows. Here auth user = followedById   
+        following: true, // Who auth user is followed by. Here auth user = followingId   
+        likes: true,        
+        posts: true,         
+        trips: true,         
+      },
+    })
+
+    res.status(200).json(account);
+  } catch (error) {
+    console.error("Error fetching user's data: ", error);
+    res.status(500).json({ error: "Failed to fetch user's data!" });
   }
 });
 
@@ -45,25 +68,28 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
     }
 
     const { firstName, lastName, userName, email, bio, profileImg } = req.body;
-    if (!firstName || !lastName || !userName || !email || !bio || !profileImg) {
+
+    if (!firstName && !lastName && !userName && !email && !bio && !profileImg) {
       return next({
         status: 404,
-        message: "Fields are required",
+        message: "At least one field is required to create an update",
       });
     }
 
-    const user = await prisma.users.update({
+    const updatedData = {};
+
+    if (firstName) updatedData.firstName = firstName;
+    if (lastName) updatedData.lastName = lastName;
+    if (userName) updatedData.userName = userName;
+    if (email) updatedData.email = email;
+    if (bio) updatedData.bio = bio;
+    if (profileImg) updatedData.profileImg = profileImg;
+
+    const updatedUser = await prisma.users.update({
       where: { id },
-      data: {
-        firstName: firstName,
-        lastName: lastName,
-        userName: userName,
-        email: email,
-        bio: bio,
-        profileImg: profileImg,
-      },
+      data: updatedData,
     });
-    res.json(user);
+    res.json(updatedUser);
   } catch (error) {
     next(error);
   }
@@ -72,7 +98,7 @@ router.patch("/account", isLoggedIn, async (req, res, next) => {
 //Delete auth account --WORKS (doesn't need ID param)
 router.delete("/account", isLoggedIn, async (req, res, next) => {
   try {
-    const id = req.user.userId;
+    const id = +req.user.userId;
 
     const userExists = await prisma.users.findUnique({
       where: { id },
@@ -85,7 +111,7 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
       });
     }
 
-    await prisma.users.delete({ where: { id: parseInt(id) } });
+    await prisma.users.delete({ where: { id } });
     res.sendStatus(204);
   } catch (error) {
     console.error("Error deleting user: ", error);
@@ -97,7 +123,7 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
 
 // <---------- v ACCOUNT FOLLOWS v ---------->
 
-//Create auth user follows --WORKS!!!!!!!!!!
+//Create auth user follow (follow someone) --WORKS
 router.post("/account/users/:id/follows", isLoggedIn, async (req, res) => {
   const { id } = req.params; //user to follow's id > followingId
   console.log("user to follow", parseInt(id));
@@ -119,23 +145,59 @@ router.post("/account/users/:id/follows", isLoggedIn, async (req, res) => {
     const newFollows = await prisma.follows.create({
       data: {
         followingId: parseInt(id),
-        followedById: parseInt(userId),
+        followedById: parseInt(userId)
       },
     });
 
     res.status(201).json(newFollows);
-    console.log("USER FOLLOWED SUCCESS");
   } catch (error) {
     console.log("error following user: ", error);
     res.status(500).json({ error: "Failed to follow user!" });
   }
 });
 
-//Get auth user follows
+//Get auth user follows (finds anytime the auth user is either followed or following)
+router.get("/account/follows", isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.user.userId;
 
-//Update auth user follows(see readme route notes!)
+    const userFollows = await prisma.follows.findMany({
+      where: { 
+        OR: [
+          { followedById: userId },
+          { followingId: userId }
+        ]
+       }
+    })
 
-//Delete auth user follows (see readme route notes!)
+    res.status(200).json(userFollows);
+  } catch (error) {
+    console.error("Error fetching follows: ", error);
+    res.status(500).json({ error: "Failed to fetch follows!" });
+  }
+})
+
+//Delete auth user follow (unfollow someone)
+router.delete("/account/users/:id/follows", isLoggedIn, async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const userId = req.user.userId;
+
+    //delete follow
+    await prisma.follows.deleteMany({
+      where: { 
+        followedById: userId ,
+        followingId: parseInt(id)
+       }
+    });
+
+    res.status(200).json({ message: "Follow deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting follow: ", error);
+    res.status(500).json({ error: "failed to delete follow" });
+  }
+});
 
 // <---------- ^ ACCOUNT FOLLOWS ^ ---------->
 
@@ -333,7 +395,13 @@ router.get("/account/posts", isLoggedIn, async (req, res, next) => {
       });
     }
 
-    const posts = await prisma.posts.findMany({ where: { userId: id } });
+    const posts = await prisma.posts.findMany({ 
+      where: { userId: id }, 
+      include: {    
+        likes: true,        
+        comments: true,                
+      },
+    });
 
     res.json(posts);
   } catch (error) {
