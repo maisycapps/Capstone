@@ -1,14 +1,20 @@
 .container {
-  background-color: #fff;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: auto;
 }
-
+.container.postHeader {
+  font-weight: bold;
+  position: fixed;
+}
 .container .header {
-  height: 65%;
-  width: 65%;
-  border: 2px solid red;
+  width: 70%;
+  /* margin-bottom: 20px; */
   border-radius: 20px;
+  margin-top: 25px;
   box-shadow: rgba(100, 100, 111, 0.5) 0px 7px 29px 0px;
 }
 .header .name {
@@ -16,7 +22,7 @@
   display: flex;
   width: 100%;
   padding: 20px;
-  border: 2px solid red;
+  border-bottom: 1px solid red;
 }
 
 .header .name .profile {

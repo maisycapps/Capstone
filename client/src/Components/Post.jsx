@@ -1,39 +1,22 @@
-import styles from "../styles/Post.module.css";
 import axios from "axios";
+import styles from "../styles/Post.module.css";
 import italy from "./Images/italy.jpg";
-import { MdMoreVert } from "react-icons/md";
 import { FaRegComments } from "react-icons/fa";
 import { AiOutlineLike } from "react-icons/ai";
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
-  const [userId, setUserId] = useState(null);
-  const [userName, setUserName] = useState(null);
-  const navigate = useNavigate();
+  const [destinationId, setDestinationId] = useState("");
 
   useEffect(() => {
     //fetch posts from backend
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/posts");
+        const response = await axios.get("http://localhost:3000/api/posts", {
+          destinationId,
+        });
         setPosts(response.data);
-
-        //fetch logged in users ID
-        const token = localStorage.getItem("token");
-        if (token) {
-          const userResponse = await axios.get(
-            "http://localhost:3000/api/auth/account",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setUserId(userResponse.data.id);
-          setUserName(userResponse.data.userName);
-        }
       } catch (error) {
         console.error("Error fetching posts: ", error);
       }
@@ -46,13 +29,8 @@ const Posts = () => {
   const handleLikes = async (postId) => {
     const token = localStorage.getItem("token");
 
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
     try {
-      const response = await axios.post(
+      await axios.post(
         `http://localhost:3000/api/auth/account/posts/${postId}/likes`,
         {},
         {
@@ -62,25 +40,11 @@ const Posts = () => {
         }
       );
 
-      console.log(response.data);
-
-      const action = response.data.action;
-
-      if (!action) {
-        console.error("action is undefined in the response");
-      }
-
       //update UI after liking post
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
           post.id === postId
-            ? {
-                ...post,
-                likes:
-                  action === "like"
-                    ? [...post.likes, { id: userId }] //add like if action is 'like"
-                    : post.likes.filter((like) => like.userId !== userId), //Remove like if logged in user has liked the post
-              }
+            ? { ...post, likes: [...post.likes, { id: postId }] }
             : post
         )
       );
@@ -92,11 +56,6 @@ const Posts = () => {
   //function to handle adding comment
   const handleComment = async (postId, commentText) => {
     const token = localStorage.getItem("token");
-
-    if (!token) {
-      navigate("/login");
-      return;
-    }
 
     try {
       const response = await axios.post(
@@ -110,7 +69,6 @@ const Posts = () => {
           },
         }
       );
-      console.log("Response data: ", response.data);
 
       //update UI after adding comment
       setPosts((prevPosts) =>
@@ -127,109 +85,62 @@ const Posts = () => {
 
   return (
     <>
-      {/* 
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <div className={styles.name}>
-            <img src={italy} alt="" className={styles.profile} />
-            <ul>
-              <li>mathew</li>
-              <li>Online</li>
-            </ul>
-            <div className={styles.status}></div>
-            <MdMoreVert className={styles.moreIcon} />
-          </div>
-        </div>
-        <img src={italy} alt="" className={styles.picture} />
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus
-          fugit aut architecto reiciendis temporibus, veritatis omnis cum
-          doloribus voluptas a quasi vero deserunt molestiae eveniet commodi
-          sapiente placeat quae dignissimos.
-        </p>
-//         {/* <div className={styles.btn}>
-//           <button>
-//             <AiOutlineLike />
-//             Like<span>{countLikes}</span>
-//           </button>
-
-          <button onClick={handleCountComments}>
-            <FaRegComments />
-            Comment<span>{countComments}</span>
-          </button>
-          {/* <button>Repost</button> */}
-      {/* </div>
-        <div className={styles.commentSection}>
-          <img src={italy} alt="" className={styles.profileComment} />
-          <input type="text" placeholder="Write You Comment here" />
-          <button className={styles.commentPost}>Post</button>
-        </div>
-        <p className={styles.timestamp}>9:42 pm Sep 17, 2024</p>
-      </div> */}
-
       {/* ------ v subjected to change v ------ */}
-      <div>
-        <h2>Posts</h2>
+      <div className={styles.container}>
+        <h2 className={styles.postHeader}>Posts</h2>
         {posts.length > 0 ? (
-          posts.map((post) => {
-            const hasLiked = post.likes.some((like) => like.userId === userId);
-
-            return (
-              <div key={post.id}>
-                {/* display destination name */}
-                <h3>
-                  {post.destination
-                    ? post.destination.destinationName
-                    : "No destination"}
-                </h3>
-                {/* dispay destination img */}
-                <img
-                  src={post.postImg}
-                  alt="Post Img"
-                  style={{ width: "300px", height: "300px" }}
-                />
-                {/* post created by user */}
-                <p>{post.user.userName}</p>
-                {/* post bio */}
-                <p>{post.text}</p>
-                <p>likes: {post.likes ? post.likes.length : ""}</p>
-                <p>Comments: {post.comments ? post.comments.length : ""}</p>
-
-                {/* like button */}
-                <button onClick={() => handleLikes(post.id)}>
-                  {hasLiked ? "Unlike" : "Like"}
-                </button>
-
-                {/* comment button */}
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Add a comment"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        handleComment(post.id, e.target.value);
-                        e.target.value = ""; //clear input after submission
-                      }
-                    }}
-                  />
-                  {/* render comments for each post */}
-                  {post.comments.map((comment) => {
-                    return (
-                      <div key={comment.id}>
-                        <p>
-                          {comment.user ? comment.user.userName : userName}:{" "}
-                          {comment.text}
-                        </p>
-                      </div>
-                    );
-                  })}
-                </div>
+          posts.map((post) => (
+            <div key={post.id} className={styles.header}>
+              <div className={styles.name}>
+                <img src={italy} alt="" className={styles.profile} />
+                <ul>
+                  <li>mathew</li>
+                </ul>
               </div>
-            );
-          })
+              <h3>
+                {post.destination
+                  ? post.destination.destinationName
+                  : "No destination"}
+              </h3>
+              <img
+                src={post.postImg}
+                className={styles.picture}
+                alt="Post Img"
+                style={{ width: "400px", height: "400px" }}
+              />
+              {/* post created by user */}
+              <p>{post.user.userName}</p>
+              {/* post bio */}
+              <p>{post.text}</p>
+              {/* <p>likes: {post.likes ? post.likes.length : ""}</p> */}
+              <button>
+                <FaRegComments />
+                Comments: {post.comments ? post.comments.length : ""}
+              </button>
+
+              <button onClick={() => handleLikes(post.id)}>
+                <AiOutlineLike />
+                Like: {post.likes ? post.likes.length : ""}
+              </button>
+              <div className={styles.commentSection}>
+                <input
+                  type="text"
+                  placeholder="Add a comment"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleComment(post.id, e.target.value);
+                      e.target.value = ""; //clear input after submission
+                    }
+                  }}
+                />
+                <button className={styles.commentPost}>Post</button>
+              </div>
+            </div>
+          ))
         ) : (
           <p>No Posts available</p>
         )}
+        {/* </div> */}
       </div>
     </>
   );
