@@ -63,6 +63,8 @@ const MyTrips = ({ user, setUpdatedUser }) => {
               <>
                 <p className={styles.defaultContent}>No Trips Yet</p>
                 <button onClick={() => setNewTripForm(true)}>Create your first Trip</button>
+
+                {/* CONDITIONALLY RENDER CREATE TRIP FORM */}
                 {newTripForm === true ? <CreateTrip setNewTripForm={setNewTripForm} setUpdatedUser={setUpdatedUser}/> : null}
               </>
             )

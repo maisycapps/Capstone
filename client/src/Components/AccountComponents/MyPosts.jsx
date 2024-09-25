@@ -4,45 +4,44 @@ import axios from 'axios';
 import styles from "../../styles/AccountSubs.module.css";
 
 
-const MyPosts = ({ user, setUpdatedUser }) => {
+const MyPosts = ({ user }) => {
 
-  const [destinationNames, setDestinationNames] = useState({});
+  //dependency factor for Account.jsx.
   const [newPostForm, setNewPostForm] = useState(false);
-  const [posts, setPosts] = useState({})
-  const [like, setLike] = useState(false)
+
+  const [seeComments, setSeeComments] = useState(false);
+
+  //user's fetched posts
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
 
-    const getDestinationName = async(destinationId) => {
-
+    const fetchUserPosts = async() => {
       try {
-        if(!destinationNames[destinationId]) {
+        const response = await axios.get("http://localhost:3000/api/auth/account/posts",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        setPosts(response.data);
 
-          const response = await axios.get(`http://localhost:3000/api/destinations/${destinationId}`);
-          const result = await response.data;
-            setDestinationNames((prevNames) => ({
-            ...prevNames, [destinationId]: result.destinationName,
-            }));
-        }
       } catch (error) {
-        console.error(error)
+        console.error("Error fetching posts: ", error);
       }
-   };
-   
-   user.posts.forEach((post) => {
-    getDestinationName(post.destinationId);
-   })
+    };
+    fetchUserPosts();
 
-   setPosts(user.posts);
-   setLike(false);
+  }, []);
 
-  }, [posts, like]);
-
-  //funtion to handle likes
-    const handleLikes = async (postId) => {
+  //HANDLE LIKES
+  const handleLikes = async (postId) => {
   
+      const token = localStorage.getItem("token");
+
       try {
-        const token = localStorage.getItem("token");
         const response = await axios.post(
           `http://localhost:3000/api/auth/account/posts/${postId}/likes`,
           {},
@@ -54,32 +53,64 @@ const MyPosts = ({ user, setUpdatedUser }) => {
         );
   
         const action = response.data.action;
-        setLike(true);
   
         if (!action) {
           console.error("action is undefined in the response");
         }
   
-        //update UI after liking post
-        // setPosts((prevPosts) =>
-        //   prevPosts.map((post) =>
-            
-        //     post.id === postId
-        //       ? { 
-        //           ...post,
-        //           likes:
-        //             action === "like"
-        //               ? [...post.likes, { id: user.id }] //add like if action is 'like"
-        //               : post.likes.filter((like) => like.userId !== user.id)
-        //                //Remove like if logged in user has liked the post
-        //         }
-        //       : post
-        //   )
-        // );
+        // update UI after liking post
+        setPosts((prevPosts) =>   
+          prevPosts.map((post) =>        
+            post.id === postId
+              ? { 
+                  ...post,
+                  likes:
+                    action === "like"
+                      ? [...post.likes, { id: user.id }] //add like if action is 'like"
+                      : post.likes.filter((like) => like.userId !== user.id) //Remove like if logged in user has liked the post
+                }
+              : post
+          )
+        );
+
       } catch (error) {
         console.error("Error liking post: ", error);
       }
-    };
+  };
+
+  //HANDLE COMMENTS
+  const handleComment = async (postId, commentText) => {
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/auth/account/posts/${postId}/comments`,
+        {
+          text: commentText,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log("Response data: ", response.data);
+
+      //update UI after adding comment
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.id === postId
+            ? { ...post, comments: [...post.comments, response.data] }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("error adding comment: ", error);
+    }
+    setNewCommentForm(false);
+  };
+  
 
   return (  
     <>
@@ -88,81 +119,93 @@ const MyPosts = ({ user, setUpdatedUser }) => {
         <div className={styles.buttonContainer}>
           <button onClick={() => setNewPostForm(true)}>Add New Post</button>
         </div>
-      {newPostForm === true ? <CreatePost setNewPostForm={setNewPostForm} setUpdatedUser={setUpdatedUser}/> : null}
+
+        {/* CONDITIONALLY RENDER CREATE POST FORM */}
+        {newPostForm === true ? <CreatePost setNewPostForm={setNewPostForm} setUpdatedUser={setUpdatedUser}/> : null}
       
       <div className={styles.list}>
-        {user.posts.length > 0 ? (
-        
-            user.posts.map((post) => {
+        {posts.length > 0 ? (
+
+            posts.map((post) => {
   
-              const hasLiked = post.likes ? post.likes.some((like) => like.userId === user.id) : null;
+              const hasLiked = post.likes.some((like) => like.userId === user.id);
               
               return (
 
-            <div key={post.id} className={styles.listItemCard}>
-              <div className={styles.listItemCardHeader}>
-                <img src={user.profileImg}/>
-                <p><b>{user.userName}</b></p>
-              </div>
+                <div key={post.id} className={styles.listItemCard}>
+                  <div className={styles.listItemCardHeader}>
+                    <img src={user.profileImg}/>
+                    <p><b>{user.userName}</b></p>
+                  </div>
 
-              <span>
-              {post.destinationId ? (
-               <>
-                <p><b>Destination: </b> {destinationNames[post.destinationId]} </p>
-               </>
-              ) : ( "No destination" )}
-              </span>
+                  <p><b>Destination: </b>                 
+                    {post.destination
+                    ? post.destination.destinationName
+                    : "No destination"} 
+                  </p>
 
-              <img
-              src={post.postImg}
-              alt="Post Img"
-              style={{ width: "300px", height: "300px" }}
-              />
-              <p>likes: {post.likes ? post.likes.length : ""}</p>
-              <p>comments: {post.comments ? post.comments.length : ""}</p>
+                  <img
+                  src={post.postImg}
+                  alt="Post Img"
+                  style={{ width: "300px", height: "300px" }}
+                  />
 
-              <p><b>{user.userName}</b> {post.text}</p>
-              <p>created on {new Date(post.createdAt).toLocaleDateString()}</p>
-              { post.updatedAt !== post.createdAt ? <p>updated on {new Date(post.updatedAt).toLocaleDateString()}</p> : null}
-           
-                <button onClick={() => handleLikes(post.id)}>
-                  {hasLiked ? "Unlike" : "Like"}
-                </button>
-
-             
-              <div>
-                {/* <input
-                  type="text"
-                  placeholder="Add a comment"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                        handleComment(post.id, e.target.value);
-                        e.target.value = ""; //clear input after submission
+                  {/* like button */}
+                  <button onClick={() => handleLikes(post.id)}>
+                    {hasLiked 
+                      ? `Unlike ${post.likes ? post.likes.length : ""}` 
+                      : `Like ${post.likes ? post.likes.length : ""}` 
                     }
-                  }}
-                /> */}
+                  </button>
 
-              
+                  <p>comments: {post.comments ? post.comments.length : ""}</p>
+
+                  <p><b>{user.userName}</b> {"  "}
+                    {post.text} {"  "}
+                    {new Date(post.createdAt).toLocaleDateString()}</p>
+                    { post.updatedAt !== post.createdAt ? <p>edited: {new Date(post.updatedAt).toLocaleDateString()}</p> : null}
+                  
                   {post.comments ? (
-                  post.comments.map((comment) => {
-                  return (
-                    <div key={comment.id}>
-                        <p>
-                          {comment.user ? comment.user.userName : userName}:{" "}
-                          {comment.text}
-                        </p>
-                    </div>
-                  );
-                  })) : (null)}
-              </div>
-                 
-            </div>
+                      post.comments.map((comment) => {
+                      return (
+                        <div key={comment.id}>
+                            <p>
+                              <b> { comment.user ? comment.user.userName : "...loading" }</b>{" "}
+                              {comment.text}{"  "}
+                              {new Date(comment.createdAt).toLocaleDateString()}
+                            </p>
+                        </div>
+                      );
+                      })) : (null)}
+                
+                  <div>
+
+                    {/* comment button */}
+                    <button onClick={() => setNewCommentForm(true)}>Comment</button>
+
+                         
+                    <input
+                      type="text"
+                      placeholder="Add a comment"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                            handleComment(post.id, e.target.value);
+                            e.target.value = ""; //clear input after submission
+                        }
+                      }}
+                    /> 
+      
+                  </div>
+                    
+                </div>
             ) 
           })
           ) : ( 
             <>
               <p className={styles.defaultContent}>No Posts Yet</p>
               <button onClick={() => setNewPostForm(true)}>Create your first post</button>
+
+              {/* CONDITIONALLY RENDER CREATE POST FORM */}
               {newPostForm === true ? <CreatePost setNewPostForm={setNewPostForm} setUpdatedUser={setUpdatedUser}/> : null}
             </>
             )

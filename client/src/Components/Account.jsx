@@ -110,7 +110,7 @@ const Account = ({ setLoggedIn }) => {
             <Routes>
               <Route path="followers" element={<Followers user={user}/>}/>
               <Route path="following" element={<Following user={user}/>}/>
-              <Route path="myposts" element={<MyPosts user={user} setUpdatedUser={setUpdatedUser}/>}/>
+              <Route path="myposts" element={<MyPosts user={user}/>}/>
               <Route path="mytrips" element={<MyTrips user={user} setUpdatedUser={setUpdatedUser}/>}/>
               <Route path="settings" element={<Settings user={user} setUpdatedUser={setUpdatedUser} setLoggedIn={setLoggedIn}/>}/>
             </Routes>

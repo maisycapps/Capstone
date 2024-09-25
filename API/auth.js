@@ -398,8 +398,13 @@ router.get("/account/posts", isLoggedIn, async (req, res, next) => {
     const posts = await prisma.posts.findMany({ 
       where: { userId: id }, 
       include: {    
-        likes: true,        
-        comments: true,                
+        destination: true,
+        comments: {
+          include: {
+            user: true,
+          },
+        },
+        likes: true,               
       },
     });
 
