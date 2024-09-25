@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import CreateTrip from '../CreateTrip';
+import styles from "../../styles/AccountSubs.module.css";
 
-const MyTrips = ({ user }) => {
+const MyTrips = ({ user, setUpdatedUser }) => {
 
   const [destinationNames, setDestinationNames] = useState({});
   const [newTripForm, setNewTripForm] = useState(false);
@@ -25,8 +26,8 @@ const MyTrips = ({ user }) => {
       }
    };
    
-   user.trips.forEach((trip) => {
-    getDestinationName(trip.destinationId);
+      user.trips.forEach((trip) => {
+        getDestinationName(trip.destinationId);
    })
 
   }, []);
@@ -34,28 +35,38 @@ const MyTrips = ({ user }) => {
   return ( 
     <> 
       <h3>Trips</h3>
+        <div className={styles.buttonContainer}>
+          <button onClick={() => setNewTripForm(true)}>Add New Trip</button>
+        </div>
+      {newTripForm === true ? <CreateTrip setNewTripForm={setNewTripForm} setUpdatedUser={setUpdatedUser}/> : null}
         
-        <div>
+        <div className={styles.list}>
           {user.trips.length > 0 ? (
               user.trips.map((trip) => (
-                <div key={trip.id}>
-            
-                  <p>{trip.tripName}</p>
-              
-                  <p>Where: {destinationNames[trip.destinationId] || "Loading..."}</p>
+                <div key={trip.id} className={styles.listItemCard}>
 
-                  <p>Start Date: {new Date(trip.startDate).toLocaleDateString()}</p>
-                  <p>End Date: {new Date(trip.endDate).toLocaleDateString()}</p>
+                  <div className={styles.listItemCardHeader}>
+                    <img src={user.profileImg}/>
+                    <p><b>{user.userName}</b></p>
+                  </div>
+
+                  <h4>"{trip.tripName}"</h4>
+              
+                  <p><b>Destination: </b> {destinationNames[trip.destinationId] || "Loading..."}</p>
+
+                  <p><b>Start Date:</b> {new Date(trip.startDate).toLocaleDateString()}</p>
+                  <p><b>End Date:</b> {new Date(trip.endDate).toLocaleDateString()}</p>
 
                 </div>
               ))
             ) : (
               <>
-                <p>No Trips Yet</p>
-                <button onClick={setNewTripForm(true)}>Create your first Trip</button>
-                {newTripForm === true ? <CreateTrip setNewTripForm={setNewTripForm}/> : null}
+                <p className={styles.defaultContent}>No Trips Yet</p>
+                <button onClick={() => setNewTripForm(true)}>Create your first Trip</button>
+                {newTripForm === true ? <CreateTrip setNewTripForm={setNewTripForm} setUpdatedUser={setUpdatedUser}/> : null}
               </>
-          )}
+            )
+          }
         </div>
     </> 
   );

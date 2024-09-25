@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import styles from "../../styles/AccountSubs.module.css";
 
 const Following = ({user}) => {
 
@@ -48,9 +49,11 @@ const Following = ({user}) => {
               ))
           ) : (
               <>
-                <p>Not Following Anyone Yet</p>
-                <button onClick={() => setSeeUsers(true)}>Browse users to follow</button>
-                {seeUsers === true ? /* view all users component*/ null : null}
+                <p className={styles.defaultContent}>Not Following Anyone Yet</p>
+                  <div className={styles.buttonContainer}>
+                    <button onClick={() => setSeeUsers(true)} >Browse users to follow</button>
+                  </div>
+                {seeUsers === true ? /* view all users component*/ console.log("seeUsers component tbd") : null}
 
               </>
           )}

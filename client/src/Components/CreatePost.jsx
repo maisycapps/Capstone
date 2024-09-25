@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const CreatePost = ({ setNewPostForm }) => {
+const CreatePost = ({ setNewPostForm, setUpdatedUser}) => {
   const [text, setText] = useState("");
   const [destinations, setDestinations] = useState([]);
   const [destinationId, setDestinationId] = useState("");
@@ -43,6 +43,7 @@ const CreatePost = ({ setNewPostForm }) => {
         }
       );
       setNewPostForm(false);
+      setUpdatedUser(true);
       console.log("Post created successfully", response.data);
       
       // navigate("/account/myposts"); // redirects to posts page -- not sure on this redirect for our routes

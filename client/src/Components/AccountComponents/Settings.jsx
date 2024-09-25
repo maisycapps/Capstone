@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import styles from "../../styles/AccountSubs.module.css";
 
 const Settings = ({user, setUpdatedUser, setLoggedIn}) => {
 
@@ -65,10 +66,11 @@ const Settings = ({user, setUpdatedUser, setLoggedIn}) => {
 
     return ( 
         <>
+          <div className={styles.settingsBody}>
             <h3>Account Settings</h3> 
 
             <form onSubmit={handleSubmit}>
-                <div>
+                <div className={styles.settingsForm}>
                     <label>First Name</label>
                     <input type="text" name="firstName" onChange={(e) => setFirstName(e.target.value)}/>
 
@@ -87,12 +89,19 @@ const Settings = ({user, setUpdatedUser, setLoggedIn}) => {
                     <label>Bio</label>
                     <input type="text" name="Bio" onChange={(e) => setBio(e.target.value)}/>
 
+                    <div className={styles.buttonContainer}>
                     <button type="submit">Save Changes</button>
+                    </div>
                 </div>
             </form>
-
+            <div className={styles.deleteSection}>
+            <h3>Delete Account</h3> 
+            <p className={styles.warning}>this action is permanent</p>
+            <div className={styles.buttonContainer}>
             <button onClick={handleDelete}>Delete Account</button>
-
+            </div>
+            </div>
+          </div>
         </>
 )
 }

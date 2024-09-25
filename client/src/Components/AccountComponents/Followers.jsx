@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import styles from "../../styles/Account.module.css"
+import styles from "../../styles/AccountSubs.module.css";
 
 const Followers = ({user}) => {
 
@@ -48,7 +48,7 @@ const Followers = ({user}) => {
               ))
           ) : (
               <>
-                <p>No Followers Yet</p>
+                <p className={styles.defaultContent}>No Followers Yet</p>
               </>
           )}
       </ul>

@@ -1,38 +1,69 @@
-.accountNav {
-  display: flex;
-  gap: 10px;
+/* ACCOUNT WHOLE PAGE CONTAINER*/
+.account {
+  display: grid;
+  border: 1px solid black;
 }
 
-{/* ACCOUNT HEADER CONTAINER*/}
+/* ACCOUNT HEADER */
 .accountCard {
   height: 400px;
+  padding: 10px;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  align-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 30px;
 }
-{/* ACCOUNT HEADER CONTENT*/}
+
+/* ACCOUNT HEADER SECTIONS */
+.header {
+  margin: 10px;
+}
+
+/* STATS FIELD */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  gap: 30px;
+}
+
+/* STAT TITLE & COUNT PAIRS */
+.stat {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+
+/* ACCOUNT HEADER IMAGE */
 .accountCard img {
-  /* justify-content: center; */
+  justify-content: center;
   align-items: center;
   width: 200px;
   height: 200px;
   border-radius: 50%;
 }
-.accountCard h1 {
+
+ /* ACCOUNT HEADER FIRSTNAME LASTNAME */
+.accountCard h2 {
   font-size: 26px;
   font-weight: bold;
+  margin-bottom: 5px;
 }
 
-
-.account {
-  margin-top: 20px;
-  display: grid;
-  border: 1px solid black;
-}
-
+/* ACCOUNT LOADING */
 .loading {
   color: blue;
 }
 
+/* ACCOUNT NAV BAR - overall placement/layout */
 .accountNav {
   display: flex;
-  gap: 10px;
+  justify-content: space-evenly;
+  padding: 10px;
 }
+
