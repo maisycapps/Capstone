@@ -2,25 +2,23 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 
-const Followers = ({user}) => {
-
+const Followers = ({ user }) => {
   const [followerNames, setFollowerNames] = useState({});
 
   useEffect(() => {
-    
     const fetchFollowers = async (followedById) => {
-      
       try {
-
-        if(!followerNames[followedById]){
-
+        if (!followerNames[followedById]) {
           //fetch users by ID
-          const response = await axios.get(`http://localhost:3000/api/users/${followedById}`);
+          const response = await axios.get(
+            `http://localhost:3000/api/users/${followedById}`
+          );
           const firstName = await response.data.firstName;
           const lastName = await response.data.lastName;
-            setFollowerNames((prevNames) => ({
-              ...prevNames, [followedById]: `${firstName} ${lastName}`
-            }));
+          setFollowerNames((prevNames) => ({
+            ...prevNames,
+            [followedById]: `${firstName} ${lastName}`,
+          }));
         }
       } catch (error) {
         console.error(error);
@@ -28,9 +26,8 @@ const Followers = ({user}) => {
     };
 
     user.following.forEach((follower) => {
-      fetchFollowers(follower.followingId)
-    })
-
+      fetchFollowers(follower.followingId);
+    });
   }, [user.following, followerNames]);
 
   return (
@@ -39,21 +36,19 @@ const Followers = ({user}) => {
 
       <ul>
         {user.following.length > 0 ? (
-              user.following.map((follower, index) => (
-                <div key={index}>
-                
-                    <li>{followerNames[follower.followingId] || "Loading..."}</li>
-                 
-                </div>
-              ))
-          ) : (
-              <>
-                <p className={styles.defaultContent}>No Followers Yet</p>
-              </>
-          )}
+          user.following.map((follower, index) => (
+            <div key={index}>
+              <li>{followerNames[follower.followingId] || "Loading..."}</li>
+            </div>
+          ))
+        ) : (
+          <>
+            <p className={styles.defaultContent}>No Followers Yet</p>
+          </>
+        )}
       </ul>
-    </> 
+    </>
   );
-}
- 
+};
+
 export default Followers;

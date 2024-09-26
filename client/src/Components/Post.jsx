@@ -125,7 +125,7 @@ const Posts = ({ post }) => {
   return (
     <>
       {/* ------ v subjected to change v ------ */}
-      <h2>Posts</h2>
+
       <div className={styles.container}>
         {posts.length > 0 ? (
           posts.map((post) => {
