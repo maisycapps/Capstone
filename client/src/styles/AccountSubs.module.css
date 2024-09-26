@@ -12,6 +12,7 @@ h3 {
     flex-direction: row;
     gap: 10px;
     flex-flow: wrap;
+    justify-content: center;
 }
 
 /* INDIVIDAUL MAPPED ITEM "CARDS" */

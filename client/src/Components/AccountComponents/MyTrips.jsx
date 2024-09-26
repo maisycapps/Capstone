@@ -8,29 +8,66 @@ const MyTrips = ({ user, setUpdatedUser }) => {
   const [destinationNames, setDestinationNames] = useState({});
   const [newTripForm, setNewTripForm] = useState(false);
 
+  // useEffect(() => {
+
+  //   const getDestinationName = async(destinationId) => {
+
+  //     try {
+  //       if(!destinationNames[destinationId]) {
+
+  //         const response = await axios.get(`http://localhost:3000/api/destinations/${destinationId}`);
+  //         const result = await response.data;
+  //           setDestinationNames((prevNames) => ({
+  //           ...prevNames, [destinationId]: result.destinationName,
+  //           }));
+  //       }
+  //     } catch (error) {
+  //       console.error(error)
+  //     }
+  //  };
+   
+  //     user.trips.forEach((trip) => {
+  //       getDestinationName(trip.destinationId);
+  //  })
+
+  // }, []);
+  
+  const [userId, setUserId] = useState("")
+
+  const [trips, setTrips] = useState([])
+  const [updateTrips, setUpdateTrips] = useState(false)
+
+  //SET USER ID
+  useEffect(() => {
+    if (user && user.id) {
+         setUserId(user.id);
+    }
+  }, [user]); 
+
+  //GET ALL TRIPS
   useEffect(() => {
 
-    const getDestinationName = async(destinationId) => {
-
-      try {
-        if(!destinationNames[destinationId]) {
-
-          const response = await axios.get(`http://localhost:3000/api/destinations/${destinationId}`);
-          const result = await response.data;
-            setDestinationNames((prevNames) => ({
-            ...prevNames, [destinationId]: result.destinationName,
-            }));
+      const token = localStorage.getItem("token");
+  
+      const fetchUserTrips = async() => {
+        try {
+          const response = await axios.get("http://localhost:3000/api/auth/account/trips",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          setTrips(response.data);
+          setUpdateTrips(false);
+  
+        } catch (error) {
+          console.error("Error fetching trips: ", error);
         }
-      } catch (error) {
-        console.error(error)
-      }
-   };
-   
-      user.trips.forEach((trip) => {
-        getDestinationName(trip.destinationId);
-   })
-
-  }, []);
+      };
+      fetchUserTrips();
+  
+  }, [updateTrips]);
    
   return ( 
     <> 
@@ -41,8 +78,8 @@ const MyTrips = ({ user, setUpdatedUser }) => {
       {newTripForm === true ? <CreateTrip setNewTripForm={setNewTripForm} setUpdatedUser={setUpdatedUser}/> : null}
         
         <div className={styles.list}>
-          {user.trips.length > 0 ? (
-              user.trips.map((trip) => (
+          {trips.length > 0 ? (
+              trips.map((trip) => (
                 <div key={trip.id} className={styles.listItemCard}>
 
                   <div className={styles.listItemCardHeader}>
