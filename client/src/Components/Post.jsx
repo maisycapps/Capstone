@@ -135,7 +135,8 @@ const Posts = ({ post }) => {
                 <div className={styles.name}>
                   <img src={italy} alt="" className={styles.profile} />
                   <ul>
-                    <li>mathew</li>
+                    {/* post created by user */}
+                    <li>{post.user.userName}</li>
                   </ul>
                 </div>
                 {/* display destination name */}
@@ -151,8 +152,7 @@ const Posts = ({ post }) => {
                   alt="Post Img"
                   style={{ width: "300px", height: "300px" }}
                 />
-                {/* post created by user */}
-                <p>{post.user.userName}</p>
+
                 {/* post bio */}
                 <p>{post.text}</p>
 
