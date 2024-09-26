@@ -122,7 +122,8 @@ const Account = ({ setLoggedIn }) => {
               <Route
                 path="myposts"
                 element={
-                  <MyPosts user={user} setUpdatedUser={setUpdatedUser} />
+                  <MyPosts user={user} />
+
                 }
               />
               <Route
