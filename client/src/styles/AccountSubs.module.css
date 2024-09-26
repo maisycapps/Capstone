@@ -8,6 +8,8 @@ h3 {
 
 /* MAPPED ITEMS LIST - ALL "CARDS" */
 .list {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     display: flex;
     flex-direction: row;
     gap: 10px;
@@ -35,10 +37,16 @@ h3 {
 }
 
 .listItemCard {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     padding: 10px;
     min-height: 500px;
     width: 400px;
+    display: grid;
+    justify-content: center;
+    gap: 5px;
 }
+
+
 
 /* ie. "NO POSTS YET" */
 .defaultContent {
@@ -55,6 +63,42 @@ h3 {
     padding-top: 5px;
 }
 
+.postModsButtonContainer {
+    display: flex;
+    gap: 5px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    justify-content: right;
+}
+
+/* Post Image Container */
+.listItemCard > .postImg {
+    display: grid;
+    place-items: center;
+    justify-content: center;
+    margin: 3px;
+    background-color: black;
+    height: 300px;
+    width: 350px;
+    margin-bottom: 5px;
+}
+
+/* Post Image */
+.listItemCard > .postImg img {
+    max-height: 300px;
+    max-width: 350px;
+}
+
+.editForm {
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.editForm > input {
+    height: fit-content;
+}
 /* --------------------------------------SETTINGS.JSX-------------------------------------- */
 
 /* FORM LAYOUT */
@@ -82,10 +126,11 @@ h3 {
     display: flex;
     justify-content: center; 
     margin-top: 5px;
-  }
+}
 
 button {
     width: fit-content;
+    height: fit-content;
 }  
 
 .deleteSection {

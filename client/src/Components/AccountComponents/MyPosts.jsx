@@ -1,12 +1,18 @@
 import CreatePost from "../CreatePost";
+import EditPost from "./EditPost";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios, { formToJSON } from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 
 const MyPosts = ({ user }) => {
 
-  //CONDITIONAL RENDERING DATA
+  //CONDITIONAL RENDERING
   const [newPostForm, setNewPostForm] = useState(false);
+  
+  const [viewEditFormId, setViewEditFormId] = useState("")
+  const [seeEditForm, setSeeEditForm] = useState(false);
+  
+  const [viewCommentsId, setViewCommentsId] = useState("")
   const [seeComments, setSeeComments] = useState(false);
 
   //AUTH USER DATA
@@ -29,6 +35,7 @@ const MyPosts = ({ user }) => {
     const token = localStorage.getItem("token");
 
     const fetchUserPosts = async() => {
+
       try {
         const response = await axios.get("http://localhost:3000/api/auth/account/posts",
           {
@@ -37,8 +44,10 @@ const MyPosts = ({ user }) => {
             },
           }
         )
+
         setPosts(response.data);
         setUpdatePosts(false);
+        setViewEditFormId("")
 
       } catch (error) {
         console.error("Error fetching posts: ", error);
@@ -97,17 +106,38 @@ const MyPosts = ({ user }) => {
         console.error("error adding comment: ", error);
       }
   };
+
+  //DELETE POST BY ID
+  const deletePost = async(postId) => {
+
+    const token = localStorage.getItem("token");
+
+    try {
+      await axios.delete(
+        `http://localhost:3000/api/auth/account/posts/${postId}`,
+         {
+           headers: {
+             Authorization: `Bearer ${token}`,
+           },
+         }
+       );
+      
+    } catch (error) {
+      console.error("error deleting post: ", error);
+    }
+    setUpdatePosts(true)
+    console.log("successfully deleted post")
+  }
  
   return (  
     <>
-      <h3>Posts</h3>
-
       <div className={styles.buttonContainer}>
           <button onClick={() => setNewPostForm(true)}>Add New Post</button>
       </div>
 
       {/* CONDITIONALLY RENDER CREATE POST FORM */}
-      {newPostForm === true ? <CreatePost setNewPostForm={setNewPostForm}/> : null}
+      {newPostForm === true && posts.length > 0 ? <CreatePost setNewPostForm={setNewPostForm} setUpdatePosts={setUpdatePosts}/> : null}
+
       
       <div className={styles.list}>
         {posts.length > 0 ? (
@@ -115,8 +145,36 @@ const MyPosts = ({ user }) => {
             const hasLiked = post.likes.some((like) => like.userId === userId);
 
           return (
+            
 
             <div key={post.id} className={styles.listItemCard}>
+
+              <div className={styles.postModsButtonContainer}>
+
+                {/* EDIT BUTTON --- Change text to gear icon */}
+                <button onClick={() => {
+                  setSeeEditForm(true),
+                  setViewEditFormId(post.id)
+                  }}>Edit Post
+                </button>
+                
+                {/* DELETE BUTTON --- Change text to trashcan icon */}
+                <button onClick={() => deletePost(post.id)}>Delete Post</button>
+              </div>
+
+                {/* CONDITIONALLY RENDER POST OR EDIT FORM */}
+                { seeEditForm && post.id === viewEditFormId ? 
+                (<> 
+                  <div className={styles.listItemCardHeader}>
+                    <img src={user.profileImg}/>
+                    <div className={styles.listItemCardHeaderText}>
+                      <p><b>{user.userName}</b></p>
+                    </div>
+                  </div>
+                  <EditPost postId={post.id} setUpdatePosts={setUpdatePosts} setSeeEditForm={setSeeEditForm} posts={posts} setPosts={setPosts} setViewEditFormId={setViewEditFormId}/>
+                  </> 
+                  ) : (
+                <>   
                 <div className={styles.listItemCardHeader}>
                   <img src={user.profileImg}/>
                   <div className={styles.listItemCardHeaderText}>
@@ -129,16 +187,20 @@ const MyPosts = ({ user }) => {
                   </div>
                 </div>
 
-                <img
-                  src={post.postImg}
-                  alt="Post Img"
-                  style={{ width: "300px", height: "300px" }}
-                />
+                <div className={styles.postImg}>
+                  <img
+                    src={post.postImg}
+                    alt="Post Img"
+                  />
+                </div>
 
-                <p>
+                   <p>
                   {post.text} {"  "}
-                  {new Date(post.createdAt).toLocaleDateString()}</p>
-                  { post.updatedAt !== post.createdAt ? <p>edited: {new Date(post.updatedAt).toLocaleDateString()}</p> : null}  
+                  {new Date(post.createdAt).toLocaleDateString()}
+                  </p>
+                  { post.updatedAt !== post.createdAt 
+                    ? <p>edited: {new Date(post.updatedAt).toLocaleDateString()}</p> 
+                    : null}  
 
                 {/* DYNAMIC LIKE BUTTON */}
                 <div className={styles.postButtonContainer}> 
@@ -148,10 +210,14 @@ const MyPosts = ({ user }) => {
                   </button>
                  
                   {/* VIEW COMMENTS BUTTON */}
-                  <button onClick={() => setSeeComments(true)}> Comments {post.comments.length}</button>
+                  <button onClick={() => {
+                    setSeeComments(true),
+                    setViewCommentsId(post.id)}}> Comments {post.comments.length}
+                  </button>
+
                 </div>
 
-                  {seeComments === true && post.comments.length > 0
+                  {seeComments && post.id === viewCommentsId && post.comments.length > 0
                   ? post.comments.map((comment) => {
                     return (
                     <div key={comment.id}>
@@ -167,11 +233,12 @@ const MyPosts = ({ user }) => {
                     })
                   : null}  
                 
+                
               <div>
 
                 <input
                   type="text"
-                  placeholder="Add a comment"
+                  placeholder="  Add a comment"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       handleComment(post.id, e.target.value);
@@ -181,7 +248,7 @@ const MyPosts = ({ user }) => {
                 /> 
     
               </div>
-                    
+              </> )}
             </div>
             ) 
           })

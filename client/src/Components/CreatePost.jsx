@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const CreatePost = ({ setNewPostForm }) => {
+const CreatePost = ({ setNewPostForm, setUpdatePosts }) => {
   const [text, setText] = useState("");
   const [destinations, setDestinations] = useState([]);
   const [destinationId, setDestinationId] = useState("");
@@ -16,7 +16,6 @@ const CreatePost = ({ setNewPostForm }) => {
         const response = await axios.get(
           "http://localhost:3000/api/destinations"
         );
-        console.log("Destinations", response.data);
         setDestinations(response.data);
       } catch (error) {
         console.error("Error fetching destinations", error);
@@ -42,7 +41,8 @@ const CreatePost = ({ setNewPostForm }) => {
         }
       );
       setNewPostForm(false);
-      console.log("Post created successfully", response.data);
+      setUpdatePosts(true);
+      console.log("Post created successfully");
 
       // navigate("/account/myposts"); // redirects to posts page -- not sure on this redirect for our routes
     } catch (error) {
