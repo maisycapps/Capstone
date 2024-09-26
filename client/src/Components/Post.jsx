@@ -1,10 +1,9 @@
-import styles from "../styles/Post.module.css";
 import axios from "axios";
+import styles from "../styles/Post.module.css";
 import italy from "./Images/italy.jpg";
-// import { MdMoreVert } from "react-icons/md";
-// import { FaRegComments } from "react-icons/fa";
-// import { AiOutlineLike } from "react-icons/ai";
-import React, { useState, useEffect } from "react";
+import { FaRegComments } from "react-icons/fa";
+import { AiOutlineLike } from "react-icons/ai";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Posts = ({ post }) => {
@@ -46,7 +45,6 @@ const Posts = ({ post }) => {
   //funtion to handle likes
   const handleLikes = async (postId) => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       navigate("/login");
       return;
@@ -63,14 +61,10 @@ const Posts = ({ post }) => {
         }
       );
 
-      console.log(response.data);
-
       const action = response.data.action;
-
       if (!action) {
         console.error("action is undefined in the response");
       }
-
       //update UI after liking post
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
@@ -93,7 +87,6 @@ const Posts = ({ post }) => {
   //function to handle adding comment
   const handleComment = async (postId, commentText) => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       navigate("/login");
       return;
@@ -111,7 +104,6 @@ const Posts = ({ post }) => {
           },
         }
       );
-      console.log("Response data: ", response.data);
 
       //update UI after adding comment
       setPosts((prevPosts) =>
@@ -133,14 +125,19 @@ const Posts = ({ post }) => {
   return (
     <>
       {/* ------ v subjected to change v ------ */}
-      <div>
-        <h2>Posts</h2>
+      <div className={styles.container}>
+        <h2 className={styles.postHeader}>Posts</h2>
         {posts.length > 0 ? (
           posts.map((post) => {
             const hasLiked = post.likes.some((like) => like.userId === userId);
-
             return (
-              <div key={post.id}>
+              <div key={post.id} className={styles.header}>
+                <div className={styles.name}>
+                  <img src={italy} alt="" className={styles.profile} />
+                  <ul>
+                    <li>mathew</li>
+                  </ul>
+                </div>
                 {/* display destination name */}
                 <h3>
                   {post.destination
@@ -150,6 +147,7 @@ const Posts = ({ post }) => {
                 {/* dispay destination img */}
                 <img
                   src={post.postImg}
+                  className={styles.picture}
                   alt="Post Img"
                   style={{ width: "300px", height: "300px" }}
                 />
@@ -159,7 +157,11 @@ const Posts = ({ post }) => {
                 <p>{post.text}</p>
 
                 {/* like button */}
-                <button onClick={() => handleLikes(post.id)}>
+
+                <button
+                  onClick={() => handleLikes(post.id)}
+                  className={styles.commentPost}
+                >
                   {hasLiked
                     ? `Unlike: ${post.likes ? post.likes.length : ""}`
                     : `Like: ${post.likes ? post.likes.length : ""}`}
@@ -190,7 +192,7 @@ const Posts = ({ post }) => {
                     })}
                   </div>
                 )}
-                <div>
+                <div className={styles.commentSection}>
                   <input
                     type="text"
                     placeholder="Add a comment"
@@ -201,13 +203,16 @@ const Posts = ({ post }) => {
                       }
                     }}
                   />
+                  <button className={styles.commentPost}>POST</button>
                 </div>
               </div>
+              // </div>
             );
           })
         ) : (
           <p>No Posts available</p>
         )}
+        {/* </div> */}
       </div>
     </>
   );

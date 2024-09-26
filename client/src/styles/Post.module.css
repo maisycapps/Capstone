@@ -1,20 +1,28 @@
 .container {
-  width: 70%;
-  background-color: #fff;
-  border-radius: 3%;
-  padding: 25px;
-
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-}
-
-.header {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  overflow: auto;
+}
+.container.postHeader {
+  font-weight: bold;
+  position: fixed;
+}
+.container .header {
+  width: 70%;
+  /* margin-bottom: 20px; */
+  border-radius: 20px;
+  margin-top: 25px;
+  box-shadow: rgba(100, 100, 111, 0.5) 0px 7px 29px 0px;
 }
 .header .name {
   height: fit-content;
   display: flex;
   width: 100%;
   padding: 20px;
+  border-bottom: 1px solid red;
 }
 
 .header .name .profile {
@@ -41,20 +49,6 @@
   font-size: 18px;
   color: black;
 }
-.header .name .moreIcon {
-  border: 2px solid red;
-  float: right;
-}
-
-.header .name .status {
-  width: 14px;
-  height: 14px;
-  position: relative;
-  left: 14px;
-  border-radius: 50%;
-  background-color: green;
-  top: 8px;
-}
 
 .header .img {
   width: 25px;
@@ -71,9 +65,10 @@
 }
 
 .container .picture {
-  display: flex;
+  display: grid;
+  place-items: center;
   margin: auto;
-  width: 100%;
+  width: 75%;
   height: 220px;
   border-radius: 2%;
 }

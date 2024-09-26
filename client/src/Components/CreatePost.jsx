@@ -18,7 +18,6 @@ const CreatePost = ({ setNewPostForm }) => {
         );
         console.log("Destinations", response.data);
         setDestinations(response.data);
-        
       } catch (error) {
         console.error("Error fetching destinations", error);
       }
@@ -44,7 +43,7 @@ const CreatePost = ({ setNewPostForm }) => {
       );
       setNewPostForm(false);
       console.log("Post created successfully", response.data);
-      
+
       // navigate("/account/myposts"); // redirects to posts page -- not sure on this redirect for our routes
     } catch (error) {
       setError("Failed to create post, Please try again.");

@@ -39,7 +39,7 @@ router.get("/:id/posts", async (req, res, next) => {
     const id = +req.params.id;
     console.log(id);
 
-    const user = await prisma.users.findUnique({ whhere: { id } });
+    const user = await prisma.users.findUnique({ where: { id } });
 
     if (!user) {
       return next({
