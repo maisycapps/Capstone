@@ -17,10 +17,13 @@ import { Navigate } from "react-router-dom";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   //checks if user is logged in on intial render
   useEffect(() => {
-    setLoggedIn(isAuthenticated());
+    const loggedInStatus = isAuthenticated();
+    setLoggedIn(loggedInStatus);
+    setLoading(false); //sets loading to false after check is done
   }, []);
 
   useEffect(() => {
@@ -37,12 +40,17 @@ function App() {
     }
   }, []);
 
+  if (loading) {
+    //show loading spinner or message while authentication is checked
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <NavBar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
 
       <Routes>
-        <Route path="/" element={<Overview />} />
+        <Route path="*" element={<Overview />} />
 
         <Route path="/about" element={<About />} />
 
@@ -55,7 +63,13 @@ function App() {
         />
         <Route
           path="/account/*"
-          element={loggedIn ? <Account setLoggedIn={setLoggedIn} /> : <Navigate to="/login" />}
+          element={
+            loggedIn ? (
+              <Account setLoggedIn={setLoggedIn} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
       </Routes>
     </div>

@@ -1,8 +1,7 @@
-import CreatePost from '../CreatePost';
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import CreatePost from "../CreatePost";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
-
 
 const MyPosts = ({ user }) => {
 
@@ -101,7 +100,6 @@ const MyPosts = ({ user }) => {
  
   return (  
     <>
-
       <h3>Posts</h3>
 
       <div className={styles.buttonContainer}>
@@ -198,7 +196,7 @@ const MyPosts = ({ user }) => {
         )}
       </div>
     </>
-  )
-}
- 
+  );
+};
+
 export default MyPosts;

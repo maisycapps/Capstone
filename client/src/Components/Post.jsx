@@ -7,11 +7,12 @@ import italy from "./Images/italy.jpg";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Posts = () => {
+const Posts = ({ post }) => {
   const [posts, setPosts] = useState([]);
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState(null);
   const navigate = useNavigate();
+  const [showComments, setShowComments] = useState(false);
 
   useEffect(() => {
     //fetch posts from backend
@@ -125,6 +126,10 @@ const Posts = () => {
     }
   };
 
+  const handleOnClick = () => {
+    setShowComments((prevShowComments) => !prevShowComments);
+  };
+
   return (
     <>
       {/* ------ v subjected to change v ------ */}
@@ -152,15 +157,39 @@ const Posts = () => {
                 <p>{post.user.userName}</p>
                 {/* post bio */}
                 <p>{post.text}</p>
-                <p>likes: {post.likes ? post.likes.length : ""}</p>
-                <p>Comments: {post.comments ? post.comments.length : ""}</p>
 
                 {/* like button */}
                 <button onClick={() => handleLikes(post.id)}>
-                  {hasLiked ? "Unlike" : "Like"}
+                  {hasLiked
+                    ? `Unlike: ${post.likes ? post.likes.length : ""}`
+                    : `Like: ${post.likes ? post.likes.length : ""}`}
                 </button>
 
                 {/* comment button */}
+                <button onClick={handleOnClick}>
+                  {showComments
+                    ? `Hide Comments: ${
+                        post.comments ? post.comments.length : ""
+                      }`
+                    : `Comments: ${post.comments ? post.comments.length : ""}`}
+                </button>
+
+                {/* conditionally render comments */}
+                {showComments && (
+                  <div>
+                    {/* render comments for each post */}
+                    {post.comments.map((comment) => {
+                      return (
+                        <div key={comment.id}>
+                          <p>
+                            {comment.user ? comment.user.userName : userName}:{" "}
+                            {comment.text}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
                 <div>
                   <input
                     type="text"
@@ -172,17 +201,6 @@ const Posts = () => {
                       }
                     }}
                   />
-                  {/* render comments for each post */}
-                  {post.comments.map((comment) => {
-                    return (
-                      <div key={comment.id}>
-                        <p>
-                          {comment.user ? comment.user.userName : userName}:{" "}
-                          {comment.text}
-                        </p>
-                      </div>
-                    );
-                  })}
                 </div>
               </div>
             );
