@@ -23,7 +23,7 @@ router.post("/login", authenticate);
 
 //Get auth user's token payload - see authControllers folder
 router.get("/account", isLoggedIn, async (req, res, next) => {
-  try { 
+  try {
     res.send(req.user);
   } catch (error) {
     next(error);
@@ -38,13 +38,13 @@ router.get("/account/users", isLoggedIn, async (req, res) => {
     const account = await prisma.users.findMany({
       where: { id: userId },
       include: {
-        followedBy: true, // Who auth user follows. Here auth user = followedById   
-        following: true, // Who auth user is followed by. Here auth user = followingId   
-        likes: true,        
-        posts: true,         
-        trips: true,         
+        followedBy: true, // Who auth user follows. Here auth user = followedById
+        following: true, // Who auth user is followed by. Here auth user = followingId
+        likes: true,
+        posts: true,
+        trips: true,
       },
-    })
+    });
 
     res.status(200).json(account);
   } catch (error) {
@@ -144,8 +144,8 @@ router.post("/account/users/:id/follows", isLoggedIn, async (req, res) => {
     //create follow
     const newFollows = await prisma.follows.create({
       data: {
-        followingId: parseInt(id),
-        followedById: parseInt(userId)
+        followingId: parseInt(id), //user being followed
+        followedById: parseInt(userId), //user doing the following
       },
     });
 
@@ -162,42 +162,84 @@ router.get("/account/follows", isLoggedIn, async (req, res) => {
     const userId = req.user.userId;
 
     const userFollows = await prisma.follows.findMany({
-      where: { 
-        OR: [
-          { followedById: userId },
-          { followingId: userId }
-        ]
-       }
-    })
+      where: {
+        //---- logged in user   ----  account the logged in user follows
+        OR: [{ followedById: userId }, { followingId: userId }],
+      },
+    });
 
     res.status(200).json(userFollows);
   } catch (error) {
     console.error("Error fetching follows: ", error);
     res.status(500).json({ error: "Failed to fetch follows!" });
   }
-})
+});
 
-//Delete auth user follow (unfollow someone)
-router.delete("/account/users/:id/follows", isLoggedIn, async (req, res, next) => {
-  const { id } = req.params;
-
+//get auth account followed users
+router.get("/account/following", isLoggedIn, async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    //delete follow
-    await prisma.follows.deleteMany({
-      where: { 
-        followedById: userId ,
-        followingId: parseInt(id)
-       }
+    const following = await prisma.follows.findMany({
+      where: {
+        followedById: userId,
+      },
+      include: {
+        following: true,
+      },
     });
-
-    res.status(200).json({ message: "Follow deleted successfully" });
+    res.status(200).json(following);
   } catch (error) {
-    console.error("Error deleting follow: ", error);
-    res.status(500).json({ error: "failed to delete follow" });
+    console.error("Error fetching followed users: ", error);
+    res.status(500).json({ error: "Failed to fetch following users." });
   }
 });
+
+//get auth account followers users
+router.get("/account/followedBy", isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const followedBy = await prisma.follows.findMany({
+      where: {
+        followedById: userId,
+      },
+      include: {
+        followedBy: true,
+      },
+    });
+    res.status(200).json(followedBy);
+  } catch (error) {
+    console.error("Error fetching followers: ", error);
+    res.status(500).json({ error: "Failed to fetch followers." });
+  }
+});
+
+//Delete auth user follow (unfollow someone)
+router.delete(
+  "/account/users/:id/follows",
+  isLoggedIn,
+  async (req, res, next) => {
+    const { id } = req.params;
+
+    try {
+      const userId = req.user.userId;
+
+      //delete follow
+      await prisma.follows.deleteMany({
+        where: {
+          followedById: userId,
+          followingId: parseInt(id),
+        },
+      });
+
+      res.status(200).json({ message: "Follow deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting follow: ", error);
+      res.status(500).json({ error: "failed to delete follow" });
+    }
+  }
+);
 
 // <---------- ^ ACCOUNT FOLLOWS ^ ---------->
 
@@ -395,16 +437,16 @@ router.get("/account/posts", isLoggedIn, async (req, res, next) => {
       });
     }
 
-    const posts = await prisma.posts.findMany({ 
-      where: { userId: id }, 
-      include: {    
+    const posts = await prisma.posts.findMany({
+      where: { userId: id },
+      include: {
         destination: true,
         comments: {
           include: {
             user: true,
           },
         },
-        likes: true,               
+        likes: true,
       },
     });
 
