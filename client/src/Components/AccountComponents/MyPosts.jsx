@@ -12,12 +12,19 @@ const MyPosts = ({ user }) => {
 
   //AUTH USER DATA
   const [userId, setUserId] = useState(null);
-  setUserId(user.id)
-  
-  //DEPENDENCY FACTOR
   const [posts, setPosts] = useState([]);
-  const [updatedPosts, setUpdatedPosts] = useState([]);
 
+  //RE-RENDER DEPENDENCY
+  const [updatePosts, setUpdatePosts] = useState(false)
+
+  //SET USER ID
+  useEffect(() => {
+    if (user && user.id) {
+       setUserId(user.id);
+    }
+  }, [user]); 
+
+  //GET ALL POSTS
   useEffect(() => {
 
     const token = localStorage.getItem("token");
@@ -32,6 +39,7 @@ const MyPosts = ({ user }) => {
           }
         )
         setPosts(response.data);
+        setUpdatePosts(false);
 
       } catch (error) {
         console.error("Error fetching posts: ", error);
@@ -39,79 +47,58 @@ const MyPosts = ({ user }) => {
     };
     fetchUserPosts();
 
-  }, []);
+  }, [updatePosts]);
  
+  
   //HANDLE LIKES
   const handleLikes = async (postId) => {
-  
-    const token = localStorage.getItem("token");
 
     try {
+      const token = localStorage.getItem("token");
       const response = await axios.post(
         `http://localhost:3000/api/auth/account/posts/${postId}/likes`,
-        {
+        {}, {
            headers: {
               Authorization: `Bearer ${token}`,
             },
         }
       );
-  
       const action = response.data.action;
+      setUpdatePosts(true)
   
       if (!action) {
           console.error("action is undefined in the response");
       } 
-      //update UI after liking post
-      // setUpdatedPosts((prevPosts) =>
-      //   prevPosts.map((post) =>
-      //     post.id === postId
-      //     ? {
-      //       ...post,
-      //       likes:
-      //       action === "like"
-      //         ? [...post.likes, { id: userId }] //add like if action is 'like"
-      //         : post.likes.filter((like) => like.userId !== userId), //Remove like if logged in user has liked the post
-      //           }
-      //     : post
-      // ));
+
     } catch (error) {
         console.error("Error liking post: ", error);
     }
   };
+  
 
   //HANDLE COMMENTS
   const handleComment = async (postId, commentText) => {
 
     const token = localStorage.getItem("token");
-
-    try {
-      const response = await axios.post(
-        `http://localhost:3000/api/auth/account/posts/${postId}/comments`,
-        {
-          text: commentText,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-    
-
-      //update UI after adding comment
-      // setUpdatedPosts((prevPosts) =>
-      //   prevPosts.map((post) =>
-      //     post.id === postId
-      //       ? { ...post, comments: [...post.comments, response.data] }
-      //       : post
-      //   )
-      // );
-    } catch (error) {
-      console.error("error adding comment: ", error);
-    }
-  };
   
-
+    try {
+       const response = await axios.post(
+         `http://localhost:3000/api/auth/account/posts/${postId}/comments`,
+         {
+            text: commentText,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setUpdatePosts(true)
+      } catch (error) {
+        console.error("error adding comment: ", error);
+      }
+  };
+ 
   return (  
     <>
 
