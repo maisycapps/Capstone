@@ -47,9 +47,16 @@ function SideBar({ loggedIn }) {
     { user 
       ?          
         <>
-          {userImg}
-          <h2> {user.firstName} {user.lastName} </h2>
-          <p>{user.bio}</p>
+          <div className={styles.profileBitContainer}> 
+            <div className={styles.profileBitImg}>
+              {userImg} 
+            </div>
+
+            <div className={styles.profileBit}>
+              <h2> {user.firstName} {user.lastName} </h2>
+              <p>{user.bio}</p>
+            </div>
+          </div>
         </>   
       : null }
    
