@@ -6,21 +6,32 @@ import styles from "../../styles/AccountSubs.module.css";
 
 const MyPosts = ({ user }) => {
 
-  //CONDITIONAL RENDERING
-  const [newPostForm, setNewPostForm] = useState(false);
-  
-  const [viewEditFormId, setViewEditFormId] = useState("")
-  const [seeEditForm, setSeeEditForm] = useState(false);
-  
-  const [viewCommentsId, setViewCommentsId] = useState("")
-  const [seeComments, setSeeComments] = useState(false);
+  /* -------------------------------- CONDITIONAL RENDERING --------------------------------*/
 
-  //AUTH USER DATA
+  //CREATE NEW POST
+  const [newPostForm, setNewPostForm] = useState(false); //view CreatePost route onClick
+  
+  //EDIT POST
+  const [seeEditForm, setSeeEditForm] = useState(false); //view EditPost route
+  const [viewEditFormId, setViewEditFormId] = useState("") //render edit form only on that post
+  
+  //VIEW COMMENTS ASSOCIATED WITH A SPECIFIC POST
+  const [seeComments, setSeeComments] = useState(false); //view comments
+  const [viewCommentsId, setViewCommentsId] = useState("") //render comments on only that post
+
+  //EDIT COMMENT
+  const [editComment, setEditComment] = useState(false) //view edit form
+  const [commentPostId, setCommentPostId] = useState("") //render edit form on only that post
+  const [commentId, setCommentId] = useState("") //render edit form on only that comment
+  const [text, setText] = useState("") //body for patch request
+
+/* -------------------------------- RE-RENDER DEPENDENCY --------------------------------*/
+  const [updatePosts, setUpdatePosts] = useState(false)
+
+/* -------------------------------- USER DATA --------------------------------*/
   const [userId, setUserId] = useState(null);
   const [posts, setPosts] = useState([]);
 
-  //RE-RENDER DEPENDENCY
-  const [updatePosts, setUpdatePosts] = useState(false)
 
   //SET USER ID
   useEffect(() => {
@@ -28,6 +39,8 @@ const MyPosts = ({ user }) => {
        setUserId(user.id);
     }
   }, [user]); 
+
+/* -------------------------------- POSTS CRUD --------------------------------*/
 
   //GET ALL POSTS
   useEffect(() => {
@@ -56,9 +69,32 @@ const MyPosts = ({ user }) => {
     fetchUserPosts();
 
   }, [updatePosts]);
+
+  //DELETE POST BY ID
+  const deletePost = async(postId) => {
+
+    const token = localStorage.getItem("token");
+  
+    try {
+      await axios.delete(
+        `http://localhost:3000/api/auth/account/posts/${postId}`,
+          {
+            headers: {
+               Authorization: `Bearer ${token}`,
+             },
+          }
+        );  
+    } catch (error) {
+        console.error("error deleting post: ", error);
+    }
+      setUpdatePosts(true)
+      console.log("successfully deleted post")
+  }
  
   
-  //HANDLE LIKES
+/* -------------------------------- LIKES CRUD --------------------------------*/
+
+//LIKE & UNLIKE
   const handleLikes = async (postId) => {
 
     try {
@@ -83,8 +119,9 @@ const MyPosts = ({ user }) => {
     }
   };
   
+/* -------------------------------- COMMENTS CRUD --------------------------------*/
 
-  //HANDLE COMMENTS
+  //CREATE A NEW COMMENT
   const handleComment = async (postId, commentText) => {
 
     const token = localStorage.getItem("token");
@@ -107,14 +144,45 @@ const MyPosts = ({ user }) => {
       }
   };
 
-  //DELETE POST BY ID
-  const deletePost = async(postId) => {
+  //EDIT COMMENT BY ID
+  const editMyComment = async(postId, commentId, text) => {
+
+    console.log("editComment function", "postId", postId, "commentId", commentId)
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.patch(
+        `http://localhost:3000/api/auth/account/posts/${postId}/comments/${commentId}`,
+        { text },
+         {
+           headers: {
+             Authorization: `Bearer ${token}`,
+           },
+         }
+       );
+      
+      console.log("patch request response", response.data)
+
+    } catch (error) {
+      console.error("error editing comment: ", error);
+    }
+    setEditComment(false);
+    setCommentPostId("")
+    setCommentId("")
+    setText("")
+    setUpdatePosts(true)
+    console.log("successfully edited comment")
+  }
+ 
+  //DELETE COMMENT BY ID
+  const deleteComment = async(postId, commentId) => {
 
     const token = localStorage.getItem("token");
 
     try {
       await axios.delete(
-        `http://localhost:3000/api/auth/account/posts/${postId}`,
+        `http://localhost:3000/api/auth/account/posts/${postId}/comments/${commentId}`,
          {
            headers: {
              Authorization: `Bearer ${token}`,
@@ -123,12 +191,13 @@ const MyPosts = ({ user }) => {
        );
       
     } catch (error) {
-      console.error("error deleting post: ", error);
+      console.error("error deleting comment: ", error);
     }
+    setCommentId("")
     setUpdatePosts(true)
-    console.log("successfully deleted post")
+    console.log("successfully deleted comment")
   }
- 
+
   return (  
     <>
       <div className={styles.buttonContainer}>
@@ -145,7 +214,6 @@ const MyPosts = ({ user }) => {
             const hasLiked = post.likes.some((like) => like.userId === userId);
 
           return (
-            
 
             <div key={post.id} className={styles.listItemCard}>
 
@@ -171,7 +239,14 @@ const MyPosts = ({ user }) => {
                       <p><b>{user.userName}</b></p>
                     </div>
                   </div>
-                  <EditPost postId={post.id} setUpdatePosts={setUpdatePosts} setSeeEditForm={setSeeEditForm} posts={posts} setPosts={setPosts} setViewEditFormId={setViewEditFormId}/>
+
+                    <EditPost 
+                        postId={post.id} 
+                        setUpdatePosts={setUpdatePosts} 
+                        setSeeEditForm={setSeeEditForm} 
+                        posts={posts} setPosts={setPosts} 
+                        setViewEditFormId={setViewEditFormId}
+                      />
                   </> 
                   ) : (
                 <>   
@@ -216,22 +291,66 @@ const MyPosts = ({ user }) => {
                   </button>
 
                 </div>
-
-                  {seeComments && post.id === viewCommentsId && post.comments.length > 0
+                
+                {/* CONDITIONALLY RENDER COMMENTS ON A PARTICULAR POST*/}
+                {seeComments && post.id === viewCommentsId && post.comments.length > 0
                   ? post.comments.map((comment) => {
                     return (
-                    <div key={comment.id}>
-                      <p>
-                        <b> { comment.user 
-                            ? "@" + comment.user.userName : "...loading" }
-                        </b>{" "}
-                            {comment.text}{"  "}
-                            {new Date(comment.createdAt).toLocaleDateString()}
-                      </p>
-                    </div>
+                      <div key={comment.id} className={styles.comments}>
+                        <p>
+                          <b> { comment.user 
+                              ? "@" + comment.user.userName : "...loading" }
+                          </b>{" "}
+                              {comment.text}{"  "}
+                              {new Date(comment.createdAt).toLocaleDateString()}
+                        </p>
+                          <div>
+
+                            {/* CONDITIONALLY RENDER EDITING BUTTONS ON USER'S COMMENTS */}
+                            { comment.userId === userId 
+                              && editComment === false
+                            ? <> 
+                                <div className={styles.editCommentButtons}>
+                                  <div className={styles.editCommentButton}>
+                                    <button onClick ={()=> {
+                                      setEditComment(true),
+                                      setCommentPostId(comment.postId),
+                                      setCommentId(comment.id)
+                                      }}>Edit</button> 
+                                  </div>
+
+                                  <div className={styles.editCommentButton}>
+                                    <button onClick={() => deleteComment(comment.postId, comment.id)}>Delete</button>
+                                  </div>
+                                </div>
+                              </>
+                            : null }
+
+                            {/* CONDITIONALLY RENDER EDIT FORM ON USER'S COMMENT BY ID */}
+                            { comment.userId === userId 
+                              && editComment === true 
+                              && commentPostId === comment.postId
+                              && commentId === comment.id
+                                  ? 
+                                    <>
+                                      {/* {setPrevText(comment.text)} */}
+                                      <div className={styles.editCommentForm}>
+                                        <form onSubmit={() => editMyComment(comment.postId, comment.id, text)}>
+                                          <input type="text" id="text" 
+                                          // placeholder={prevText} 
+                                            value={text}
+                                            onChange={(e) => setText(e.target.value)}/>
+                                        <button value="submit">Submit</button>
+                                        </form>
+                                      </div>
+                                    </>
+                                  : null }
+
+                          </div>
+                      </div>
                     );
                     })
-                  : null}  
+                : null }  
                 
                 
               <div>

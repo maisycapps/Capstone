@@ -46,8 +46,6 @@ h3 {
     gap: 5px;
 }
 
-
-
 /* ie. "NO POSTS YET" */
 .defaultContent {
     padding: 10px;
@@ -99,6 +97,18 @@ h3 {
 .editForm > input {
     height: fit-content;
 }
+
+.comments {
+    display: grid; 
+    grid-template-columns: 80% 20%;
+}
+
+.editCommentButtons {
+    float: right;
+    display: flex;
+    gap: 5px;
+}
+
 /* --------------------------------------SETTINGS.JSX-------------------------------------- */
 
 /* FORM LAYOUT */
