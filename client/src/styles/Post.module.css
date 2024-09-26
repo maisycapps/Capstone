@@ -6,10 +6,10 @@
   height: 80vh;
   overflow: auto;
 }
-.container.postHeader {
+/* .container.postHeader {
   font-weight: bold;
   position: fixed;
-}
+} */
 .container .header {
   width: 70%;
   /* margin-bottom: 20px; */
