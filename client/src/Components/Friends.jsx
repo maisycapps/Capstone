@@ -66,7 +66,7 @@ const Friends = () => {
   };
 
   //handle for 'follow' user button
-  const handleFollow = async (userId, userName, firstName, lastName) => {
+  const handleFollow = async (userId) => {
     try {
       const token = localStorage.getItem("token");
 
@@ -87,7 +87,7 @@ const Friends = () => {
         }
       );
 
-      //set details from response
+      //set user details from response
       const followedUser = response.data;
 
       console.log(`Followed user with ID: ${userId}`);
