@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios, { formToJSON } from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 
-const EditPost = ({ postId, setUpdatePosts, setSeeEditForm, setViewEditFormId, posts, setPosts }) => {
+const EditPost = ({ viewEditFormId, setUpdatePosts, setSeeEditForm, setViewEditFormId }) => {
 
 //EDIT POST DATA
 const [destinations, setDestinations] = useState([]);
@@ -14,6 +14,7 @@ const [error, setError] = useState(null);
 
 //GET DESTINATIONS FOR DROPDOWN MENU
 useEffect(() => {
+  
     const fetchDestinations = async () => {
       try {
         const response = await axios.get(
@@ -38,21 +39,21 @@ useEffect(() => {
 
     try {
 
-      const response = await axios.patch(`http://localhost:3000/api/auth/account/posts/${postId}`,
+      await axios.patch(`http://localhost:3000/api/auth/account/posts/${viewEditFormId}`,
         { text, postImg, destinationId: parseInt(destinationId) },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
-      )
+      ) 
 
     } catch (error) {
           setError("please modify at least one field", error)
     }
     setViewEditFormId("")
-    setSeeEditForm(false)
     setUpdatePosts(true)
+    setSeeEditForm(false)
 
   }
 
@@ -60,7 +61,9 @@ useEffect(() => {
         <>
         <h4>Edit Post</h4>
 
-        <form onSubmit={editPost} className={styles.editForm}>
+        <form onSubmit={editPost}>
+
+          <div className={styles.editForm}>
 
             <label htmlFor="destination">
                 <select
@@ -90,7 +93,17 @@ useEffect(() => {
             </label>
 
             {error && <p style={{ color: "red" }}>{error}</p>}
-            <button value="submit">Submit</button>
+          </div>
+          <div className={styles.editFormButtons}>
+             
+              <button value="submit">Submit</button>
+                
+              <button onClick={() => {
+                  setSeeEditForm(false)
+                  setViewEditFormId("")
+                  }}>Cancel</button>
+            
+          </div>
 
         </form>
         </>

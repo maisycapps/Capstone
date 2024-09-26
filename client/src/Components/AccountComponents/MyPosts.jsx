@@ -58,14 +58,14 @@ const MyPosts = ({ user }) => {
           }
         )
 
-        setPosts(response.data);
-        setUpdatePosts(false);
-        setViewEditFormId("")
+        setPosts(response.data)
 
       } catch (error) {
         console.error("Error fetching posts: ", error);
       }
+      setUpdatePosts(false)
     };
+
     fetchUserPosts();
 
   }, [updatePosts]);
@@ -88,7 +88,6 @@ const MyPosts = ({ user }) => {
         console.error("error deleting post: ", error);
     }
       setUpdatePosts(true)
-      console.log("successfully deleted post")
   }
  
   
@@ -138,16 +137,16 @@ const MyPosts = ({ user }) => {
             },
           }
         );
-        setUpdatePosts(true)
+        
       } catch (error) {
         console.error("error adding comment: ", error);
       }
+      setUpdatePosts(true)
+      setSeeComments(true)
   };
 
   //EDIT COMMENT BY ID
   const editMyComment = async(postId, commentId, text) => {
-
-    console.log("editComment function", "postId", postId, "commentId", commentId)
 
     const token = localStorage.getItem("token");
 
@@ -161,18 +160,17 @@ const MyPosts = ({ user }) => {
            },
          }
        );
-      
-      console.log("patch request response", response.data)
+
+      setCommentPostId("")
+      setCommentId("")
+      setText("")
 
     } catch (error) {
       console.error("error editing comment: ", error);
     }
-    setEditComment(false);
-    setCommentPostId("")
-    setCommentId("")
-    setText("")
+
+    setSeeComments(true)
     setUpdatePosts(true)
-    console.log("successfully edited comment")
   }
  
   //DELETE COMMENT BY ID
@@ -195,7 +193,6 @@ const MyPosts = ({ user }) => {
     }
     setCommentId("")
     setUpdatePosts(true)
-    console.log("successfully deleted comment")
   }
 
   return (  
@@ -206,10 +203,11 @@ const MyPosts = ({ user }) => {
 
       {/* CONDITIONALLY RENDER CREATE POST FORM */}
       {newPostForm === true && posts.length > 0 ? <CreatePost setNewPostForm={setNewPostForm} setUpdatePosts={setUpdatePosts}/> : null}
-
       
       <div className={styles.list}>
+
         {posts.length > 0 ? (
+
         posts.map((post) => {
             const hasLiked = post.likes.some((like) => like.userId === userId);
 
@@ -241,7 +239,8 @@ const MyPosts = ({ user }) => {
                   </div>
 
                     <EditPost 
-                        postId={post.id} 
+                        user={user}
+                        viewEditFormId={viewEditFormId}
                         setUpdatePosts={setUpdatePosts} 
                         setSeeEditForm={setSeeEditForm} 
                         posts={posts} setPosts={setPosts} 
@@ -269,13 +268,13 @@ const MyPosts = ({ user }) => {
                   />
                 </div>
 
-                   <p>
-                  {post.text} {"  "}
-                  {new Date(post.createdAt).toLocaleDateString()}
-                  </p>
                   { post.updatedAt !== post.createdAt 
-                    ? <p>edited: {new Date(post.updatedAt).toLocaleDateString()}</p> 
-                    : null}  
+                    ? <p>{new Date(post.updatedAt).toLocaleDateString()}{"  "}
+                    "{post.text}" 
+                    </p> 
+                    : <p>{new Date(post.createdAt).toLocaleDateString()}{"  "}
+                    "{post.text}" </p>  
+                  }
 
                 {/* DYNAMIC LIKE BUTTON */}
                 <div className={styles.postButtonContainer}> 
@@ -296,36 +295,37 @@ const MyPosts = ({ user }) => {
                 {seeComments && post.id === viewCommentsId && post.comments.length > 0
                   ? post.comments.map((comment) => {
                     return (
-                      <div key={comment.id} className={styles.comments}>
-                        <p>
-                          <b> { comment.user 
-                              ? "@" + comment.user.userName : "...loading" }
-                          </b>{" "}
-                              {comment.text}{"  "}
-                              {new Date(comment.createdAt).toLocaleDateString()}
-                        </p>
-                          <div>
+                      <div key={comment.id}>
+                        <div className={styles.comments}>
+                          <p>
+                            <b> { comment.user 
+                                ? "@" + comment.user.userName : "...loading" }
+                            </b>{" "}
+                                {comment.text}{"  "}
+                                {new Date(comment.createdAt).toLocaleDateString()}
+                          </p>
+                            
 
                             {/* CONDITIONALLY RENDER EDITING BUTTONS ON USER'S COMMENTS */}
                             { comment.userId === userId 
                               && editComment === false
                             ? <> 
                                 <div className={styles.editCommentButtons}>
-                                  <div className={styles.editCommentButton}>
+                                  
                                     <button onClick ={()=> {
                                       setEditComment(true),
                                       setCommentPostId(comment.postId),
                                       setCommentId(comment.id)
                                       }}>Edit</button> 
-                                  </div>
+                                  
 
-                                  <div className={styles.editCommentButton}>
+                                  
                                     <button onClick={() => deleteComment(comment.postId, comment.id)}>Delete</button>
-                                  </div>
+                                 
                                 </div>
                               </>
                             : null }
-
+                        </div>
                             {/* CONDITIONALLY RENDER EDIT FORM ON USER'S COMMENT BY ID */}
                             { comment.userId === userId 
                               && editComment === true 
@@ -333,20 +333,26 @@ const MyPosts = ({ user }) => {
                               && commentId === comment.id
                                   ? 
                                     <>
-                                      {/* {setPrevText(comment.text)} */}
                                       <div className={styles.editCommentForm}>
-                                        <form onSubmit={() => editMyComment(comment.postId, comment.id, text)}>
+                                        <form onSubmit={() => {
+                                          editMyComment(comment.postId, comment.id, text)
+                                          setEditComment(false)}}>
                                           <input type="text" id="text" 
-                                          // placeholder={prevText} 
                                             value={text}
                                             onChange={(e) => setText(e.target.value)}/>
-                                        <button value="submit">Submit</button>
+                                      
+                                        <div className={styles.editCommentSubmitButtons}>
+                                          <button onClick={() => setEditComment(false)}>Cancel</button>
+                                        </div>
+                                        <div className={styles.editCommentSubmitButtons}>
+                                          <button value="submit">Submit</button>
+                                        </div>
                                         </form>
                                       </div>
                                     </>
                                   : null }
 
-                          </div>
+                          
                       </div>
                     );
                     })
@@ -380,6 +386,7 @@ const MyPosts = ({ user }) => {
             {newPostForm === true ? <CreatePost setNewPostForm={setNewPostForm}/> : null}
           </>
         )}
+
       </div>
     </>
   );
