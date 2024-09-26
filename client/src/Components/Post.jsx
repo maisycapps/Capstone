@@ -1,17 +1,17 @@
-import styles from "../styles/Post.module.css";
 import axios from "axios";
+import styles from "../styles/Post.module.css";
 import italy from "./Images/italy.jpg";
-// import { MdMoreVert } from "react-icons/md";
-// import { FaRegComments } from "react-icons/fa";
-// import { AiOutlineLike } from "react-icons/ai";
-import React, { useState, useEffect } from "react";
+import { FaRegComments } from "react-icons/fa";
+import { AiOutlineLike } from "react-icons/ai";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const Posts = () => {
+const Posts = ({ post }) => {
   const [posts, setPosts] = useState([]);
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState(null);
   const navigate = useNavigate();
+  const [showComments, setShowComments] = useState(false);
 
   useEffect(() => {
     //fetch posts from backend
@@ -45,7 +45,6 @@ const Posts = () => {
   //funtion to handle likes
   const handleLikes = async (postId) => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       navigate("/login");
       return;
@@ -62,14 +61,10 @@ const Posts = () => {
         }
       );
 
-      console.log(response.data);
-
       const action = response.data.action;
-
       if (!action) {
         console.error("action is undefined in the response");
       }
-
       //update UI after liking post
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
@@ -92,7 +87,6 @@ const Posts = () => {
   //function to handle adding comment
   const handleComment = async (postId, commentText) => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       navigate("/login");
       return;
@@ -110,7 +104,6 @@ const Posts = () => {
           },
         }
       );
-      console.log("Response data: ", response.data);
 
       //update UI after adding comment
       setPosts((prevPosts) =>
@@ -125,17 +118,26 @@ const Posts = () => {
     }
   };
 
+  const handleOnClick = () => {
+    setShowComments((prevShowComments) => !prevShowComments);
+  };
+
   return (
     <>
       {/* ------ v subjected to change v ------ */}
-      <div>
-        <h2>Posts</h2>
+      <div className={styles.container}>
+        <h2 className={styles.postHeader}>Posts</h2>
         {posts.length > 0 ? (
           posts.map((post) => {
             const hasLiked = post.likes.some((like) => like.userId === userId);
-
             return (
-              <div key={post.id}>
+              <div key={post.id} className={styles.header}>
+                <div className={styles.name}>
+                  <img src={italy} alt="" className={styles.profile} />
+                  <ul>
+                    <li>mathew</li>
+                  </ul>
+                </div>
                 {/* display destination name */}
                 <h3>
                   {post.destination
@@ -145,6 +147,7 @@ const Posts = () => {
                 {/* dispay destination img */}
                 <img
                   src={post.postImg}
+                  className={styles.picture}
                   alt="Post Img"
                   style={{ width: "300px", height: "300px" }}
                 />
@@ -152,16 +155,44 @@ const Posts = () => {
                 <p>{post.user.userName}</p>
                 {/* post bio */}
                 <p>{post.text}</p>
-                <p>likes: {post.likes ? post.likes.length : ""}</p>
-                <p>Comments: {post.comments ? post.comments.length : ""}</p>
 
                 {/* like button */}
-                <button onClick={() => handleLikes(post.id)}>
-                  {hasLiked ? "Unlike" : "Like"}
+
+                <button
+                  onClick={() => handleLikes(post.id)}
+                  className={styles.commentPost}
+                >
+                  {hasLiked
+                    ? `Unlike: ${post.likes ? post.likes.length : ""}`
+                    : `Like: ${post.likes ? post.likes.length : ""}`}
                 </button>
 
                 {/* comment button */}
-                <div>
+                <button onClick={handleOnClick}>
+                  {showComments
+                    ? `Hide Comments: ${
+                        post.comments ? post.comments.length : ""
+                      }`
+                    : `Comments: ${post.comments ? post.comments.length : ""}`}
+                </button>
+
+                {/* conditionally render comments */}
+                {showComments && (
+                  <div>
+                    {/* render comments for each post */}
+                    {post.comments.map((comment) => {
+                      return (
+                        <div key={comment.id}>
+                          <p>
+                            {comment.user ? comment.user.userName : userName}:{" "}
+                            {comment.text}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+                <div className={styles.commentSection}>
                   <input
                     type="text"
                     placeholder="Add a comment"
@@ -172,24 +203,16 @@ const Posts = () => {
                       }
                     }}
                   />
-                  {/* render comments for each post */}
-                  {post.comments.map((comment) => {
-                    return (
-                      <div key={comment.id}>
-                        <p>
-                          {comment.user ? comment.user.userName : userName}:{" "}
-                          {comment.text}
-                        </p>
-                      </div>
-                    );
-                  })}
+                  <button className={styles.commentPost}>POST</button>
                 </div>
               </div>
+              // </div>
             );
           })
         ) : (
           <p>No Posts available</p>
         )}
+        {/* </div> */}
       </div>
     </>
   );

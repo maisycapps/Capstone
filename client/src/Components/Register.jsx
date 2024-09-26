@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import styles from "../styles/Register.module.css";
@@ -43,6 +43,7 @@ const Register = ({ loggedIn, setLoggedIn }) => {
 
       navigate("/account");
     } catch (error) {
+      console.log(error);
       setError("Registration failed. Please try again.");
     }
   };
@@ -60,8 +61,7 @@ const Register = ({ loggedIn, setLoggedIn }) => {
             onChange={(e) => setFirstName(e.target.value)}
             required
           />
-          {/* </div> */}
-          {/* <div> */}
+
           <label>Last Name:</label>
           <input
             type="text"
@@ -69,8 +69,7 @@ const Register = ({ loggedIn, setLoggedIn }) => {
             onChange={(e) => setLastName(e.target.value)}
             required
           />
-          {/* </div> */}
-          {/* <div> */}
+
           <label>Username:</label>
           <input
             type="text"
@@ -78,8 +77,7 @@ const Register = ({ loggedIn, setLoggedIn }) => {
             onChange={(e) => setUserName(e.target.value)}
             required
           />
-          {/* </div> */}
-          {/* <div> */}
+
           <label>Email:</label>
           <input
             type="email"
@@ -87,8 +85,7 @@ const Register = ({ loggedIn, setLoggedIn }) => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          {/* </div> */}
-          {/* <div> */}
+
           <label>Password:</label>
           <input
             type="password"
@@ -96,7 +93,7 @@ const Register = ({ loggedIn, setLoggedIn }) => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          {/* </div> */}
+
           {error && <p style={{ color: "red" }}>{error}</p>}
           <button type="submit">Register</button>
         </form>
