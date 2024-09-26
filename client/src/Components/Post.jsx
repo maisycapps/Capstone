@@ -4,6 +4,7 @@ import italy from "./Images/italy.jpg";
 import { FaRegComments } from "react-icons/fa";
 import { AiOutlineLike } from "react-icons/ai";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Posts = ({ post }) => {
   const [posts, setPosts] = useState([]);
@@ -16,10 +17,23 @@ const Posts = ({ post }) => {
     //fetch posts from backend
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/posts", {
-          destinationId,
-        });
+        const response = await axios.get("http://localhost:3000/api/posts");
         setPosts(response.data);
+
+        //fetch logged in users ID
+        const token = localStorage.getItem("token");
+        if (token) {
+          const userResponse = await axios.get(
+            "http://localhost:3000/api/auth/account",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setUserId(userResponse.data.id);
+          setUserName(userResponse.data.userName);
+        }
       } catch (error) {
         console.error("Error fetching posts: ", error);
       }
@@ -31,9 +45,13 @@ const Posts = ({ post }) => {
   //funtion to handle likes
   const handleLikes = async (postId) => {
     const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
 
     try {
-      await axios.post(
+      const response = await axios.post(
         `http://localhost:3000/api/auth/account/posts/${postId}/likes`,
         {},
         {
@@ -43,11 +61,21 @@ const Posts = ({ post }) => {
         }
       );
 
+      const action = response.data.action;
+      if (!action) {
+        console.error("action is undefined in the response");
+      }
       //update UI after liking post
       setPosts((prevPosts) =>
         prevPosts.map((post) =>
           post.id === postId
-            ? { ...post, likes: [...post.likes, { id: postId }] }
+            ? {
+                ...post,
+                likes:
+                  action === "like"
+                    ? [...post.likes, { id: userId }] //add like if action is 'like"
+                    : post.likes.filter((like) => like.userId !== userId), //Remove like if logged in user has liked the post
+              }
             : post
         )
       );
@@ -59,6 +87,10 @@ const Posts = ({ post }) => {
   //function to handle adding comment
   const handleComment = async (postId, commentText) => {
     const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -93,14 +125,19 @@ const Posts = ({ post }) => {
   return (
     <>
       {/* ------ v subjected to change v ------ */}
-      <div>
-        <h2>Posts</h2>
+      <div className={styles.container}>
+        <h2 className={styles.postHeader}>Posts</h2>
         {posts.length > 0 ? (
           posts.map((post) => {
             const hasLiked = post.likes.some((like) => like.userId === userId);
-
             return (
-              <div key={post.id}>
+              <div key={post.id} className={styles.header}>
+                <div className={styles.name}>
+                  <img src={italy} alt="" className={styles.profile} />
+                  <ul>
+                    <li>mathew</li>
+                  </ul>
+                </div>
                 {/* display destination name */}
                 <h3>
                   {post.destination
@@ -110,6 +147,7 @@ const Posts = ({ post }) => {
                 {/* dispay destination img */}
                 <img
                   src={post.postImg}
+                  className={styles.picture}
                   alt="Post Img"
                   style={{ width: "300px", height: "300px" }}
                 />
@@ -119,7 +157,11 @@ const Posts = ({ post }) => {
                 <p>{post.text}</p>
 
                 {/* like button */}
-                <button onClick={() => handleLikes(post.id)}>
+
+                <button
+                  onClick={() => handleLikes(post.id)}
+                  className={styles.commentPost}
+                >
                   {hasLiked
                     ? `Unlike: ${post.likes ? post.likes.length : ""}`
                     : `Like: ${post.likes ? post.likes.length : ""}`}
@@ -150,7 +192,7 @@ const Posts = ({ post }) => {
                     })}
                   </div>
                 )}
-                <div>
+                <div className={styles.commentSection}>
                   <input
                     type="text"
                     placeholder="Add a comment"
@@ -161,10 +203,12 @@ const Posts = ({ post }) => {
                       }
                     }}
                   />
+                  <button className={styles.commentPost}>POST</button>
                 </div>
               </div>
-            </div>
-          ))
+              // </div>
+            );
+          })
         ) : (
           <p>No Posts available</p>
         )}

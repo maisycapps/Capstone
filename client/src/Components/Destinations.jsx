@@ -1,4 +1,4 @@
-import { IoLocationOutline, IoPersonCircleOutline } from "react-icons/io5";
+// import { IoLocationOutline, IoPersonCircleOutline } from "react-icons/io5";
 import styles from "../styles/Destinations.module.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -26,20 +26,26 @@ const Destinations = () => {
   return (
     <>
       {/*------- v wont display because of styling v */}
-      <div /*className={styles.desContainer}*/>
+      <div
+      // className={styles.desContainer}
+      >
         <h1>Explore our Destinations</h1>
         {destinations.length > 0 ? (
           <>
             {destinations.map((destination) => {
-              <div key={destination.id} /* className={styles.desCard}*/>
+              <div
+                key={destination.id}
+                //  className={styles.desCard}
+              >
                 <img
                   src={destination.destinationImg}
-                  alt={
-                    destination.destinationName
-                  } /* className={styles.desImage}*/
+                  alt={destination.destinationName}
+                  // className={styles.desImage}
                 />
 
-                <div /*className={styles.desDetail}*/>
+                <div
+                // className={styles.desDetail}
+                >
                   <h3>
                     {/* <IoLocationOutline />*/} {destination.destinationName}
                   </h3>
@@ -63,14 +69,17 @@ const Destinations = () => {
       {/*------- v only here so I could see the mapping, can delete when styling fixed v */}
       <div>
         {destinations.length > 0 ? ( // Ensure there's data before rendering
-          <div>
+          <div className={styles.desContainer}>
             {destinations.map((destination) => (
-              <div key={destination.id}>
+              <div key={destination.id} className={styles.desCard}>
                 <img
                   src={destination.destinationImg}
                   alt={destination.destinationName}
+                  className={styles.desImage}
                 />
-                <h2>{destination.destinationName}</h2>
+                <div className={styles.desDetail}>
+                  <h2>{destination.destinationName}</h2>
+                </div>
               </div>
             ))}
           </div>

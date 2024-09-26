@@ -49,20 +49,6 @@
   font-size: 18px;
   color: black;
 }
-.header .name .moreIcon {
-  border: 2px solid red;
-  float: right;
-}
-
-.header .name .status {
-  width: 14px;
-  height: 14px;
-  position: relative;
-  left: 14px;
-  border-radius: 50%;
-  background-color: green;
-  top: 8px;
-}
 
 .header .img {
   width: 25px;
