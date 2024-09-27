@@ -68,6 +68,17 @@ const MyTrips = ({ user, setUpdatedUser }) => {
       fetchUserTrips();
   
   }, [updateTrips]);
+
+  //EDIT TRIP BY ID
+  useEffect(() => {
+    
+  }, []);
+
+  //DELETE TRIP BY ID
+  useEffect(() => {
+    
+  }, []);
+ 
    
   return ( 
     <> 

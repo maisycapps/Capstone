@@ -483,26 +483,30 @@ router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
       const destination = await prisma.destinations.findUnique({
         where: { id: destinationId },
       });
+
       if (!destination) {
         return res.status(400).json({ error: "Invalid destination" });
       }
     }
 
-    if (!req.body) {
+    if (!text && !destinationId && !postImg) {
       return next({
         status: 404,
-        message: "Fields are required",
+        message: "At least one field required",
       });
     }
 
+    const updatedData = {};
+
+    if (text) updatedData.text = text;
+    if (postImg) updatedData.postImg = postImg;
+    if (destinationId) updatedData.destinationId = destinationId;
+
     const updatedPost = await prisma.posts.update({
       where: { id: parseInt(id) },
-      data: {
-        text: text,
-        destinationId: destinationId,
-        postImg: postImg,
-      },
+      data: updatedData
     });
+    
     res.json(updatedPost);
   } catch (error) {
     console.error("Error updating this post: ", error);

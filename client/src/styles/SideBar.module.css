@@ -9,6 +9,25 @@
   margin-top: 50px;
 }
 
+.profileBitContainer {
+  display: block;
+  margin: 10px;
+}
+
+.profileBit {
+  padding: 20px;
+}
+
+.profileBit > h2 {
+  text-align: center;
+  padding-bottom: 5px;
+}
+
+
+.profileBitImg > img {
+  height: 15rem;
+}
+
 .sideList {
   /* border: 2px solid blue; */
   font-size: 26px;

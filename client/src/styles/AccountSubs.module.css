@@ -8,11 +8,15 @@ h3 {
 
 /* MAPPED ITEMS LIST - ALL "CARDS" */
 .list {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     display: flex;
     flex-direction: row;
     gap: 10px;
     flex-flow: wrap;
-    justify-content: center;
+    justify-content: left;
+    margin-right: 3rem;
+    margin-left: 3rem;
 }
 
 /* INDIVIDAUL MAPPED ITEM "CARDS" */
@@ -35,9 +39,12 @@ h3 {
 }
 
 .listItemCard {
-    padding: 10px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    padding: 25px;
     min-height: 500px;
     width: 400px;
+    display: grid;
+    gap: 5px;
 }
 
 /* ie. "NO POSTS YET" */
@@ -54,6 +61,70 @@ h3 {
     padding-bottom: 5px;
     padding-top: 5px;
 }
+
+.postModsButtonContainer {
+    display: flex;
+    gap: 5px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    justify-content: right;
+}
+
+/* Post Image Container */
+.listItemCard > .postImg {
+    display: grid;
+    place-items: center;
+    justify-content: center;
+    margin: 3px;
+    height: 300px;
+    width: 350px;
+    margin-bottom: 5px;
+}
+
+/* Post Image */
+.listItemCard > .postImg img {
+    max-height: 300px;
+    max-width: 350px;
+    padding: 10px;
+}
+
+/* EDIT POST */
+.editForm {
+    margin-bottom: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.editFormButtons {
+    float: right;
+    display: flex;
+    gap: 5px;
+}
+
+/* EDIT COMMENT */
+.comments {
+    display: grid; 
+    grid-template-columns: 80% 20%;
+}
+
+.editCommentForm > input {
+    height: fit-content;
+}
+
+.editCommentButtons {
+    display: flex;
+    float: right;
+    gap: 5px;
+}
+
+.editCommentSubmitButtons {
+    margin-top: 3px;
+    padding: 3px;
+    float: right;
+}
+
 
 /* --------------------------------------SETTINGS.JSX-------------------------------------- */
 
@@ -82,10 +153,11 @@ h3 {
     display: flex;
     justify-content: center; 
     margin-top: 5px;
-  }
+}
 
 button {
     width: fit-content;
+    height: fit-content;
 }  
 
 .deleteSection {

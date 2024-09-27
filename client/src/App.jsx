@@ -50,7 +50,7 @@ function App() {
       <NavBar loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
 
       <Routes>
-        <Route path="*" element={<Overview />} />
+        <Route path="*" element={<Overview loggedIn={loggedIn} />} />
 
         <Route path="/about" element={<About />} />
 
