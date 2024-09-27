@@ -1,0 +1,36 @@
+.aboutContainer {
+  width: 100%;
+  height: 100vh;
+}
+.aboutTitle {
+  font-size: 20px;
+}
+.aboutHeader {
+  display: flex;
+}
+
+.aboutImage {
+  width: 75%;
+  height: 50vh;
+
+  border: 2px solid red;
+}
+.slog {
+  font-size: 25px;
+}
+
+.aboutContainer p {
+  font-size: 18px;
+  margin-left: 20px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.memorize {
+  display: grid;
+  grid-template-columns: 1fr, 3fr 2fr;
+}
+
+.memorize .Display {
+  width: 300px;
+  height: 200px;
+}
