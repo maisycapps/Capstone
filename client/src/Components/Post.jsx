@@ -133,7 +133,20 @@ const Posts = ({ post }) => {
             return (
               <div key={post.id} className={styles.header}>
                 <div className={styles.name}>
-                  <img src={italy} alt="" className={styles.profile} />
+                  {/* conditionally renders pfp if doesnt exsist */}
+                  {post.user.profileImg ? (
+                    <img
+                      src={post.user.profileImg}
+                      alt="Profile Image"
+                      className={styles.profile}
+                    />
+                  ) : (
+                    <img
+                      src={italy}
+                      alt="Default Profile Image"
+                      className={styles.profile}
+                    />
+                  )}
                   <ul>
                     {/* post created by user */}
                     <li>{post.user.userName}</li>

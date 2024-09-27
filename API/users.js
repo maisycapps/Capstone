@@ -12,6 +12,7 @@ router.get("/", async (req, res, next) => {
         userName: true,
         firstName: true,
         lastName: true,
+        profileImg: true,
       },
     });
     res.json(users);
@@ -25,7 +26,15 @@ router.get("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
 
-    const user = await prisma.users.findUnique({ where: { id } });
+    const user = await prisma.users.findUnique({
+      where: { id },
+      include: {
+        following: true,
+        followedBy: true,
+        posts: true,
+        likes: true,
+      },
+    });
 
     if (!user) {
       return next({

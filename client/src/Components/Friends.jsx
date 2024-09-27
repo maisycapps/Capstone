@@ -1,7 +1,9 @@
-import italy from "./Images/italy.jpg";
 import styles from "../styles/Friends.module.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import italy from "./Images/italy.jpg";
+import { Link } from "react-router-dom";
 
 const Friends = () => {
   const [users, setUsers] = useState([]);
@@ -10,12 +12,15 @@ const Friends = () => {
   const [following, setFollowing] = useState([]);
   const [followingList, setFollowingList] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedInUserId, setLoggedInUserId] = useState(null);
 
   //checks if user is logged in
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setLoggedIn(true);
+      const decodedToken = jwtDecode(token); //decode token to get userId
+      setLoggedInUserId(decodedToken.userId); //set userId
     } else {
       setLoggedIn(false);
     }
@@ -147,29 +152,47 @@ const Friends = () => {
           ) : (
             <ul>
               {/* maps through users */}
-              {filteredUsers.map((user) => (
-                <>
-                  <img src={italy} alt="" className={styles.profile} />
-                  <li key={`user-${user.id}`}>
-                    {user.userName}
-                    {/* conditionally renders follow unfollow button if logged in */}
-                    {loggedIn && (
-                      <>
-                        {following.includes(user.id) ? (
-                          <button onClick={() => handleUnfollow(user.id)}>
-                            Unfollow
-                          </button>
+              {filteredUsers
+                .filter((user) => user.id !== loggedInUserId) //filters out logged in user in search
+                .map((user) => (
+                  <>
+                    <li key={`user-${user.id}`}>
+                      {/* link to user profile */}
+                      <Link to={`/profile/${user.id}`}>
+                        {/* conditionally renders pfp if doesnt exsist */}
+                        {user.profileImg ? (
+                          <img
+                            src={user.profileImg}
+                            alt="Profile Image"
+                            className={styles.profile}
+                          />
                         ) : (
-                          <button onClick={() => handleFollow(user.id)}>
-                            Follow
-                          </button>
+                          <img
+                            src={italy}
+                            alt="Default Profile Image"
+                            className={styles.profile}
+                          />
                         )}
-                      </>
-                    )}
-                  </li>
-                  <li>{`${user.firstName} ${user.lastName}`}</li>
-                </>
-              ))}
+                      </Link>
+                      {user.userName}
+                      {/* conditionally renders follow unfollow button if logged in */}
+                      {loggedIn && (
+                        <>
+                          {following.includes(user.id) ? (
+                            <button onClick={() => handleUnfollow(user.id)}>
+                              Unfollow
+                            </button>
+                          ) : (
+                            <button onClick={() => handleFollow(user.id)}>
+                              Follow
+                            </button>
+                          )}
+                        </>
+                      )}
+                    </li>
+                    <li>{`${user.firstName} ${user.lastName}`}</li>
+                  </>
+                ))}
             </ul>
           )}
         </div>
@@ -182,11 +205,29 @@ const Friends = () => {
           <div className={styles.friendCard}>
             {followingList.length > 0 ? (
               <>
-                <img src={italy} alt="" className={styles.profile} />
                 <ul>
                   {followingList.map((user) => (
                     <>
-                      <li key={`following-${user.id}`}>{user.userName}</li>
+                      <li key={`following-${user.id}`}>
+                        {/* link to user profile */}
+                        <Link to={`/profile/${user.id}`}>
+                          {/* conditionally renders pfp if doesnt exsist */}
+                          {user.profileImg ? (
+                            <img
+                              src={user.profileImg}
+                              alt="Profile Image"
+                              className={styles.profile}
+                            />
+                          ) : (
+                            <img
+                              src={italy}
+                              alt="Default Profile Image"
+                              className={styles.profile}
+                            />
+                          )}
+                        </Link>
+                        {user.userName}
+                      </li>
                       <li>{`${user.firstName} ${user.lastName}`}</li>
                     </>
                   ))}

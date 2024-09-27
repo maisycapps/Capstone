@@ -23,9 +23,9 @@
   padding-bottom: 5px;
 }
 
-
 .profileBitImg > img {
   height: 15rem;
+  max-width: 15rem;
 }
 
 .sideList {
