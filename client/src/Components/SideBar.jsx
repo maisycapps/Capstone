@@ -1,65 +1,64 @@
 import styles from "../styles/SideBar.module.css";
 import axios from "axios";
+import italy from "./Images/italy.jpg";
+
 import { useEffect, useState } from "react";
 
 function SideBar({ loggedIn }) {
-
   const [user, setUser] = useState(null);
   const [userImg, setUserImg] = useState({});
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-  const fetchData = async () => {
-    try {
-      const token = localStorage.getItem("token");
+        // Fetch user's data
+        const response = await axios.get(
+          "http://localhost:3000/api/auth/account/users",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-      // Fetch user's data
-      const response = await axios.get(
-        "http://localhost:3000/api/auth/account/users",
+        const accountData = await response.data[0];
+
+        setUser(accountData);
+
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          accountData.profileImg
+            ? setUserImg(
+                <img src={accountData.profileImg} alt="Profile Image" />
+              )
+            : setUserImg(<img src={italy} alt="Default Profile Image" />);
         }
-      );
-
-      const accountData = await response.data[0];
-
-      setUser(accountData);
-
-      {  accountData.profileImg ? 
-        setUserImg(<img src={accountData.profileImg} alt="Profile Image" />) 
-      : setUserImg(<img src={italy} alt="Default Profile Image" />)}
-      
-    } catch (error) {
-      console.error("Error fetching user account data", error);
-    }
-  };
-  fetchData();
-
-  }, [])
-
+      } catch (error) {
+        console.error("Error fetching user account data", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className={styles.sideBarContainer}>
-      
-    {/* USER DATA */}      
-    { user 
-      ?          
+      {/* USER DATA */}
+      {user ? (
         <>
-          <div className={styles.profileBitContainer}> 
-            <div className={styles.profileBitImg}>
-              {userImg} 
-            </div>
+          <div className={styles.profileBitContainer}>
+            <div className={styles.profileBitImg}>{userImg}</div>
 
             <div className={styles.profileBit}>
-              <h2> {user.firstName} {user.lastName} </h2>
+              <h2>
+                {" "}
+                {user.firstName} {user.lastName}{" "}
+              </h2>
               <p>{user.bio}</p>
             </div>
           </div>
-        </>   
-      : null }
-   
+        </>
+      ) : null}
 
       {/* SIDE NAV */}
       <ul className={styles.list}>
