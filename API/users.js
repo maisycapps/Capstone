@@ -6,10 +6,17 @@ const prisma = require("../prisma");
 //get all users -- WORKS
 router.get("/", async (req, res, next) => {
   try {
-    const users = await prisma.users.findMany();
+    const users = await prisma.users.findMany({
+      select: {
+        id: true,
+        userName: true,
+        firstName: true,
+        lastName: true,
+      },
+    });
     res.json(users);
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: "Failed to fetch users" });
   }
 });
 
