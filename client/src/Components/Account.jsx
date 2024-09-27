@@ -36,6 +36,7 @@ const Account = ({ setLoggedIn }) => {
           }
         );
         const accountData = await response.data[0];
+
         setUser(accountData);
         setUpdatedUser(false);
       } catch (error) {

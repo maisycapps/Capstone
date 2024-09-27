@@ -42,9 +42,9 @@ const CreatePost = ({ setNewPostForm, setUpdatePosts }) => {
       );
       setNewPostForm(false);
       setUpdatePosts(true);
-      console.log("Post created successfully");
 
-      // navigate("/account/myposts"); // redirects to posts page -- not sure on this redirect for our routes
+      navigate("/account/myposts")
+
     } catch (error) {
       setError("Failed to create post, Please try again.");
     }
