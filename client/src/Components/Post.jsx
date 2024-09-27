@@ -125,8 +125,8 @@ const Posts = ({ post }) => {
   return (
     <>
       {/* ------ v subjected to change v ------ */}
+
       <div className={styles.container}>
-        <h2 className={styles.postHeader}>Posts</h2>
         {posts.length > 0 ? (
           posts.map((post) => {
             const hasLiked = post.likes.some((like) => like.userId === userId);
