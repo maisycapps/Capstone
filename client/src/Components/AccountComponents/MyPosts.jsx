@@ -150,6 +150,11 @@ const MyPosts = ({ user }) => {
 
     const token = localStorage.getItem("token");
 
+    { text.length === 0 ? 
+      console.error("must enter new comment text", error)
+      : next()
+    }
+
     try {
       const response = await axios.patch(
         `http://localhost:3000/api/auth/account/posts/${postId}/comments/${commentId}`,
