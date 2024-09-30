@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import styles from "../../styles/AccountSubs.module.css";
 
-const Settings = ({user, setUpdatedUser, setLoggedIn}) => {
+const Settings = ({user, setUpdateUser, setLoggedIn}) => {
 
     const navigate = useNavigate();
 
@@ -32,8 +32,10 @@ const Settings = ({user, setUpdatedUser, setLoggedIn}) => {
           );
     
           console.log("account successfully edited")
-          setUpdatedUser(true);
-          navigate("account")
+          setUpdateUser(true);
+
+          navigate("/account")
+        
         } catch (error) {
           console.error(error)
         }

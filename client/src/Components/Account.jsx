@@ -19,7 +19,7 @@ const Account = ({ setLoggedIn }) => {
   const [user, setUser] = useState(null);
 
   //Re-Rendering Dependency
-  const [updatedUser, setUpdatedUser] = useState(false);
+  const [updateUser, setUpdateUser] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,13 +38,13 @@ const Account = ({ setLoggedIn }) => {
         const accountData = await response.data[0];
 
         setUser(accountData);
-        setUpdatedUser(false);
+        setUpdateUser(false);
       } catch (error) {
         console.error("Error fetching user account data", error);
       }
     };
     fetchData();
-  }, [updatedUser]);
+  }, [updateUser]);
 
   return (
     <>
@@ -113,7 +113,7 @@ const Account = ({ setLoggedIn }) => {
             </div>
 
             {location.pathname === "/account" ? (
-              <MyPosts user={user} setUpdatedUser={setUpdatedUser} />
+              <MyPosts user={user} setUpdateUser={setUpdateUser} />
             ) : null}
 
             {/* CURRENT URL LOCATION /ACCOUNT */}
@@ -130,7 +130,7 @@ const Account = ({ setLoggedIn }) => {
               <Route
                 path="mytrips"
                 element={
-                  <MyTrips user={user} setUpdatedUser={setUpdatedUser} />
+                  <MyTrips user={user} setUpdateUser={setUpdateUser} />
                 }
               />
               <Route
@@ -138,7 +138,7 @@ const Account = ({ setLoggedIn }) => {
                 element={
                   <Settings
                     user={user}
-                    setUpdatedUser={setUpdatedUser}
+                    setUpdateUser={setUpdateUser}
                     setLoggedIn={setLoggedIn}
                   />
                 }

@@ -202,7 +202,7 @@ router.get("/account/followedBy", isLoggedIn, async (req, res) => {
 
     const followedBy = await prisma.follows.findMany({
       where: {
-        followedById: userId,
+        followingId: userId,
       },
       include: {
         followedBy: true,

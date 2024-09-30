@@ -43,8 +43,6 @@ const CreatePost = ({ setNewPostForm, setUpdatePosts }) => {
       setNewPostForm(false);
       setUpdatePosts(true);
 
-      navigate("/account/myposts")
-
     } catch (error) {
       setError("Failed to create post, Please try again.");
     }
