@@ -36,9 +36,11 @@ h3 {
 .listItemCardHeader > img {
     height: 70px;
     width: 70px;
+    border-radius: 50%;
 }
 
 .listItemCard {
+    border-radius: 20px;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     padding: 25px;
     min-height: 500px;
@@ -125,6 +127,51 @@ h3 {
     float: right;
 }
 
+/* --------------------------------------FOLLOWING.JSX & FOLLOWERS.JSX -------------------------------------- */
+.followList {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.followListCard {
+    list-style-type: none;
+    border-radius: 20px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    height: 200px;
+    width: 800px;
+    display: grid;
+    grid-template-columns: 40% 40% 20%;
+    align-items: center;
+}
+
+.followListCard:hover {
+    background-color: rgb(231, 231, 224);
+}
+
+.followListCardImg {
+    justify-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 175px;
+    width: 175px;
+    padding-left: 5rem;
+}
+
+.followListCard >.followListCardImg > img {
+    max-height: 175px;
+    max-width: 175px;
+    border-radius: 50%;
+}
+
+.followListCardText {
+    display: flex;
+    flex-direction: column;
+}
 
 /* --------------------------------------SETTINGS.JSX-------------------------------------- */
 
