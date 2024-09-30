@@ -137,72 +137,80 @@ const Friends = () => {
   return (
     <>
       {/* search users */}
-      <div className={styles.friendsContainer}>
-        <h1>Search Users</h1>
-        <input
-          type="text"
-          placeholder="Search users..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <div className={styles.friendCard}>
-          {/* conditionally renders if user isnt found */}
-          {filteredUsers.length === 0 ? (
-            <p>No user found...</p>
-          ) : (
-            <ul>
-              {/* maps through users */}
-              {filteredUsers
-                .filter((user) => user.id !== loggedInUserId) //filters out logged in user in search
-                .map((user) => (
-                  <>
-                    <li key={`user-${user.id}`}>
-                      {/* link to user profile */}
-                      <Link to={`/profile/${user.id}`}>
-                        {/* conditionally renders pfp if doesnt exsist */}
-                        {user.profileImg ? (
-                          <img
-                            src={user.profileImg}
-                            alt="Profile Image"
-                            className={styles.profile}
-                          />
-                        ) : (
-                          <img
-                            src={italy}
-                            alt="Default Profile Image"
-                            className={styles.profile}
-                          />
-                        )}
-                      </Link>
-                      {user.userName}
-                      {/* conditionally renders follow unfollow button if logged in */}
-                      {loggedIn && (
-                        <>
-                          {following.includes(user.id) ? (
-                            <button onClick={() => handleUnfollow(user.id)}>
-                              Unfollow
-                            </button>
+      <div className={styles.container}>
+        <div className={styles.friendsFilterContainer}>
+          <h1>Search Users</h1>
+          <input
+            type="text"
+            placeholder="Search users..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <div className={styles.friendFilterCard}>
+            {/* conditionally renders if user isnt found */}
+            {filteredUsers.length === 0 ? (
+              <p>No user found...</p>
+            ) : (
+              <ul>
+                {/* maps through users */}
+                {filteredUsers
+                  .filter((user) => user.id !== loggedInUserId) //filters out logged in user in search
+                  .map((user) => (
+                    <>
+                      <li key={`user-${user.id}`}>
+                        {/* link to user profile */}
+                        <Link to={`/profile/${user.id}`}>
+                          {/* conditionally renders pfp if doesnt exsist */}
+                          {user.profileImg ? (
+                            <img
+                              src={user.profileImg}
+                              alt="Profile Image"
+                              className={styles.profile}
+                            />
                           ) : (
-                            <button onClick={() => handleFollow(user.id)}>
-                              Follow
-                            </button>
+                            <img
+                              src={italy}
+                              alt="Default Profile Image"
+                              className={styles.profile}
+                            />
                           )}
-                        </>
-                      )}
-                    </li>
-                    <li>{`${user.firstName} ${user.lastName}`}</li>
-                  </>
-                ))}
-            </ul>
-          )}
+                        </Link>
+                        {user.userName}
+                        {/* conditionally renders follow unfollow button if logged in */}
+                        {loggedIn && (
+                          <>
+                            {following.includes(user.id) ? (
+                              <button
+                                onClick={() => handleUnfollow(user.id)}
+                                className={styles.btnFilter}
+                              >
+                                Unfollow
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => handleFollow(user.id)}
+                                className={styles.btnFilter}
+                              >
+                                Follow
+                              </button>
+                            )}
+                          </>
+                        )}
+                      </li>
+                      <li>{`${user.firstName} ${user.lastName}`}</li>
+                    </>
+                  ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
 
       {/*conditionally renders a list of accounts the logged in user follows if logged in */}
       {loggedIn && (
-        <div className={styles.friendsContainer}>
+        <div className={styles.friendsFollowContainer}>
           <h1>Following</h1>
-          <div className={styles.friendCard}>
+          <div className={styles.friendFollowCard}>
             {followingList.length > 0 ? (
               <>
                 <ul>
