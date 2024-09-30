@@ -4,7 +4,7 @@ import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 import italy from "../Images/italy.jpg";
 
-const Followers = ({ user }) => {
+const ProfileFollowers = ({ user }) => {
 
   const [followers, setFollowers] = useState([]);
   const [updateFollowers, setUpdateFollowers] = useState(false);
@@ -102,7 +102,7 @@ const Followers = ({ user }) => {
 
           <>
           
-            <p className={styles.defaultContent}>Not Followers</p>
+            <p className={styles.defaultContent}>No Followers</p>
       
           </>
         )}
@@ -111,5 +111,5 @@ const Followers = ({ user }) => {
   );
 };
 
-export default Followers;
+export default ProfileFollowers;
 

@@ -7,14 +7,15 @@ import { Routes, Route, useLocation } from "react-router-dom";
 
 //ACCOUNT SUBCOMPONENTS (for routes)
 import ProfileNav from "./ProfileComponents/ProfileNav";
-import Followers from "./AccountComponents/Followers";
-import Following from "./AccountComponents/Following";
+import ProfileFollowers from "./ProfileComponents/ProfileFollowers";
+import ProfileFollowing from "./ProfileComponents/ProfileFollowing";
 import ProfilePosts from "./ProfileComponents/ProfilePosts";
 
 const Profile = () => {
   const location = useLocation();
-  const [user, setUser] = useState(null);
+  const [thisUser, setThisUser] = useState(null);
   const { id } = useParams();
+
   //Re-Rendering Dependency
   // const [updatedUser, setUpdatedUser] = useState(false);
 
@@ -25,10 +26,9 @@ const Profile = () => {
         const response = await axios.get(
           `http://localhost:3000/api/users/${id}`
         );
-        const accountData = await response.data;
-        console.log(response.data);
+        const accountData = await response.data
 
-        setUser(accountData);
+        setThisUser(accountData);
       } catch (error) {
         console.error("Error fetching user account data", error);
       }
@@ -36,32 +36,32 @@ const Profile = () => {
     fetchUser();
   }, [id]);
 
-  if (!user) {
+  if (!thisUser) {
     return <div>User not found...</div>;
   }
 
   return (
     <>
       <div className={styles.account}>
-        {user ? (
+        {thisUser ? (
           //IF THERE IS A USER
           <>
             <div className={styles.accountCard}>
               <div className={styles.header}>
                 <div className={styles.stat}>
-                  {user.profileImg ? (
-                    <img src={user.profileImg} alt="Profile Image" />
+                  {thisUser.profileImg ? (
+                    <img src={thisUser.profileImg} alt="Profile Image" />
                   ) : (
                     <img src={italy} alt="Default Profile Image" />
                   )}
 
                   <h2>
-                    {user.firstName} {user.lastName}
+                    {thisUser.firstName} {thisUser.lastName}
                   </h2>
 
-                  {user.bio ? (
+                  {thisUser.bio ? (
                     <>
-                      <p>{user.bio}</p>
+                      <p>{thisUser.bio}</p>
                     </>
                   ) : null}
                 </div>
@@ -74,7 +74,7 @@ const Profile = () => {
                     <p>
                       <b>Following</b>
                     </p>
-                    <p>{user.followedBy.length}</p>
+                    <p>{thisUser.followedBy.length}</p>
                   </div>
 
                   <div className={styles.stat}>
@@ -82,14 +82,14 @@ const Profile = () => {
                     <p>
                       <b>Followers</b>
                     </p>
-                    <p>{user.following.length}</p>
+                    <p>{thisUser.following.length}</p>
                   </div>
 
                   <div className={styles.stat}>
                     <p>
                       <b>Posts</b>
                     </p>
-                    <p>{user.posts.length}</p>
+                    <p>{thisUser.posts.length}</p>
                   </div>
                 </div>
               </div>
@@ -99,19 +99,20 @@ const Profile = () => {
               <ProfileNav />
             </div>
 
-            {location.pathname === "/profile/:id" ? (
-              <ProfilePosts user={user} />
-            ) : null}
-
             {/* CURRENT URL LOCATION /ACCOUNT */}
             <Routes>
-              <Route path="followers" element={<Followers user={user} />} />
-              <Route path="following" element={<Following user={user} />} />
+              <Route path="ProfileFollowers" element={<ProfileFollowers thisUser={thisUser} />} />
+              <Route path="ProfileFollowing" element={<ProfileFollowing thisUser={thisUser} />} />
               <Route
-                path="profilePosts"
-                element={<ProfilePosts user={user} />}
+                path="ProfilePosts"
+                element={<ProfilePosts thisUser={thisUser} />}
               />
             </Routes>
+
+            {location.pathname === "/profile/:id" ? (
+              <ProfilePosts thisUser={thisUser} />
+            ) : null}
+
           </>
         ) : (
           //IF USER IS LOADING

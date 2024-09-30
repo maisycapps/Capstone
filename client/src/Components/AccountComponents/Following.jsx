@@ -60,8 +60,6 @@ const Following = ({ user }) => {
   return (
     <>
       <h3>Following</h3>
-
-      {console.log("following", ...following)}
         
       <ul>
         { following.length > 0 

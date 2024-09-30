@@ -49,7 +49,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-//get posts associated with a user
+//get posts associated with a user ---
 router.get("/:id/posts", async (req, res, next) => {
   try {
     const id = +req.params.id;
@@ -64,7 +64,18 @@ router.get("/:id/posts", async (req, res, next) => {
       });
     }
 
-    const posts = await prisma.posts.findMany({ where: { userId: id } });
+    const posts = await prisma.posts.findMany({ 
+      where: { userId: id },
+      include: {
+        destination: true,
+        comments: {
+          include: {
+            user: true,
+          },
+        },
+        likes: true,
+      },
+    });
 
     res.json(posts);
   } catch (error) {

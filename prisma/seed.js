@@ -13,7 +13,7 @@ const user = Array.from({ length: 30 }).map(() => ({
   profileImg: faker.image.urlLoremFlickr({
     width: 300,
     height: 300,
-    category: "portraits",
+    category: "profile pictures",
   }),
   //tried to seed followedBy and following- can't grab followData seed nums to do so accurately.
 }));

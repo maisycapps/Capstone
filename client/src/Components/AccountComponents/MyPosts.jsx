@@ -226,11 +226,11 @@ const MyPosts = ({ user }) => {
                 <button onClick={() => {
                   setSeeEditForm(true),
                   setViewEditFormId(post.id)
-                  }}>Edit
+                  }}>Edit Post
                 </button>
                 
                 {/* DELETE BUTTON --- Change text to trashcan icon */}
-                <button onClick={() => deletePost(post.id)}>Delete</button>
+                <button onClick={() => deletePost(post.id)}>Delete Post</button>
               </div>
 
                 {/* CONDITIONALLY RENDER POST OR EDIT FORM */}

@@ -138,7 +138,6 @@ h3 {
 }
 
 .followListCard {
-    color: black;
     list-style-type: none;
     border-radius: 20px;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
@@ -147,7 +146,6 @@ h3 {
     display: grid;
     grid-template-columns: 40% 40% 20%;
     align-items: center;
-    text-decoration: none;
 }
 
 .followListCard:hover {
@@ -173,7 +171,9 @@ h3 {
 .followListCardText {
     display: flex;
     flex-direction: column;
+    color: black;
 }
+
 
 /* --------------------------------------SETTINGS.JSX-------------------------------------- */
 

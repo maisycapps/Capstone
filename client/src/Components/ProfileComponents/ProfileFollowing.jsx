@@ -4,10 +4,10 @@ import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 import italy from "../Images/italy.jpg";
 
-const Followers = ({ user }) => {
+const ProfileFollowing = ({ user }) => {
 
-  const [followers, setFollowers] = useState([]);
-  const [updateFollowers, setUpdateFollowers] = useState(false);
+  const [following, setFollowing] = useState([]);
+  const [updateFollowing, setUpdateFollowing] = useState(false);
 
   const [seeUsers, setSeeUsers] = useState(false);
 
@@ -15,10 +15,10 @@ const Followers = ({ user }) => {
 
     const token = localStorage.getItem("token");
 
-    const fetchFollowers = async () => {
+    const fetchFollowing = async () => {
       try {
           const response = await axios.get(
-            `http://localhost:3000/api/auth/account/followedBy`,
+            `http://localhost:3000/api/auth/account/following`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -26,17 +26,16 @@ const Followers = ({ user }) => {
             }
           );
         const result = await response.data;
-
-        setFollowers(result)
+        setFollowing(result)
       }
        catch (error) {
         console.error(error);
       }  
-      setUpdateFollowers(false)
+      setUpdateFollowing(false)
     };
-    fetchFollowers();
+    fetchFollowing();
 
-  }, [updateFollowers]);
+  }, [updateFollowing]);
 
   //UNFOLLOW
   const handleUnfollow = async (userId) => {
@@ -50,41 +49,41 @@ const Followers = ({ user }) => {
       );
 
       console.log(`UnFollowed user with ID: ${userId}`);
-      setFollowers((prev) => prev.filter((id) => id !== userId)); //remove userId from following
+      setFollowing((prev) => prev.filter((id) => id !== userId)); //remove userId from following
     } catch (error) {
       console.error("Error unfollowing user: ", error);
     }
-    setUpdateFollowers(true)
+    setUpdateFollowing(true)
   };
 
 
   return (
     <>
-      <h3>Followers</h3>
+      <h3>Following</h3>
         
       <ul>
-        { followers.length > 0 
+        { following.length > 0 
         ? (
           <>
           <div className={styles.followList}>
             {/* maps through instances in which auth user's ID = followedBy id, and returns the ids and data of who they follow. */}
-            {followers.map((user) => {
+            {following.map((user) => {
               return (
-                <div key={user.followedBy.id}>
-                  <Link to={`/profile/${user.followedBy.id}`}>
+                <div key={user.following.id}>
+                  <Link to={`/profile/${user.following.id}`}>
                     <div className={styles.followListCard}>
                       <div className={styles.followListCardImg}>
-                      {user.followedBy.profileImg 
-                      ? <img src={user.followedBy.profileImg} alt="profileImg" />
+                      {user.following.profileImg 
+                      ? <img src={user.following.profileImg} alt="profileImg" />
                       : <img src={italy} alt="defaultImg" />}
                       </div>
                       <div className={styles.followListCardText}>
-                        <li><b>{user.followedBy.userName}</b></li>
-                        <li>{user.followedBy.firstName} {user.followedBy.lastName}</li>
+                        <li><b>{user.following.userName}</b></li>
+                        <li>{user.following.firstName} {user.following.lastName}</li>
                       </div>
                       <div>
                         <button onClick={() => {
-                          handleUnfollow(user.followedBy.id)}}>
+                          handleUnfollow(user.following.id)}}>
                               Unfollow
                         </button>
                     
@@ -102,8 +101,17 @@ const Followers = ({ user }) => {
 
           <>
           
-            <p className={styles.defaultContent}>Not Followers</p>
-      
+            <p className={styles.defaultContent}>Not Following Anyone Yet</p>
+            <div className={styles.buttonContainer}>
+              <button onClick={() => setSeeUsers(true)}>
+                Browse users to follow
+              </button>
+            </div>
+            {seeUsers === true
+              ? /* view all users component*/ console.log(
+                  "seeUsers component tbd"
+                )
+              : null}
           </>
         )}
       </ul>
@@ -111,5 +119,4 @@ const Followers = ({ user }) => {
   );
 };
 
-export default Followers;
-
+export default ProfileFollowing;
