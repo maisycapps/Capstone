@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 import italy from "../Images/italy.jpg";
@@ -70,6 +71,7 @@ const Followers = ({ user }) => {
             {followers.map((user) => {
               return (
                 <div key={user.followedBy.id}>
+                  <Link to={`/profile/${user.followedBy.id}`}>
                     <div className={styles.followListCard} onClick={() => console.log("You clicked: ", user.followedBy.userName)}>
                       <div className={styles.followListCardImg}>
                       {user.followedBy.profileImg 
@@ -88,6 +90,7 @@ const Followers = ({ user }) => {
                     
                       </div>
                     </div>
+                  </Link>
                 </div>
               )
             })}
