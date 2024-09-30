@@ -204,49 +204,49 @@ const Friends = () => {
             )}
           </div>
         </div>
-      </div>
 
-      {/*conditionally renders a list of accounts the logged in user follows if logged in */}
-      {loggedIn && (
-        <div className={styles.friendsFollowContainer}>
-          <h1>Following</h1>
-          <div className={styles.friendFollowCard}>
-            {followingList.length > 0 ? (
-              <>
-                <ul>
-                  {followingList.map((user) => (
-                    <>
-                      <li key={`following-${user.id}`}>
-                        {/* link to user profile */}
-                        <Link to={`/profile/${user.id}`}>
-                          {/* conditionally renders pfp if doesnt exsist */}
-                          {user.profileImg ? (
-                            <img
-                              src={user.profileImg}
-                              alt="Profile Image"
-                              className={styles.profile}
-                            />
-                          ) : (
-                            <img
-                              src={italy}
-                              alt="Default Profile Image"
-                              className={styles.profile}
-                            />
-                          )}
-                        </Link>
-                        {user.userName}
-                      </li>
-                      <li>{`${user.firstName} ${user.lastName}`}</li>
-                    </>
-                  ))}
-                </ul>
-              </>
-            ) : (
-              <p>You are not following anyone yet.</p>
-            )}
+        {/*conditionally renders a list of accounts the logged in user follows if logged in */}
+        {loggedIn && (
+          <div className={styles.friendsFollowContainer}>
+            <h1>Following</h1>
+            <div className={styles.friendFollowCard}>
+              {followingList.length > 0 ? (
+                <>
+                  <ul>
+                    {followingList.map((user) => (
+                      <>
+                        <li key={`following-${user.id}`}>
+                          {/* link to user profile */}
+                          <Link to={`/profile/${user.id}`}>
+                            {/* conditionally renders pfp if doesnt exsist */}
+                            {user.profileImg ? (
+                              <img
+                                src={user.profileImg}
+                                alt="Profile Image"
+                                className={styles.profile}
+                              />
+                            ) : (
+                              <img
+                                src={italy}
+                                alt="Default Profile Image"
+                                className={styles.profile}
+                              />
+                            )}
+                          </Link>
+                          {user.userName}
+                        </li>
+                        <li>{`${user.firstName} ${user.lastName}`}</li>
+                      </>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <p>You are not following anyone yet.</p>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   );
 };
