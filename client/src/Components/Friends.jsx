@@ -132,72 +132,84 @@ const Friends = () => {
   return (
     <>
       {/* search users */}
-      <div className={styles.friendsContainer}>
-        <h1>Search Users</h1>
-        <input
-          type="text"
-          placeholder="Search users..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <div className={styles.friendCard}>
-          {/* conditionally renders if user isnt found */}
-          {filteredUsers.length === 0 ? (
-            <p>No user found...</p>
-          ) : (
-            <ul>
-              {/* maps through users */}
-              {filteredUsers.map((user) => (
-                <>
-                  <img src={italy} alt="" className={styles.profile} />
-                  <li key={`user-${user.id}`}>
-                    {user.userName}
-                    {/* conditionally renders follow unfollow button if logged in */}
-                    {loggedIn && (
-                      <>
-                        {following.includes(user.id) ? (
-                          <button onClick={() => handleUnfollow(user.id)}>
-                            Unfollow
-                          </button>
-                        ) : (
-                          <button onClick={() => handleFollow(user.id)}>
-                            Follow
-                          </button>
-                        )}
-                      </>
-                    )}
-                  </li>
-                  <li>{`${user.firstName} ${user.lastName}`}</li>
-                </>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-
-      {/*conditionally renders a list of accounts the logged in user follows if logged in */}
-      {loggedIn && (
-        <div className={styles.friendsContainer}>
-          <h1>Following</h1>
-          <div className={styles.friendCard}>
-            {followingList.length > 0 ? (
-              <>
-                <img src={italy} alt="" className={styles.profile} />
-                <ul>
-                  {followingList.map((user) => (
-                    <>
-                      <li key={`following-${user.id}`}>{user.userName}</li>
-                      <li>{`${user.firstName} ${user.lastName}`}</li>
-                    </>
-                  ))}
-                </ul>
-              </>
+      <div className={styles.container}>
+        <div className={styles.friendsFilterContainer}>
+          <h1>Search Users</h1>
+          <input
+            type="text"
+            placeholder="Search users..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <div className={styles.friendFilterCard}>
+            {/* conditionally renders if user isnt found */}
+            {filteredUsers.length === 0 ? (
+              <p>No user found...</p>
             ) : (
-              <p>You are not following anyone yet.</p>
+              <ul>
+                {/* maps through users */}
+                {filteredUsers.map((user) => (
+                  <>
+                    <img src={italy} alt="" className={styles.profile} />
+                    <li key={`user-${user.id}`}>
+                      {user.userName}
+                      {/* conditionally renders follow unfollow button if logged in */}
+                      {loggedIn && (
+                        <>
+                          {following.includes(user.id) ? (
+                            <button
+                              onClick={() => handleUnfollow(user.id)}
+                              className={styles.btnFilter}
+                            >
+                              Unfollow
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => handleFollow(user.id)}
+                              className={styles.btnFilter}
+                            >
+                              Follow
+                            </button>
+                          )}
+                        </>
+                      )}
+                    </li>
+                    <li>{`${user.firstName} ${user.lastName}`}</li>
+                  </>
+                ))}
+              </ul>
             )}
           </div>
         </div>
-      )}
+        {loggedIn && (
+          <>
+            <div className={styles.friendsFollowContainer}>
+              <h1>Following</h1>
+              <div className={styles.friendFollowCard}>
+                {followingList.length > 0 ? (
+                  <>
+                    {/* <img src={italy} alt="" className={styles.profile} /> */}
+                    <ul>
+                      {followingList.map((user) => (
+                        <>
+                          <img src={italy} alt="" className={styles.profile} />
+
+                          <li key={`following-${user.id}`}>{user.userName}</li>
+                          <li>{`${user.firstName} ${user.lastName}`}</li>
+                        </>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <p>You are not following anyone yet.</p>
+                )}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/*conditionally renders a list of accounts the logged in user follows if logged in */}
     </>
   );
 };

@@ -1,49 +1,88 @@
-.friendsContainer {
+.container {
+  height: 100vh;
+}
+
+.friendsFilterContainer {
   display: block;
   justify-content: center;
-}
-.friendsContainer .friendCard {
-  width: 90%;
-  padding: 15px;
-  height: fit-content;
+  height: 500px;
   display: flex;
+  flex-direction: column;
+}
+.friendsFilterContainer .friendFilterCard {
+  overflow: auto;
+  height: fit-content;
   margin: 20px;
-  /* border: 2px solid red; */
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-
   border-radius: 15px;
 }
 
-.friendsContainer .friendCard .profile {
+.friendsFilterContainer .friendFilterCard .profile {
   width: 48px;
   height: 48px;
   border-radius: 50%;
 }
 
-.friendsContainer .friendCard ul {
-  position: relative;
+.friendsFilterContainer .friendFilterCard ul {
+  padding: 20px;
   left: 14px;
   top: 5px;
 }
-.friendsContainer .friendCard ul li {
+
+.friendsFilterContainer .friendFilterCard ul li {
   list-style: none;
+  font-size: 16px;
+  color: #1f5156;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.friendsFilterContainer .friendFilterCard ul li .btnFilter {
+  border: none;
+  float: right;
+  font-size: 18px;
+  background-color: #1f5156;
+  color: #fff;
+  width: 80px;
+  height: 30px;
+  border-radius: 10px;
 }
 
-.friendCard ul li:nth-child(1) {
-  font-size: 18px;
-  font-weight: bold;
+/* ///////////////////////////////////////// */
+.friendsFollowContainer {
+  display: block;
+  justify-content: center;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
 }
 
-.friendCard ul li:nth-child(2) {
-  font-size: 18px;
-  color: black;
+.friendsFollowContainer .friendFollowCard {
+  overflow: auto;
+  height: fit-content;
+  margin: 20px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-radius: 15px;
 }
-.friendCard .status {
-  width: 14px;
-  height: 14px;
-  position: relative;
-  left: 14px;
+
+.friendsFollowContainer .friendFollowCard {
+  overflow: auto;
+  height: fit-content;
+  margin: 20px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  border-radius: 15px;
+}
+.friendsFollowContainer .friendFollowCard .profile {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background-color: green;
-  top: 8px;
+}
+
+.friendsFollowContainer .friendFollowCard ul {
+  left: 14px;
+  top: 5px;
+}
+.friendsFollowContainer .friendFollowCard ul li {
+  font-size: 16px;
+  color: #1f5156;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  list-style: none;
 }
