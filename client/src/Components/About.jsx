@@ -42,6 +42,24 @@ function About() {
         <div className={styles.imgDisplay}>
           <img src={trail} alt="" />
         </div>
+        <div className={styles.imgDisplay}>
+          <img src={hiking} alt="" />
+        </div>
+        <div className={styles.imgDisplay}>
+          <img src={meditation} alt="" />
+        </div>
+        <div className={styles.imgDisplay}>
+          <img src={trail} alt="" />
+        </div>
+        <div className={styles.imgDisplay}>
+          <img src={hiking} alt="" />
+        </div>
+        <div className={styles.imgDisplay}>
+          <img src={meditation} alt="" />
+        </div>
+        <div className={styles.imgDisplay}>
+          <img src={trail} alt="" />
+        </div>
       </div>
     </div>
   );

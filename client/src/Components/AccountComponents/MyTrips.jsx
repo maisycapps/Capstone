@@ -1,125 +1,179 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import CreateTrip from '../CreateTrip';
+import EditTrip from "./EditTrip";
 import styles from "../../styles/AccountSubs.module.css";
 
-const MyTrips = ({ user, setUpdatedUser }) => {
+const MyTrips = ({ user }) => {
 
-  const [destinationNames, setDestinationNames] = useState({});
+/* -------------------------------- CONDITIONAL RENDERING --------------------------------*/
+  //CREATE NEW POST
   const [newTripForm, setNewTripForm] = useState(false);
 
-  // useEffect(() => {
+  //EDIT TRIP
+  const [seeEditForm, setSeeEditForm] = useState(false); //view EditPost route
+  const [viewEditFormId, setViewEditFormId] = useState("") //render edit form only on that post
 
-  //   const getDestinationName = async(destinationId) => {
-
-  //     try {
-  //       if(!destinationNames[destinationId]) {
-
-  //         const response = await axios.get(`http://localhost:3000/api/destinations/${destinationId}`);
-  //         const result = await response.data;
-  //           setDestinationNames((prevNames) => ({
-  //           ...prevNames, [destinationId]: result.destinationName,
-  //           }));
-  //       }
-  //     } catch (error) {
-  //       console.error(error)
-  //     }
-  //  };
-   
-  //     user.trips.forEach((trip) => {
-  //       getDestinationName(trip.destinationId);
-  //  })
-
-  // }, []);
-  
-  const [userId, setUserId] = useState("")
-
-  const [trips, setTrips] = useState([])
+/* -------------------------------- RE-RENDER DEPENDENCY --------------------------------*/
   const [updateTrips, setUpdateTrips] = useState(false)
+
+/* -------------------------------- USER DATA --------------------------------*/
+  const [userId, setUserId] = useState(null);
+  const [trips, setTrips] = useState([])
 
   //SET USER ID
   useEffect(() => {
     if (user && user.id) {
-         setUserId(user.id);
+       setUserId(user.id);
     }
   }, [user]); 
+
+/* -------------------------------- TRIPS CRUD --------------------------------*/
 
   //GET ALL TRIPS
   useEffect(() => {
 
-      const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
   
-      const fetchUserTrips = async() => {
-        try {
-          const response = await axios.get("http://localhost:3000/api/auth/account/trips",
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          )
-          setTrips(response.data);
-          setUpdateTrips(false);
+    const fetchUserTrips = async() => {
+
+      try {
+        const response = await axios.get("http://localhost:3000/api/auth/account/trips",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+
+        setTrips(response.data);
   
-        } catch (error) {
-          console.error("Error fetching trips: ", error);
-        }
+      } catch (error) {
+        console.error("Error fetching trips: ", error);
+      }
+        setUpdateTrips(false);
       };
+
       fetchUserTrips();
   
   }, [updateTrips]);
 
-  //EDIT TRIP BY ID
-  useEffect(() => {
-    
-  }, []);
-
   //DELETE TRIP BY ID
-  useEffect(() => {
-    
-  }, []);
+  const deleteTrip = async(tripId) => {
  
+    const token = localStorage.getItem("token");
+  
+    try {
+      await axios.delete(
+        `http://localhost:3000/api/auth/account/trips/${tripId}`,
+          {
+            headers: {
+               Authorization: `Bearer ${token}`,
+             },
+          }
+        );  
+    } catch (error) {
+        console.error("error deleting post: ", error);
+    }
+
+      setUpdateTrips(true)
+
+  }
    
   return ( 
-    <> 
-      <h3>Trips</h3>
-        <div className={styles.buttonContainer}>
-          <button onClick={() => setNewTripForm(true)}>Add New Trip</button>
-        </div>
-      {newTripForm === true ? <CreateTrip setNewTripForm={setNewTripForm} setUpdatedUser={setUpdatedUser}/> : null}
-        
-        <div className={styles.list}>
-          {trips.length > 0 ? (
-              trips.map((trip) => (
-                <div key={trip.id} className={styles.listItemCard}>
+  <>
+    {/* CONDITIONALLY RENDER TRIPS OR "NO TRIPS YET"*/}
 
-                  <div className={styles.listItemCardHeader}>
-                    <img src={user.profileImg}/>
-                    <p><b>{user.userName}</b></p>
+    { trips.length > 0 
+    ? ( <>
+          {/* CREATE NEW TRIP BUTTON & CONDITIONALLY RENDERED FORM */}
+          <div className={styles.buttonContainer}>
+            <button onClick={() => setNewTripForm(true)}>Add New Trip</button>
+          </div>
+    
+          {newTripForm === true && trips.length > 0 
+            ? <CreateTrip setNewTripForm={setNewTripForm} setUpdateTrips={setUpdateTrips}/> 
+            : null
+          }
+       <div className={styles.list}>
+
+          {trips.map((trip) => {
+            return (
+              <div key={trip.id} >
+
+                  <div className={styles.listItemCard}>
+
+                    {/* CONDITIONALLY RENDERED EDIT TRIP OR CANCEL BUTTON */}
+                    <div className={styles.postModsButtonContainer}>
+                      { seeEditForm === true && trip.id === viewEditFormId 
+                      ?<button onClick={() => setSeeEditForm(false)}>Cancel</button>
+                      :
+                      <>
+                      {/* EDIT BUTTON --- Change text to gear icon */}
+                      <button onClick={() => {
+                        setSeeEditForm(true),
+                        setViewEditFormId(trip.id)
+                        }}>Edit
+                      </button>
+                      </>
+                      }
+
+                      {/* DELETE BUTTON --- Change text to trashcan icon */}
+                      <button onClick={() => deleteTrip(trip.id)}>Delete</button>
+                    </div>
+                 
+
+                {/* CONDITIONALLY RENDER TRIP OR EDIT FORM */}
+                { seeEditForm === true && trip.id === viewEditFormId 
+                  ? (<> 
+
+                      <div className={styles.listItemCardHeader}>
+                        <img src={user.profileImg}/>
+                        <p><b>{user.userName}</b></p>
+                      </div>
+
+                      <EditTrip viewEditFormId={viewEditFormId} setViewEditFormId={setViewEditFormId} setSeeEditForm={setSeeEditForm} setUpdateTrips={setUpdateTrips}/>
+                  
+                      </> 
+                  ) : (
+                    <>
+                    
+                      <h4 style={{textAlign: "center"}} >"{trip.tripName}"</h4>
+
+                      <div className={styles.postImg}>
+                        <img src={trip.destination.destinationImg} alt="destinationImg" />
+                      </div>
+
+                      <p><b>Destination: </b> { trip.destination.destinationName || "Loading..."}</p>
+                      <p><b>When: </b>{new Date(trip.startDate).toLocaleDateString("en-US", {year: "numeric", month: "long", day: "numeric"})} - {new Date(trip.endDate).toLocaleDateString("en-US", {year: "numeric", month: "long", day: "numeric"})}</p>
+
+                      <p><b>Who's Going: </b> You </p>
+                      {/* for T3 other trip users --- filter userId out and return { , trip.user.userName || , "Loading..." } to view other users associated w the trip */}
+                      { /* T3 have button to search mutual followers and add to trip */}
+                      { /* T3 have button to delete trip guests */}
+
+                      </>
+                    
+                   
+                    )}
                   </div>
 
-                  <h4>"{trip.tripName}"</h4>
-              
-                  <p><b>Destination: </b> {destinationNames[trip.destinationId] || "Loading..."}</p>
+              </div>
+          )}) 
+        }</div>
+          </>
+        ) : ( 
 
-                  <p><b>Start Date:</b> {new Date(trip.startDate).toLocaleDateString()}</p>
-                  <p><b>End Date:</b> {new Date(trip.endDate).toLocaleDateString()}</p>
-
-                </div>
-              ))
-            ) : (
               <>
                 <p className={styles.defaultContent}>No Trips Yet</p>
                 <button onClick={() => setNewTripForm(true)}>Create your first Trip</button>
 
-                {/* CONDITIONALLY RENDER CREATE TRIP FORM */}
-                {newTripForm === true ? <CreateTrip setNewTripForm={setNewTripForm} setUpdatedUser={setUpdatedUser}/> : null}
+                {newTripForm === true ? <CreateTrip setNewTripForm={setNewTripForm} setUpdateTrips={setUpdateTrips}/> : null}
               </>
-            )
-          }
-        </div>
-    </> 
-  );
-}
+        )
+    }
+  </>
+  )
+};
  
 export default MyTrips;

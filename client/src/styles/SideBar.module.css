@@ -26,6 +26,10 @@
 .profileBitImg > img {
   height: 15rem;
   max-width: 15rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .sideList {

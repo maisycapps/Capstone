@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const CreateTrip = ({ setNewTripForm, setUpdatedUser }) => {
+const CreateTrip = ({ setNewTripForm, setUpdateTrips }) => {
 
   const [destinations, setDestinations] = useState([]);
   const [tripName, setTripName] = useState("");
@@ -32,12 +32,6 @@ const CreateTrip = ({ setNewTripForm, setUpdatedUser }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    //if no token it will navigate to login
-    // if (!token) {
-    //   nagivate("/login");
-    //   return;
-    // }
-
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
@@ -55,12 +49,11 @@ const CreateTrip = ({ setNewTripForm, setUpdatedUser }) => {
         }
       );
 
-      console.log("Trip created successfully", response.data);
       setNewTripForm(false)
-      setUpdatedUser(true)
+      setUpdateTrips(true)
 
-      //navigates to trips page for for the logged in user
-      // navigate("/account/mytrips");
+      navigate("/account/mytrips")
+
     } catch (error) {
       setError("Failed to create Trip, Please try again.");
     }
