@@ -1,16 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 // import "../styles/NavBar.css";
 import { CodeIcon, HamburgerMenuClose, HamburgerMenuOpen } from "./Icons";
+import { jwtDecode } from "jwt-decode";
 
 function NavBar({ loggedIn, setLoggedIn }) {
   const [click, setClick] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  //decodes token and sets admin based off role
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      console.log("decoded token", decodedToken);
+
+      if (decodedToken && decodedToken.role === "ADMIN") {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    } else {
+      setIsAdmin(false);
+    }
+  }, [loggedIn]);
 
   //logs user out
   const handleLogout = () => {
     localStorage.removeItem("token");
     //update state to reflect logged out status
     setLoggedIn(false);
+    setIsAdmin(false);
     //redirects them to the home page
     window.location.href = "/";
   };
@@ -72,6 +92,19 @@ function NavBar({ loggedIn, setLoggedIn }) {
                     Account
                   </NavLink>
                 </li>
+                {/* conditionally render if user is admin */}
+                {isAdmin && (
+                  <li className="nav-item">
+                    <NavLink
+                      to="/admin"
+                      activeClassName="active"
+                      className="nav-links"
+                      onClick={handleClick}
+                    >
+                      Admin
+                    </NavLink>
+                  </li>
+                )}
                 <li
                   activeClassName="active"
                   className="nav-links"

@@ -15,6 +15,7 @@ import { isAuthenticated } from "./UtilityFiles/auth";
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import Profile from "./Components/Profile";
+import Admin from "./Components/Admin";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -73,6 +74,7 @@ function App() {
           }
         />
         <Route path="/profile/:id/*" element={<Profile />} />
+        <Route path="/admin/*" element={<Admin />} />
       </Routes>
     </div>
   );
