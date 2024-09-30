@@ -1,5 +1,5 @@
 //function to decode JWT token
-const decodedToken = (token) => {
+export const decodedToken = (token) => {
   try {
     const payload = JSON.parse(atob(token.split(".")[1])); // Correct token decoding
     return payload;
