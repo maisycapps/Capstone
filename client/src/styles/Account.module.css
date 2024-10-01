@@ -1,7 +1,6 @@
 /* ACCOUNT WHOLE PAGE CONTAINER*/
 .account {
   display: grid;
-  border: 1px solid black;
 }
 
 /* ACCOUNT HEADER */

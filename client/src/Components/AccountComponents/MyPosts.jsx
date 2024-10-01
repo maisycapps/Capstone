@@ -1,10 +1,10 @@
 import CreatePost from "../CreatePost";
 import EditPost from "./EditPost";
 import { useState, useEffect } from "react";
-import axios, { formToJSON } from "axios";
+import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 
-const MyPosts = ({ user }) => {
+const MyPosts = ({ user, setUpdateUser }) => {
 
   /* -------------------------------- CONDITIONAL RENDERING --------------------------------*/
 
@@ -88,6 +88,7 @@ const MyPosts = ({ user }) => {
         console.error("error deleting post: ", error);
     }
       setUpdatePosts(true)
+      setUpdateUser(true)
   }
  
   
@@ -206,7 +207,7 @@ const MyPosts = ({ user }) => {
     }
 
       {/* CONDITIONALLY RENDER CREATE POST FORM */}
-      {newPostForm === true && posts.length > 0 ? <CreatePost setNewPostForm={setNewPostForm} setUpdatePosts={setUpdatePosts}/> : null}
+      {newPostForm === true && posts.length > 0 ? <CreatePost setNewPostForm={setNewPostForm} setUpdatePosts={setUpdatePosts} setUpdateUser={setUpdateUser}/> : null}
       
       <div className={styles.list}>
 
@@ -413,7 +414,7 @@ const MyPosts = ({ user }) => {
             <button onClick={() => setNewPostForm(true)}>Create your first post</button>
 
             {/* CONDITIONALLY RENDER CREATE POST FORM */}
-            {newPostForm === true ? <CreatePost setNewPostForm={setNewPostForm}/> : null}
+            {newPostForm === true ? <CreatePost setNewPostForm={setNewPostForm} setUpdatePosts={setUpdatePosts} setUpdateUser={setUpdateUser}/> : null}
           </>
         )}
 
