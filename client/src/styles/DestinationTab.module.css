@@ -1,0 +1,62 @@
+.adContainer {
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.form {
+  display: flex;
+  justify-content: center;
+}
+.adContainer form {
+  display: block;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 5px 30px 5px;
+  width: 300px;
+  height: 150px;
+}
+.adContainer form input {
+  margin: 10px;
+  display: flex;
+  width: 300px;
+  justify-content: center;
+}
+
+.adContainer form button {
+  width: 300px;
+  height: 30px;
+  font-size: 18px;
+  background-color: #fff;
+  color: #1f5156;
+  border-radius: 5px;
+}
+.adContainer form button:hover {
+  background-color: #1f5156;
+  color: #fff;
+}
+
+.adContainer .search {
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.desContainer {
+  width: 100%;
+  height: 60vh;
+  display: flex;
+}
+.desContainer ul {
+  width: 300px;
+  height: 300px;
+  justify-content: center;
+  align-items: center;
+}
+
+.desContainer ul button {
+  width: 60px;
+  color: #fff;
+  background-color: #1f5156;
+}

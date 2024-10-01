@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import styles from "../../styles/PostTab.module.css";
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
@@ -92,7 +93,7 @@ const Posts = () => {
 
   return (
     <>
-      <div>
+      <div className="adminContainerv2">
         <h3>Manage Posts</h3>
         <input
           type="text"
@@ -100,18 +101,21 @@ const Posts = () => {
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <ul>
-          {/* maps through posts */}
-          {filteredPosts.map((post) => (
-            <li key={post.id}>
-              {/* user pfp */}
-              <img
-                src={post.user.profileImg}
-                alt="Profile Image"
-                style={{ width: "50px", height: "50px" }}
-              />
+        {/* <div className="userDetail"> */}
+        {/* <ul className={styles.ul}> */}
+        {/* maps through posts */}
+        {/* <div className="userCardv2-container"> */}
+        {filteredPosts.map((post) => (
+          <div className="eachPost" key={post.id}>
+            {/* user pfp */}
+            <img
+              src={post.user.profileImg}
+              alt="Profile Image"
+              style={{ width: "50px", height: "50px" }}
+            />
+            <div className="userDetail">
               {/* username */}
-              <p>USER: {post.user.userName}</p>
+              <h2>USER: {post.user.userName}</h2>
               {/* destination */}
               <h2>
                 {post.destination
@@ -130,28 +134,30 @@ const Posts = () => {
               <button onClick={() => handleDeletePost(post.id)}>
                 Delete Post
               </button>
+            </div>
 
-              {/* Render comments */}
-              {post.comments && post.comments.length > 0 && (
-                <ul>
-                  {post.comments.map((comment) => (
-                    <li key={comment.id}>
-                      <p>
-                        {comment.user.userName}: {comment.text}
-                      </p>
-                      <button
-                        onClick={() => handleDeleteComment(comment.id, post.id)}
-                      >
-                        Delete Comment
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
-          ))}
-        </ul>
+            {/* Render comments */}
+            {post.comments && post.comments.length > 0 && (
+              <div className={styles.adminPostComments}>
+                {post.comments.map((comment) => (
+                  <div key={comment.id}>
+                    <h3>
+                      {comment.user.userName}: {comment.text}
+                    </h3>
+                    <button
+                      onClick={() => handleDeleteComment(comment.id, post.id)}
+                    >
+                      Delete Comment
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
+      {/* </ul> */}
+      {/* </div> */}
     </>
   );
 };
