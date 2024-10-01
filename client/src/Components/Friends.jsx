@@ -160,20 +160,20 @@ const Friends = () => {
                       <li key={`user-${user.id}`}>
                         {/* link to user profile */}
                         <Link to={`/profile/${user.id}`}>
-                          {/* conditionally renders pfp if doesnt exsist */}
-                          {user.profileImg ? (
-                            <img
-                              src={user.profileImg}
-                              alt="Profile Image"
-                              className={styles.profile}
-                            />
-                          ) : (
-                            <img
-                              src={italy}
-                              alt="Default Profile Image"
-                              className={styles.profile}
-                            />
-                          )}
+                              {/* conditionally renders pfp if doesnt exsist */}
+                              {user.profileImg ? (
+                               <img
+                                  src={user.profileImg}
+                                  alt="Profile Image"
+                                  className={styles.profile}
+                                />
+                              ) : (
+                                <img
+                                  src={italy}
+                                  alt="Default Profile Image"
+                                  className={styles.profile}
+                                />
+                              )}
                         </Link>
                         {user.userName}
                         {/* conditionally renders follow unfollow button if logged in */}

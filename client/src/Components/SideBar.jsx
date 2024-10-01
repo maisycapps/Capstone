@@ -1,6 +1,7 @@
 import styles from "../styles/SideBar.module.css";
 import axios from "axios";
 import italy from "./Images/italy.jpg";
+import { Link } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 
@@ -62,11 +63,16 @@ function SideBar({ loggedIn }) {
 
       {/* SIDE NAV */}
       <ul className={styles.list}>
-        <li className={styles.sideList}>HOME</li>
-        <li className={styles.sideList}>ABOUT </li>
-        <li className={styles.sideList}>GALLERY</li>
-        <li className={styles.sideList}>TRIPS</li>
-        <li className={styles.sideList}>DESTINATION</li>
+        <Link to="/">
+          <li className={styles.sideList}>HOME</li>
+        </Link>
+        <Link to="/about">
+          {" "}
+          <li className={styles.sideList}>ABOUT</li>
+        </Link>
+        <Link to="/destinations">
+          <li className={styles.sideList}>DESTINATIONS</li>
+        </Link>
       </ul>
     </div>
   );

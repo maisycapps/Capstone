@@ -4,13 +4,13 @@ import styles from "../../styles/Account.module.css";
 const ProfileNav = () => {
   return (
     <>
-      <NavLink className={styles.navElements} to="followers">
+      <NavLink className={styles.navElements} to="ProfileFollowers">
         Followers
       </NavLink>
-      <NavLink className={styles.navElements} to="following">
+      <NavLink className={styles.navElements} to="ProfileFollowing">
         Following
       </NavLink>
-      <NavLink className={styles.navElements} to="profilePosts">
+      <NavLink className={styles.navElements} to="ProfilePosts">
         Posts
       </NavLink>
     </>

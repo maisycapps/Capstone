@@ -4,26 +4,29 @@ import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 import italy from "../Images/italy.jpg";
 
-const Followers = ({ user }) => {
+const ProfileFollowers = ({ user, thisUser }) => {
 
   const [followers, setFollowers] = useState([]);
   const [updateFollowers, setUpdateFollowers] = useState(false);
 
   const [seeUsers, setSeeUsers] = useState(false);
 
-  useEffect(() => {
+  /* -------------------------------- USER DATA --------------------------------*/
+  const [userId, setUserId] = useState(null);
 
-    const token = localStorage.getItem("token");
+    //SET USER ID
+    useEffect(() => {
+      if (user && user.id) {
+         setUserId(user.id);
+      }
+    }, [user]); 
+
+  useEffect(() => {
 
     const fetchFollowers = async () => {
       try {
           const response = await axios.get(
-            `http://localhost:3000/api/auth/account/followedBy`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
+            `http://localhost:3000/api/users/${thisUser.id}/followedBy`,
           );
         const result = await response.data;
 
@@ -37,6 +40,7 @@ const Followers = ({ user }) => {
     fetchFollowers();
 
   }, [updateFollowers]);
+
 
   //UNFOLLOW
   const handleUnfollow = async (userId) => {
@@ -71,30 +75,33 @@ const Followers = ({ user }) => {
             {followers.map((user) => {
               return (
                 <div key={user.followedBy.id}>
-                  <div className={styles.followListCard}>
+                   <div className={styles.followListCard}>
 
-                      <Link to={`/profile/${user.followedBy.id}`} className={styles.userLinks}>
-                        <div className={styles.followListCardImg}>
-                        {user.followedBy.profileImg 
-                        ? <img src={user.followedBy.profileImg} alt="profileImg" />
-                        : <img src={italy} alt="defaultImg" />}
-                        </div>
-                      </Link>
-                      <Link to={`/profile/${user.followedBy.id}`} className={styles.userLinks}>
-                          <li><b>{user.followedBy.userName}</b></li>
-                          <li>{user.followedBy.firstName} {user.followedBy.lastName}</li>
-                      </Link>
-
-                      <div>
-                          <button onClick={() => {
-                            handleUnfollow(user.followedBy.id)}}>
-                                Unfollow
-                          </button>
+                    <Link to={`/profile/${user.followedBy.id}`} className={styles.userLinks}>
+                      <div className={styles.followListCardImg}>
+                      {user.followedBy.profileImg 
+                      ? <img src={user.followedBy.profileImg} alt="profileImg" />
+                      : <img src={italy} alt="defaultImg" />}
                       </div>
-                  </div>
+                    </Link>
+                    <Link to={`/profile/${user.followedBy.id}`} className={styles.userLinks}>
+                      <div className={styles.followListCardText}>
+                        <li><b>{user.followedBy.userName}</b></li>
+                        <li>{user.followedBy.firstName} {user.followedBy.lastName}</li>
+                      </div>
+                    </Link>
+                     
+                
 
-                </div>         
-             
+                    { userId ? <div>
+                        <button onClick={() => {
+                          handleUnfollow(user.followedBy.id)}}>
+                              Unfollow
+                        </button>
+                      </div> : null } 
+
+                  </div>
+                </div>
               )
             })}
             </div>
@@ -105,7 +112,7 @@ const Followers = ({ user }) => {
 
           <>
           
-            <p className={styles.defaultContent}>No Followers Yet</p>
+            <p className={styles.defaultContent}>{thisUser.firstName} doesn't have any followers yet</p>
       
           </>
         )}
@@ -114,5 +121,5 @@ const Followers = ({ user }) => {
   );
 };
 
-export default Followers;
+export default ProfileFollowers;
 

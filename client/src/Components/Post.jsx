@@ -12,6 +12,8 @@ const Posts = ({ post }) => {
   const [userName, setUserName] = useState(null);
   const navigate = useNavigate();
   const [showComments, setShowComments] = useState(false);
+  const [seeComments, setSeeComments] = useState(false); //view comments
+  const [viewCommentsId, setViewCommentsId] = useState(""); //render comments on only that post
 
   useEffect(() => {
     //fetch posts from backend
@@ -118,8 +120,9 @@ const Posts = ({ post }) => {
     }
   };
 
-  const handleOnClick = () => {
-    setShowComments((prevShowComments) => !prevShowComments);
+  const handleOnClick = (postId) => {
+    // setShowComments((prevShowComments) => !prevShowComments);
+    setViewCommentsId(viewCommentsId === postId ? "" : postId);
   };
 
   return (
@@ -181,16 +184,17 @@ const Posts = ({ post }) => {
                 </button>
 
                 {/* comment button */}
-                <button onClick={handleOnClick}>
-                  {showComments
-                    ? `Hide Comments: ${
-                        post.comments ? post.comments.length : ""
-                      }`
+                <button
+                  onClick={() => handleOnClick(post.id)}
+                  className={styles.commentPost}
+                >
+                  {viewCommentsId === post.id
+                    ? `Comments: ${post.comments ? post.comments.length : ""}`
                     : `Comments: ${post.comments ? post.comments.length : ""}`}
                 </button>
 
                 {/* conditionally render comments */}
-                {showComments && (
+                {viewCommentsId === post.id && (
                   <div>
                     {/* render comments for each post */}
                     {post.comments.map((comment) => {
@@ -216,7 +220,6 @@ const Posts = ({ post }) => {
                       }
                     }}
                   />
-                  {/* <button className={styles.commentPost}>POST</button> */}
                 </div>
               </div>
               // </div>
