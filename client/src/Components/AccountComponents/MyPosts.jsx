@@ -98,6 +98,7 @@ const MyPosts = ({ user }) => {
 
     try {
       const token = localStorage.getItem("token");
+      
       const response = await axios.post(
         `http://localhost:3000/api/auth/account/posts/${postId}/likes`,
         {}, {
@@ -150,11 +151,6 @@ const MyPosts = ({ user }) => {
 
     const token = localStorage.getItem("token");
 
-    { text.length === 0 ? 
-      console.error("must enter new comment text", error)
-      : next()
-    }
-
     try {
       const response = await axios.patch(
         `http://localhost:3000/api/auth/account/posts/${postId}/comments/${commentId}`,
@@ -202,9 +198,12 @@ const MyPosts = ({ user }) => {
 
   return (  
     <>
+      {posts.length > 0 ? 
       <div className={styles.buttonContainer}>
           <button onClick={() => setNewPostForm(true)}>Add New Post</button>
       </div>
+      : null
+    }
 
       {/* CONDITIONALLY RENDER CREATE POST FORM */}
       {newPostForm === true && posts.length > 0 ? <CreatePost setNewPostForm={setNewPostForm} setUpdatePosts={setUpdatePosts}/> : null}
@@ -214,6 +213,7 @@ const MyPosts = ({ user }) => {
         {posts.length > 0 ? (
 
         posts.map((post) => {
+
             const hasLiked = post.likes.some((like) => like.userId === userId);
 
           return (
@@ -222,15 +222,28 @@ const MyPosts = ({ user }) => {
 
               <div className={styles.postModsButtonContainer}>
 
-                {/* EDIT BUTTON --- Change text to gear icon */}
-                <button onClick={() => {
-                  setSeeEditForm(true),
-                  setViewEditFormId(post.id)
-                  }}>Edit
-                </button>
+                 {/* CONDITIONALLY RENDERED EDIT POST OR CANCEL BUTTON */}
                 
-                {/* DELETE BUTTON --- Change text to trashcan icon */}
-                <button onClick={() => deletePost(post.id)}>Delete</button>
+
+                      { seeEditForm === true && post.id === viewEditFormId 
+                      ? (
+                        <>
+                          <button onClick={() => setSeeEditForm(false)}>Cancel</button>
+                        </>
+                      ) : (
+                        <>
+                          <button onClick={() => {
+                          setSeeEditForm(true),
+                          setViewEditFormId(post.id)
+                          }}>Edit
+                         </button>
+                       </>
+                      )
+                      }            
+                
+                  {/* DELETE BUTTON --- Change text to trashcan icon */}
+                  <button onClick={() => deletePost(post.id)}>Delete</button>
+
               </div>
 
                 {/* CONDITIONALLY RENDER POST OR EDIT FORM */}
@@ -290,8 +303,14 @@ const MyPosts = ({ user }) => {
                  
                   {/* VIEW COMMENTS BUTTON */}
                   <button onClick={() => {
-                    setSeeComments(true),
-                    setViewCommentsId(post.id)}}> Comments {post.comments.length}
+                          seeComments ? setSeeComments(false) :
+                          setSeeComments(true),
+                          setViewCommentsId(post.id)}}> 
+                          
+                          {seeComments && post.id === viewCommentsId && post.comments.length > 0
+                          ? `Hide Comments`
+                          : `Comments: ${post.comments? post.comments.length : 0}`}
+     
                   </button>
 
                 </div>
@@ -317,7 +336,7 @@ const MyPosts = ({ user }) => {
                             ? <> 
                                 <div className={styles.editCommentButtons}>
                                   
-                                    <button onClick ={()=> {
+                                    <button onClick ={()=> { 
                                       setEditComment(true),
                                       setCommentPostId(comment.postId),
                                       setCommentId(comment.id)
@@ -340,8 +359,13 @@ const MyPosts = ({ user }) => {
                                     <>
                                       <div className={styles.editCommentForm}>
                                         <form onSubmit={() => {
-                                          editMyComment(comment.postId, comment.id, text)
-                                          setEditComment(false)}}>
+                                               //error handling to prevent empty comment revision submissions
+                                               if (text.length > 0) { 
+                                                editMyComment(comment.postId, comment.id, text)
+                                               } else {
+                                                  alert("must enter text before submitting")
+                                                }
+                                          }}>
                                           <input type="text" id="text" 
                                             value={text}
                                             onChange={(e) => setText(e.target.value)}/>
@@ -349,6 +373,7 @@ const MyPosts = ({ user }) => {
                                         <div className={styles.editCommentSubmitButtons}>
                                           <button onClick={() => setEditComment(false)}>Cancel</button>
                                         </div>
+
                                         <div className={styles.editCommentSubmitButtons}>
                                           <button value="submit">Submit</button>
                                         </div>

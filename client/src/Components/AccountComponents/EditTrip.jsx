@@ -113,11 +113,6 @@ useEffect(() => {
           <div className={styles.editFormButtons}>
              
               <button value="submit">Submit</button>  
-                
-              <button onClick={() => {
-                  setSeeEditForm(false)
-                  setViewEditFormId("")
-                  }}>Cancel</button>
             
           </div>
 

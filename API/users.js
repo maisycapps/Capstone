@@ -49,7 +49,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-//get posts associated with a user
+//get posts associated with a user ---
 router.get("/:id/posts", async (req, res, next) => {
   try {
     const id = +req.params.id;
@@ -64,10 +64,67 @@ router.get("/:id/posts", async (req, res, next) => {
       });
     }
 
-    const posts = await prisma.posts.findMany({ where: { userId: id } });
+    const posts = await prisma.posts.findMany({ 
+      where: { userId: id },
+      include: {
+        destination: true,
+        comments: {
+          include: {
+            user: true,
+          },
+        },
+        likes: {
+          include: {
+            user: true,
+          },
+        }
+      },
+    });
 
     res.json(posts);
   } catch (error) {
     next(error);
   }
 });
+
+//get user's followers ---
+  //get followed users -- works
+  router.get("/:id/following", async (req, res) => {
+    try {
+      const id = +req.params.id;
+  
+      const following = await prisma.follows.findMany({
+        where: {
+          followedById: id,
+        },
+        include: {
+          following: true,
+        },
+      });
+      res.status(200).json(following);
+    } catch (error) {
+      console.error("Error fetching followed users: ", error);
+      res.status(500).json({ error: "Failed to fetch following users." });
+    }
+  });
+  
+  //get followers -- works
+  router.get("/:id/followedBy", async (req, res) => {
+    try {
+      const id = +req.params.id;
+  
+      const followedBy = await prisma.follows.findMany({
+        where: {
+          followingId: id,
+        },
+        include: {
+          followedBy: true,
+        },
+      });
+      res.status(200).json(followedBy);
+    } catch (error) {
+      console.error("Error fetching followers: ", error);
+      res.status(500).json({ error: "Failed to fetch followers." });
+    }
+  });
+  

@@ -16,8 +16,8 @@ router.get("/", async (req, res, next) => {
           },
         },
         likes: true,
-      },
-    });
+    }
+  });
     res.json(posts);
   } catch (error) {
     console.error("Error fetching posts: ", error);
@@ -30,7 +30,7 @@ router.get("/:id", async (req, res, next) => {
   try {
     const id = +req.params.id;
 
-    const post = await prisma.posts.findUnique({ where: { id } });
+    const post = await prisma.posts.findUnique({ where: { id }});
 
     if (!post) {
       return next({

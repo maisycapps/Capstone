@@ -13,7 +13,6 @@ function NavBar({ loggedIn, setLoggedIn }) {
     const token = localStorage.getItem("token");
     if (token) {
       const decodedToken = jwtDecode(token);
-      console.log("decoded token", decodedToken);
 
       if (decodedToken && decodedToken.role === "ADMIN") {
         setIsAdmin(true);
