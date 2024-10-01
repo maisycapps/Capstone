@@ -4,12 +4,22 @@ import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 import italy from "../Images/italy.jpg";
 
-const ProfileFollowing = ({ thisUser }) => {
+const ProfileFollowing = ({ user, thisUser }) => {
 
   const [following, setFollowing] = useState([]);
   const [updateFollowing, setUpdateFollowing] = useState(false);
 
   const [seeUsers, setSeeUsers] = useState(false);
+
+    /* -------------------------------- USER DATA --------------------------------*/
+    const [userId, setUserId] = useState(null);
+
+    //SET USER ID
+    useEffect(() => {
+      if (user && user.id) {
+         setUserId(user.id);
+      }
+    }, [user]); 
 
   useEffect(() => {
 
@@ -64,26 +74,30 @@ const ProfileFollowing = ({ thisUser }) => {
             {following.map((user) => {
               return (
                 <div key={user.following.id}>
+                  <div className={styles.followListCard}>
+                  
                   <Link to={`/profile/${user.following.id}`} className={styles.userLinks}>
-                    <div className={styles.followListCard}>
                       <div className={styles.followListCardImg}>
                       {user.following.profileImg 
                       ? <img src={user.following.profileImg} alt="profileImg" />
                       : <img src={italy} alt="defaultImg" />}
                       </div>
+                  </Link>
+                  <Link to={`/profile/${user.following.id}`} className={styles.userLinks}>
                       <div className={styles.followListCardText}>
                         <li><b>{user.following.userName}</b></li>
                         <li>{user.following.firstName} {user.following.lastName}</li>
                       </div>
-                      <div>
-                        <button onClick={() => {
-                          handleUnfollow(user.following.id)}}>
-                              Unfollow
-                        </button>
-                    
-                      </div>
-                    </div>
                   </Link>
+               
+                    { userId ? <div>
+                          <button onClick={() => {
+                            handleUnfollow(user.following.id)}}>
+                                Unfollow
+                          </button>
+                    </div> : null }
+
+                  </div>
                 </div>
               )
             })}

@@ -79,18 +79,19 @@ const Following = ({ user }) => {
                     
                     <div className={styles.followListCard}>
                       <Link to={`/profile/${user.following.id}`} className={styles.userLinks}>
-                      <div className={styles.followListCardImg}>
-                      {user.following.profileImg 
-                      ? <img src={user.following.profileImg} alt="profileImg" />
-                      : <img src={italy} alt="defaultImg" />}
-                      </div>
+                        <div className={styles.followListCardImg}>
+                        {user.following.profileImg 
+                        ? <img src={user.following.profileImg} alt="profileImg" />
+                        : <img src={italy} alt="defaultImg" />}
+                        </div>
                       </Link>
                       <Link to={`/profile/${user.following.id}`} className={styles.userLinks}>
-                      <div className={styles.followListCardText}>
-                        <li><b>{user.following.userName}</b></li>
-                        <li>{user.following.firstName} {user.following.lastName}</li>
-                      </div>
+                        <div className={styles.followListCardText}>
+                          <li><b>{user.following.userName}</b></li>
+                          <li>{user.following.firstName} {user.following.lastName}</li>
+                        </div>
                       </Link>
+                     
                    
                       <div>
                         <button onClick={() => {

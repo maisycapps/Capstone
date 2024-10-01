@@ -43,11 +43,10 @@ const Settings = ({user, setUpdateUser, setLoggedIn}) => {
 
     const handleDelete = async (e) => {
         e.preventDefault();
-        console.log("handleDelete")
 
         try {
           const token = localStorage.getItem("token");
-          console.log("token", token)
+        
           const id = user.id;
           console.log("id", id)
         
@@ -59,6 +58,7 @@ const Settings = ({user, setUpdateUser, setLoggedIn}) => {
               },
             }
           );
+
           console.log("account successfully deleted")
           setLoggedIn(false)
         } catch (error) {

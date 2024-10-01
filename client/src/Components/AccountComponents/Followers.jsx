@@ -71,29 +71,30 @@ const Followers = ({ user }) => {
             {followers.map((user) => {
               return (
                 <div key={user.followedBy.id}>
-              
-                    <Link to={`/profile/${user.followedBy.id}`} className={styles.userLinks}>
-                      <div className={styles.followListCard}>
+                  <div className={styles.followListCard}>
+
+                      <Link to={`/profile/${user.followedBy.id}`} className={styles.userLinks}>
                         <div className={styles.followListCardImg}>
                         {user.followedBy.profileImg 
                         ? <img src={user.followedBy.profileImg} alt="profileImg" />
                         : <img src={italy} alt="defaultImg" />}
                         </div>
-                        <div className={styles.followListCardText}>
+                      </Link>
+                      <Link to={`/profile/${user.followedBy.id}`} className={styles.userLinks}>
                           <li><b>{user.followedBy.userName}</b></li>
                           <li>{user.followedBy.firstName} {user.followedBy.lastName}</li>
-                        </div>
-                        <div>
+                      </Link>
+
+                      <div>
                           <button onClick={() => {
                             handleUnfollow(user.followedBy.id)}}>
                                 Unfollow
                           </button>
-                      
-                        </div>
                       </div>
-                    </Link>
-               
-                </div>
+                  </div>
+
+                </div>         
+             
               )
             })}
             </div>
