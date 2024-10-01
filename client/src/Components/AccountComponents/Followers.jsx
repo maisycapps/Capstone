@@ -71,6 +71,7 @@ const Followers = ({ user }) => {
             {followers.map((user) => {
               return (
                 <div key={user.followedBy.id}>
+
                   <div className={styles.followListCard}>
 
                       <Link to={`/profile/${user.followedBy.id}`} className={styles.userLinks}>
@@ -91,6 +92,7 @@ const Followers = ({ user }) => {
                                 Unfollow
                           </button>
                       </div>
+
                   </div>
 
                 </div>         
