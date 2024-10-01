@@ -19,6 +19,34 @@ const Profile = ({ loggedIn }) => {
   //Re-Rendering Dependency
   // const [updatedUser, setUpdatedUser] = useState(false);
 
+  /* ---------------- AUTH USER DATA FOR LIKE & COMMENT FUNCTIONALITIES ------------------ */
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        // Fetch user's data
+        const response = await axios.get(
+          "http://localhost:3000/api/auth/account/users",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const accountData = await response.data[0];
+
+        setUser(accountData);
+
+      } catch (error) {
+        console.error("Error fetching user account data", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   /*---------------- GET PROFILE BY USER ID ---------------- */
   useEffect(() => {
     const fetchUser = async () => {
@@ -103,16 +131,16 @@ const Profile = ({ loggedIn }) => {
 
             {/* CURRENT URL LOCATION /ACCOUNT */}
             <Routes>
-              <Route path="ProfileFollowers" element={<ProfileFollowers thisUser={thisUser} />} />
-              <Route path="ProfileFollowing" element={<ProfileFollowing thisUser={thisUser} />} />
+              <Route path="ProfileFollowers" element={<ProfileFollowers thisUser={thisUser} user={user}/>} />
+              <Route path="ProfileFollowing" element={<ProfileFollowing thisUser={thisUser} user={user}/>} />
               <Route
                 path="ProfilePosts"
-                element={<ProfilePosts thisUser={thisUser} loggedIn={loggedIn} />}
+                element={<ProfilePosts thisUser={thisUser} user={user} />}
               />
             </Routes>
 
             {location.pathname === `/profile/${thisUser.id}` ? (
-              <ProfilePosts thisUser={thisUser} />
+              <ProfilePosts thisUser={thisUser} user={user} />
             ) : null}
 
           </>

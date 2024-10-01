@@ -253,3 +253,7 @@ button {
     right: 16px;
     padding-left: 1px;
 }
+
+.popupInner .closeBtn:hover {
+  border: black 2px solid;
+}

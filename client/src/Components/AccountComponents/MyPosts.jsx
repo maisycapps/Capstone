@@ -151,11 +151,6 @@ const MyPosts = ({ user }) => {
 
     const token = localStorage.getItem("token");
 
-    { text.length === 0 ? 
-      console.error("must enter new comment text", error)
-      : next()
-    }
-
     try {
       const response = await axios.patch(
         `http://localhost:3000/api/auth/account/posts/${postId}/comments/${commentId}`,
@@ -291,8 +286,14 @@ const MyPosts = ({ user }) => {
                  
                   {/* VIEW COMMENTS BUTTON */}
                   <button onClick={() => {
-                    setSeeComments(true),
-                    setViewCommentsId(post.id)}}> Comments {post.comments.length}
+                          seeComments ? setSeeComments(false) :
+                          setSeeComments(true),
+                          setViewCommentsId(post.id)}}> 
+                          
+                          {seeComments && post.id === viewCommentsId && post.comments.length > 0
+                          ? `Hide Comments`
+                          : `Comments: ${post.comments? post.comments.length : 0}`}
+     
                   </button>
 
                 </div>
@@ -318,7 +319,7 @@ const MyPosts = ({ user }) => {
                             ? <> 
                                 <div className={styles.editCommentButtons}>
                                   
-                                    <button onClick ={()=> {
+                                    <button onClick ={()=> { 
                                       setEditComment(true),
                                       setCommentPostId(comment.postId),
                                       setCommentId(comment.id)
@@ -341,8 +342,13 @@ const MyPosts = ({ user }) => {
                                     <>
                                       <div className={styles.editCommentForm}>
                                         <form onSubmit={() => {
-                                          editMyComment(comment.postId, comment.id, text)
-                                          setEditComment(false)}}>
+                                               //error handling to prevent empty comment revision submissions
+                                               if (text.length > 0) { 
+                                                editMyComment(comment.postId, comment.id, text)
+                                               } else {
+                                                  alert("must enter text before submitting")
+                                                }
+                                          }}>
                                           <input type="text" id="text" 
                                             value={text}
                                             onChange={(e) => setText(e.target.value)}/>
@@ -350,6 +356,7 @@ const MyPosts = ({ user }) => {
                                         <div className={styles.editCommentSubmitButtons}>
                                           <button onClick={() => setEditComment(false)}>Cancel</button>
                                         </div>
+
                                         <div className={styles.editCommentSubmitButtons}>
                                           <button value="submit">Submit</button>
                                         </div>

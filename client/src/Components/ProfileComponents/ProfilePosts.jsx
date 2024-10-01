@@ -4,10 +4,10 @@ import styles from "../../styles/AccountSubs.module.css";
 import PopUp from "./PopUp";
 import { Link } from "react-router-dom"
 
-const ProfilePosts = ({ loggedIn , thisUser }) => {
+const ProfilePosts = ({ user, thisUser }) => {
 
+  /* -------------------------------- POPUP RENDERING --------------------------------*/
   const [popSignIn, setPopSignIn] = useState(false);
-
 
   /* -------------------------------- CONDITIONAL RENDERING --------------------------------*/
   //VIEW COMMENTS ASSOCIATED WITH A SPECIFIC POST
@@ -19,6 +19,16 @@ const ProfilePosts = ({ loggedIn , thisUser }) => {
   const [commentPostId, setCommentPostId] = useState("") //render edit form on only that post
   const [commentId, setCommentId] = useState("") //render edit form on only that comment
   const [text, setText] = useState("") //body for patch request
+
+/* -------------------------------- USER DATA --------------------------------*/
+const [userId, setUserId] = useState(null);
+
+//SET USER ID
+useEffect(() => {
+  if (user && user.id) {
+     setUserId(user.id);
+  }
+}, [user]); 
 
   /* -------------------------------- RE-RENDER DEPENDENCY --------------------------------*/
   const [updatePosts, setUpdatePosts] = useState(false)
@@ -66,7 +76,6 @@ const handleLikes = async (postId) => {
       }
     );
     const action = response.data.action;
-    console.log(response.data.action)
 
     setUpdatePosts(true)
 
@@ -112,12 +121,8 @@ const handleLikes = async (postId) => {
 
     const token = localStorage.getItem("token");
 
-    { text.length === 0 ? 
-      console.error("must enter new comment text", error)
-      : next()
-    }
-
     try {
+
       const response = await axios.patch(
         `http://localhost:3000/api/auth/account/posts/${postId}/comments/${commentId}`,
         { text },
@@ -171,7 +176,7 @@ const handleLikes = async (postId) => {
       ? (
             posts.map((post) => { 
 
-              const hasLiked = post.likes.some((like) => like.userId === user.id);
+              const hasLiked = post.likes.some((like) => like.userId === userId);
 
               return ( 
                 <>   
@@ -204,18 +209,24 @@ const handleLikes = async (postId) => {
                     }
                   
                   {/* CONDITIONALLY RENDER AUTH USER FEATURES*/}
-                  { loggedIn === true
+                  { user 
                   ? (
                       <div className={styles.postButtonContainer}> 
                         <button onClick={() => handleLikes(post.id)}>
-                          { hasLiked === true ? "Unlike" : "Like"}{"  "}
-                          { post.likes ? post.likes.length : 0 }
+                        {hasLiked
+                        ? `Unlike: ${post.likes ? post.likes.length : ""}`
+                        : `Like: ${post.likes ? post.likes.length : ""}`}
                         </button>
                       
                     
                         <button onClick={() => {
+                          seeComments ? setSeeComments(false) :
                           setSeeComments(true),
-                          setViewCommentsId(post.id)}}> Comments {post.comments.length}
+                          setViewCommentsId(post.id)}}> 
+                          {seeComments && post.id === viewCommentsId && post.comments.length > 0
+                          ? `Hide Comments`
+                          : `Comments: ${post.comments? post.comments.length : 0}`}
+     
                         </button>
                       </div>
                       
@@ -232,7 +243,8 @@ const handleLikes = async (postId) => {
                       </div>
 
                       <PopUp trigger={popSignIn} setTrigger={setPopSignIn}>
-                        <h3>Please <Link to={'/register'}>Register</Link> or <Link to={'/login'}>Login</Link> to join the conversation</h3>
+                        <h3>Please <Link to={'/register'}>
+                        Register</Link> or <Link to={'/login'}>Login</Link> to join the conversation</h3>
                       </PopUp>
                     </>
 
@@ -282,8 +294,15 @@ const handleLikes = async (postId) => {
                                     <>
                                       <div className={styles.editCommentForm}>
                                         <form onSubmit={() => {
-                                          editMyComment(comment.postId, comment.id, text)
-                                          setEditComment(false)}}>
+
+                                          { if (text.length > 0) { editMyComment(comment.postId, comment.id, text)
+                                            setEditComment(false)}
+                                            else {
+                                              alert("must enter text before submitting")
+                                            }
+                                          }
+
+                                         }}>
                                           <input type="text" id="text" 
                                             value={text}
                                             onChange={(e) => setText(e.target.value)}/>
@@ -302,7 +321,7 @@ const handleLikes = async (postId) => {
                           )})
                       : (null) }  
 
-                    { loggedIn === true ? 
+                    { user ?
                     <div>
                       <input
                         type="text"

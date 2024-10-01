@@ -626,7 +626,7 @@ router.patch(
     const { postId, id } = req.params; //post id, comment id
 
     const { text } = req.body;
-    console.log("req.body", req.body);
+    console.log("edit comment req.body", req.body);
 
     try {
       const userId = req.user.userId;
@@ -654,6 +654,7 @@ router.patch(
           text: text,
         },
       });
+
       res.json(updatedComment);
     } catch (error) {
       console.error("Error updating this comment: ", error);
