@@ -108,6 +108,7 @@ const authenticate = async (req, res, next) => {
     const payload = {
       userId: user.id,
       userName: user.userName,
+      role: user.role, //checks if user or admin
     };
 
     console.log("Step 4: Payload created", payload); //debuggin

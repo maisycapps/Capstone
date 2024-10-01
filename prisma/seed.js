@@ -2,13 +2,27 @@ const { faker } = require("@faker-js/faker");
 
 const prisma = require("../prisma");
 
+const bcrypt = require("bcrypt");
+
+const admin = {
+  firstName: "Admin",
+  lastName: "Boss",
+  userName: "admin",
+  email: "admin@yahoo.com",
+  password: bcrypt.hashSync("admingroup4", 10),
+  role: "ADMIN",
+};
+
+// admin.password = bcrypt.hash("admingroup4", 10);
+console.log("Admin password", bcrypt.hashSync("password", 10));
+
 //seeds users
 const user = Array.from({ length: 30 }).map(() => ({
   firstName: faker.person.firstName(),
   lastName: faker.person.lastName(),
   userName: faker.internet.userName(),
   email: faker.internet.email(),
-  password: faker.internet.password(),
+  password: bcrypt.hashSync(faker.internet.password(), 10),
   bio: faker.person.bio(),
   profileImg: faker.image.urlLoremFlickr({
     width: 300,
@@ -17,6 +31,8 @@ const user = Array.from({ length: 30 }).map(() => ({
   }),
   //tried to seed followedBy and following- can't grab followData seed nums to do so accurately.
 }));
+
+// user.password = bcrypt.hash(user.password);
 
 //seeds follows
 const followData = Array.from({ length: 20 }).map(() => ({
@@ -27,7 +43,7 @@ const followData = Array.from({ length: 20 }).map(() => ({
 
 //seeds destinations
 const destinationData = Array.from({ length: 30 }).map(() => ({
-  destinationName: faker.location.city({ skipDuplication: false }),
+  destinationName: faker.location.city({ skipDuplication: true }),
   destinationImg: faker.image.urlLoremFlickr({
     width: 300,
     height: 300,
@@ -70,6 +86,7 @@ const likeData = Array.from({ length: 30 }).map(() => ({
 }));
 
 const seed = async () => {
+  await prisma.users.create({ data: admin });
   await prisma.users.createMany({ data: user });
   await prisma.destinations.createMany({ data: destinationData });
   await prisma.trips.createMany({ data: tripsData });
