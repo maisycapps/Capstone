@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import styles from "../../styles/DestinationTab.module.css";
 
 const Destinations = () => {
   const [destinations, setDestinations] = useState([]);
@@ -93,52 +94,57 @@ const Destinations = () => {
   );
 
   return (
-    <div>
+    <div className={styles.adContainer}>
       <h3>Manage Destinations</h3>
 
       {/* Form to create a new destination */}
-      <form onSubmit={handleCreateDestination}>
-        <input
-          type="text"
-          placeholder="Destination Name"
-          value={destinationName}
-          onChange={(e) => setDestinationName(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Destination Image URL"
-          value={destinationImg}
-          onChange={(e) => setDestinationImg(e.target.value)}
-          required
-        />
-        <button type="submit">Create Destination</button>
-      </form>
+      <div className={styles.form}>
+        <form onSubmit={handleCreateDestination}>
+          <input
+            type="text"
+            placeholder="Destination Name"
+            value={destinationName}
+            onChange={(e) => setDestinationName(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Destination Image URL"
+            value={destinationImg}
+            onChange={(e) => setDestinationImg(e.target.value)}
+            required
+          />
+          <button type="submit">Create Destination</button>
+        </form>
+      </div>
 
       {/* Search input */}
       <input
         type="text"
         placeholder="Search destinations by name..."
         value={searchTerm}
+        className={styles.search}
         onChange={handleSearchChange}
       />
 
       {/* Render destinations */}
-      <ul>
-        {filteredDestinations.map((destination) => (
-          <li key={destination.id}>
-            <h4>{destination.destinationName}</h4>
-            <img
-              src={destination.destinationImg}
-              alt={destination.destinationName}
-              style={{ width: "100px", height: "100px" }}
-            />
-            <button onClick={() => handleDeleteDestination(destination.id)}>
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className={styles.desContainer}>
+        <ul>
+          {filteredDestinations.map((destination) => (
+            <li key={destination.id} className={styles.list}>
+              <h4>{destination.destinationName}</h4>
+              <img
+                src={destination.destinationImg}
+                alt={destination.destinationName}
+                style={{ width: "100px", height: "100px" }}
+              />
+              <button onClick={() => handleDeleteDestination(destination.id)}>
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

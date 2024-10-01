@@ -1,0 +1,21 @@
+.adminContainerv2 {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+
+.eachPost {
+  display: flex;
+  border: 2px solid red;
+  background-color: #333;
+}
+
+.userDetail {
+  border: 2px solid red;
+  background-color: #333;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+}

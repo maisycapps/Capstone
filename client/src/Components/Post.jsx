@@ -216,7 +216,7 @@ const Posts = ({ post }) => {
                       }
                     }}
                   />
-                  <button className={styles.commentPost}>POST</button>
+                  {/* <button className={styles.commentPost}>POST</button> */}
                 </div>
               </div>
               // </div>

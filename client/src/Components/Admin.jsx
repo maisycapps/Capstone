@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import styles from "../styles/Admin.module.css";
 import Users from "./AdminComponents/UsersTab";
 import Posts from "./AdminComponents/PostsTab";
 import Trips from "./AdminComponents/TripsTab";
@@ -24,11 +25,11 @@ const Admin = () => {
 
   return (
     <>
-      <div>
+      <div className={styles.adminContainer}>
         {" "}
         <div>
           <h2>Admin Dashboard</h2>
-          <div className="admin-tabs">
+          <div className={styles.adminTabs}>
             <button onClick={() => setActiveTab("users")}>Users</button>
             <button onClick={() => setActiveTab("posts")}>Posts</button>
             <button onClick={() => setActiveTab("trips")}>Trips</button>

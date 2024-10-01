@@ -1,0 +1,81 @@
+.adminContainer {
+  width: 100%;
+  height: 100vh;
+}
+
+.adminContainer h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+.adminContainer .adminTabs {
+  display: flex;
+  justify-content: center;
+}
+.adminContainer .adminTabs button {
+  color: #fff;
+  background-color: #1f5156;
+  font-size: 20px;
+  width: 150px;
+  height: 40px;
+  margin: 15px;
+  border-radius: 10px;
+}
+
+.adminContainer h3 {
+  font-size: 16px;
+  background-color: #fff;
+}
+
+.adminContainer .inputSearch {
+  width: 300px;
+  display: flex;
+  align-items: center;
+  margin: 10px;
+  outline: none;
+}
+
+.adminContainer .userCard ul {
+  width: 100%;
+  height: 100vh;
+  /* display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)); */
+  gap: 20px;
+  justify-content: center;
+  place-items: center;
+  border: 2px solid red;
+}
+.adminContainer .userCard ul li {
+  box-shadow: rgba(100, 100, 111, 0.5) 0px 7px 29px 0px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.adminContainer ul {
+  list-style: none;
+  height: 300px;
+  width: 500px;
+  /* border: 2px solid red; */
+}
+.adminContainer ul li img {
+  width: 300px;
+  height: 100%;
+}
+
+.adminContainer ul li .userDetail button {
+  margin: 20px;
+  width: 100px;
+  height: 30px;
+  color: #fff;
+  background-color: #1f5156;
+  border-radius: 10px;
+}
+
+.userDetail p {
+  align-items: center;
+}

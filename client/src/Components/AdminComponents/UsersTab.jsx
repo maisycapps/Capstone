@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import styles from "../../styles/Admin.module.css";
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -54,24 +55,33 @@ const Users = () => {
 
   return (
     <>
-      <div>
+      <div className={styles.adminContainer}>
         {" "}
         <h3>Manage Users</h3>
         <input
           type="text"
+          className={styles.inputSearch}
           placeholder="Search by username..."
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <ul>
-          {filteredUsers.map((user) => (
-            <li key={user.id}>
-              <img src={user.profileImg} alt="userImg" />
-              {user.userName} - {user.email}
-              <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
-            </li>
-          ))}
-        </ul>
+        <div className={styles.userCard}>
+          <ul>
+            {filteredUsers.map((user) => (
+              <li key={user.id}>
+                <img src={user.profileImg} alt="userImg" />
+                <div className={styles.userDetail}>
+                  <h1>{user.userName}</h1>
+                  <h2>{user.email}</h2>
+
+                  <button onClick={() => handleDeleteUser(user.id)}>
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </>
   );
