@@ -12,6 +12,8 @@ const Posts = ({ post }) => {
   const [userName, setUserName] = useState(null);
   const navigate = useNavigate();
   const [showComments, setShowComments] = useState(false);
+  const [seeComments, setSeeComments] = useState(false); //view comments
+  const [viewCommentsId, setViewCommentsId] = useState(""); //render comments on only that post
 
   useEffect(() => {
     //fetch posts from backend
