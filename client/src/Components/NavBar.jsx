@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 // import "../styles/NavBar.css";
 import { CodeIcon, HamburgerMenuClose, HamburgerMenuOpen } from "./Icons";
 import { jwtDecode } from "jwt-decode";
+import Logo from "./Images/Logo.jpg";
 
 function NavBar({ loggedIn, setLoggedIn }) {
   const [click, setClick] = useState(false);
@@ -40,10 +41,10 @@ function NavBar({ loggedIn, setLoggedIn }) {
       <nav className="navbar">
         <div className="nav-container">
           <NavLink to="/" className="nav-logo">
-            <span>Tripy</span>
+            <span>Copilot</span>
             {/* <i className="fas fa-code"></i> */}
-            <span className="icon">
-              <CodeIcon />
+            <span>
+              <img src={Logo} alt="" className="icon" />
             </span>
           </NavLink>
 
