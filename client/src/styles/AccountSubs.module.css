@@ -174,6 +174,9 @@ h3 {
     color: black;
 }
 
+.userLinks {
+    text-decoration: none;
+}
 
 /* --------------------------------------SETTINGS.JSX-------------------------------------- */
 
@@ -222,3 +225,31 @@ button {
     font-style: italic;
 }
 
+/* --------------------------------------POPUP.JSX-------------------------------------- */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.2);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popupInner {
+    position: relative;
+    padding: 32px;
+    width: 100%;
+    max-width: 640px;
+    background-color: #FFF;
+}
+
+.popupInner .closeBtn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    padding-left: 1px;
+}

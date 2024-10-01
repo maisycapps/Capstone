@@ -11,7 +11,7 @@ import ProfileFollowers from "./ProfileComponents/ProfileFollowers";
 import ProfileFollowing from "./ProfileComponents/ProfileFollowing";
 import ProfilePosts from "./ProfileComponents/ProfilePosts";
 
-const Profile = () => {
+const Profile = ({ loggedIn }) => {
   const location = useLocation();
   const [thisUser, setThisUser] = useState(null);
   const { id } = useParams();
@@ -19,6 +19,7 @@ const Profile = () => {
   //Re-Rendering Dependency
   // const [updatedUser, setUpdatedUser] = useState(false);
 
+  /*---------------- GET PROFILE BY USER ID ---------------- */
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -29,6 +30,7 @@ const Profile = () => {
         const accountData = await response.data
 
         setThisUser(accountData);
+
       } catch (error) {
         console.error("Error fetching user account data", error);
       }
@@ -105,11 +107,11 @@ const Profile = () => {
               <Route path="ProfileFollowing" element={<ProfileFollowing thisUser={thisUser} />} />
               <Route
                 path="ProfilePosts"
-                element={<ProfilePosts thisUser={thisUser} />}
+                element={<ProfilePosts thisUser={thisUser} loggedIn={loggedIn} />}
               />
             </Routes>
 
-            {location.pathname === "/profile/:id" ? (
+            {location.pathname === `/profile/${thisUser.id}` ? (
               <ProfilePosts thisUser={thisUser} />
             ) : null}
 

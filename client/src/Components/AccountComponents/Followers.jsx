@@ -71,26 +71,28 @@ const Followers = ({ user }) => {
             {followers.map((user) => {
               return (
                 <div key={user.followedBy.id}>
-                  <Link to={`/profile/${user.followedBy.id}`}>
-                    <div className={styles.followListCard}>
-                      <div className={styles.followListCardImg}>
-                      {user.followedBy.profileImg 
-                      ? <img src={user.followedBy.profileImg} alt="profileImg" />
-                      : <img src={italy} alt="defaultImg" />}
+              
+                    <Link to={`/profile/${user.followedBy.id}`} className={styles.userLinks}>
+                      <div className={styles.followListCard}>
+                        <div className={styles.followListCardImg}>
+                        {user.followedBy.profileImg 
+                        ? <img src={user.followedBy.profileImg} alt="profileImg" />
+                        : <img src={italy} alt="defaultImg" />}
+                        </div>
+                        <div className={styles.followListCardText}>
+                          <li><b>{user.followedBy.userName}</b></li>
+                          <li>{user.followedBy.firstName} {user.followedBy.lastName}</li>
+                        </div>
+                        <div>
+                          <button onClick={() => {
+                            handleUnfollow(user.followedBy.id)}}>
+                                Unfollow
+                          </button>
+                      
+                        </div>
                       </div>
-                      <div className={styles.followListCardText}>
-                        <li><b>{user.followedBy.userName}</b></li>
-                        <li>{user.followedBy.firstName} {user.followedBy.lastName}</li>
-                      </div>
-                      <div>
-                        <button onClick={() => {
-                          handleUnfollow(user.followedBy.id)}}>
-                              Unfollow
-                        </button>
-                    
-                      </div>
-                    </div>
-                  </Link>
+                    </Link>
+               
                 </div>
               )
             })}

@@ -98,6 +98,7 @@ const MyPosts = ({ user }) => {
 
     try {
       const token = localStorage.getItem("token");
+      
       const response = await axios.post(
         `http://localhost:3000/api/auth/account/posts/${postId}/likes`,
         {}, {

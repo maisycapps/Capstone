@@ -70,7 +70,7 @@ const Following = ({ user }) => {
             {following.map((user) => {
               return (
                 <div key={user.following.id}>
-                  <Link to={`/profile/${user.following.id}`}>
+                  <Link to={`/profile/${user.following.id}`} className={styles.userLinks}>
                     <div className={styles.followListCard}>
                       <div className={styles.followListCardImg}>
                       {user.following.profileImg 

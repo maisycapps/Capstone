@@ -1,8 +1,13 @@
 import { useState, useEffect } from "react";
 import axios, { formToJSON } from "axios";
 import styles from "../../styles/AccountSubs.module.css";
+import PopUp from "./PopUp";
+import { Link } from "react-router-dom"
 
-const ProfilePosts = ({user, thisUser}) => {
+const ProfilePosts = ({ loggedIn , thisUser }) => {
+
+  const [popSignIn, setPopSignIn] = useState(false);
+
 
   /* -------------------------------- CONDITIONAL RENDERING --------------------------------*/
   //VIEW COMMENTS ASSOCIATED WITH A SPECIFIC POST
@@ -18,25 +23,6 @@ const ProfilePosts = ({user, thisUser}) => {
   /* -------------------------------- RE-RENDER DEPENDENCY --------------------------------*/
   const [updatePosts, setUpdatePosts] = useState(false)
 
-  /* -------------------------------- AUTH USER'S DATA --------------------------------*/
-  const [userId, setUserId] = useState(null);
-
-  //SET USER ID
-  useEffect(() => {
-    if (user && user.id) {
-       setUserId(user.id);
-    }
-  }, [user]); 
-
-  /* -------------------------------- THIS USER'S DATA --------------------------------*/
-    const [thisUserId, setThisUserId] = useState(null);
-
-    //SET THIS USER ID
-    useEffect(() => {
-      if (thisUser && thisUser.id) {
-         setThisUserId(thisUser.id);
-      }
-    }, [thisUser]); 
 
   /* -------------------------------- POSTS CRUD --------------------------------*/
 
@@ -50,7 +36,6 @@ const ProfilePosts = ({user, thisUser}) => {
       try {
         const response = await axios.get(`http://localhost:3000/api/users/${thisUser.id}/posts`,
         )
-        console.log(response.data)
         setPosts(response.data)
 
       } catch (error) {
@@ -70,15 +55,19 @@ const handleLikes = async (postId) => {
 
   try {
     const token = localStorage.getItem("token");
+
     const response = await axios.post(
       `http://localhost:3000/api/auth/account/posts/${postId}/likes`,
-      {}, {
-         headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
     const action = response.data.action;
+    console.log(response.data.action)
+
     setUpdatePosts(true)
 
     if (!action) {
@@ -89,6 +78,7 @@ const handleLikes = async (postId) => {
       console.error("Error liking post: ", error);
   }
 }
+
 
 /* -------------------------------- COMMENTS CRUD --------------------------------*/
 
@@ -181,7 +171,7 @@ const handleLikes = async (postId) => {
       ? (
             posts.map((post) => { 
 
-              const hasLiked = post.likes.some((like) => like.userId === userId);
+              const hasLiked = post.likes.some((like) => like.userId === user.id);
 
               return ( 
                 <>   
@@ -212,20 +202,42 @@ const handleLikes = async (postId) => {
                       : <p>{new Date(post.createdAt).toLocaleDateString()}{"  "}
                       "{post.text}" </p>  
                     }
-
-                      {/* DYNAMIC LIKE BUTTON */}
+                  
+                  {/* CONDITIONALLY RENDER AUTH USER FEATURES*/}
+                  { loggedIn === true
+                  ? (
                       <div className={styles.postButtonContainer}> 
                         <button onClick={() => handleLikes(post.id)}>
-                          {hasLiked ? "Unlike" : "Like"}{"  "}
-                          {post.likes ? post.likes.length : 0}
+                          { hasLiked === true ? "Unlike" : "Like"}{"  "}
+                          { post.likes ? post.likes.length : 0 }
                         </button>
                       
-                        {/* VIEW COMMENTS BUTTON */}
+                    
                         <button onClick={() => {
                           setSeeComments(true),
                           setViewCommentsId(post.id)}}> Comments {post.comments.length}
                         </button>
                       </div>
+                      
+                    ) : ( 
+                      <>
+                      <div className={styles.postButtonContainer}> 
+                        <button onClick={() => setPopSignIn(true)}>
+                          Likes { post.likes ? post.likes.length : 0 }
+                        </button>
+
+                        <button onClick={() => setPopSignIn(true)}> 
+                          Comments {post.comments ? post.comments.length : 0 }
+                        </button>
+                      </div>
+
+                      <PopUp trigger={popSignIn} setTrigger={setPopSignIn}>
+                        <h3>Please <Link to={'/register'}>Register</Link> or <Link to={'/login'}>Login</Link> to join the conversation</h3>
+                      </PopUp>
+                    </>
+
+                  )
+                  }
 
                   {/* CONDITIONALLY RENDER COMMENTS ON A PARTICULAR POST*/}
                   {seeComments && post.id === viewCommentsId && post.comments.length > 0
@@ -243,7 +255,7 @@ const handleLikes = async (postId) => {
                             
 
                             {/* CONDITIONALLY RENDER EDITING BUTTONS ON USER'S COMMENTS */}
-                            { comment.userId === userId 
+                            { comment.userId === user.id
                               && editComment === false
                               ? <> 
                                 <div className={styles.editCommentButtons}>
@@ -262,7 +274,7 @@ const handleLikes = async (postId) => {
                             </div>
 
                             {/* CONDITIONALLY RENDER EDIT FORM ON USER'S COMMENT BY ID */}
-                            { comment.userId === userId 
+                            { comment.userId === user.id
                               && editComment === true 
                               && commentPostId === comment.postId
                               && commentId === comment.id
@@ -290,6 +302,7 @@ const handleLikes = async (postId) => {
                           )})
                       : (null) }  
 
+                    { loggedIn === true ? 
                     <div>
                       <input
                         type="text"
@@ -302,6 +315,8 @@ const handleLikes = async (postId) => {
                         }}
                       /> 
                     </div>
+                    : null
+                    }
               
                   </div>       
               </> 

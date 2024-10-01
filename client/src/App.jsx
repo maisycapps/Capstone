@@ -72,7 +72,7 @@ function App() {
             )
           }
         />
-        <Route path="/profile/:id/*" element={<Profile />} />
+        <Route path="/profile/:id/*" element={<Profile loggedIn={loggedIn} />} />
       </Routes>
     </div>
   );

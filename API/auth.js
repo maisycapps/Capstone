@@ -195,7 +195,7 @@ router.get("/account/following", isLoggedIn, async (req, res) => {
   }
 });
 
-//get auth account followers users -- havent tested
+//get auth account followers users -- works
 router.get("/account/followedBy", isLoggedIn, async (req, res) => {
   try {
     const userId = req.user.userId;

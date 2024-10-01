@@ -4,7 +4,7 @@ import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 import italy from "../Images/italy.jpg";
 
-const ProfileFollowers = ({ user }) => {
+const ProfileFollowers = ({ thisUser }) => {
 
   const [followers, setFollowers] = useState([]);
   const [updateFollowers, setUpdateFollowers] = useState(false);
@@ -13,17 +13,10 @@ const ProfileFollowers = ({ user }) => {
 
   useEffect(() => {
 
-    const token = localStorage.getItem("token");
-
     const fetchFollowers = async () => {
       try {
           const response = await axios.get(
-            `http://localhost:3000/api/auth/account/followedBy`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
+            `http://localhost:3000/api/users/${thisUser.id}/followedBy`,
           );
         const result = await response.data;
 
@@ -37,6 +30,7 @@ const ProfileFollowers = ({ user }) => {
     fetchFollowers();
 
   }, [updateFollowers]);
+
 
   //UNFOLLOW
   const handleUnfollow = async (userId) => {
@@ -71,7 +65,7 @@ const ProfileFollowers = ({ user }) => {
             {followers.map((user) => {
               return (
                 <div key={user.followedBy.id}>
-                  <Link to={`/profile/${user.followedBy.id}`}>
+                  <Link to={`/profile/${user.followedBy.id}`} className={styles.userLinks}>
                     <div className={styles.followListCard}>
                       <div className={styles.followListCardImg}>
                       {user.followedBy.profileImg 
@@ -102,7 +96,7 @@ const ProfileFollowers = ({ user }) => {
 
           <>
           
-            <p className={styles.defaultContent}>No Followers</p>
+            <p className={styles.defaultContent}>{thisUser.firstName} doesn't have any followers yet</p>
       
           </>
         )}
