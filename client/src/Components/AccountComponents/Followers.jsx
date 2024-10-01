@@ -81,9 +81,10 @@ const Followers = ({ user }) => {
                         : <img src={italy} alt="defaultImg" />}
                         </div>
                       </Link>
-                      <Link to={`/profile/${user.followedBy.id}`} className={styles.userLinks}>
+                      <Link to={`/profile/${user.followedBy.id}`} className={styles.userLinks}> <div className={styles.followListCardText}>
                           <li><b>{user.followedBy.userName}</b></li>
                           <li>{user.followedBy.firstName} {user.followedBy.lastName}</li>
+                        </div>
                       </Link>
 
                       <div>

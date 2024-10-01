@@ -76,8 +76,8 @@ const Following = ({ user }) => {
               return (
                 <div key={user.following.id}>
 
-                    
                     <div className={styles.followListCard}>
+                      
                       <Link to={`/profile/${user.following.id}`} className={styles.userLinks}>
                         <div className={styles.followListCardImg}>
                         {user.following.profileImg 
