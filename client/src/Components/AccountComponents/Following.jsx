@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 import italy from "../Images/italy.jpg";
 import Friends from "../Friends";
 
-const Following = ({ user }) => {
+const Following = ({ user, setUpdateUser }) => {
 
   const navigate = useNavigate();
 
@@ -58,6 +57,7 @@ const Following = ({ user }) => {
       console.error("Error unfollowing user: ", error);
     }
     // {following.length === 0 && navigate("/account/myposts")}
+    setUpdateUser(true)
     setUpdateFollowing(true)
   };
 
@@ -112,12 +112,15 @@ const Following = ({ user }) => {
         ) : (
 
           <>
-          
-            <p className={styles.defaultContent}>Not Following Anyone Yet</p>
-
+             {seeUsers === false ?
+             <>
+            <div className={styles.buttonContainer}>
             <button onClick={() => setSeeUsers(true)}>Browse Users to Follow</button>
-            {seeUsers && <Friends />}
-           
+            </div>
+            </>
+            : 
+           <Friends />
+            }
           </>
         )}
       </ul>

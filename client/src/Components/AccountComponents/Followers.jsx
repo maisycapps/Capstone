@@ -4,12 +4,20 @@ import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 import italy from "../Images/italy.jpg";
 
-const Followers = ({ user }) => {
+const Followers = ({ user, setUpdateUser }) => {
+
+  /* -------------------------------- USER DATA --------------------------------*/
+    const [userId, setUserId] = useState(null);
+
+    //SET USER ID
+    useEffect(() => {
+      if (user && user.id) {
+         setUserId(user.id);
+      }
+  }, [user]); 
 
   const [followers, setFollowers] = useState([]);
   const [updateFollowers, setUpdateFollowers] = useState(false);
-
-  const [seeUsers, setSeeUsers] = useState(false);
 
   useEffect(() => {
 
@@ -54,6 +62,7 @@ const Followers = ({ user }) => {
     } catch (error) {
       console.error("Error unfollowing user: ", error);
     }
+    setUpdateUser(true)
     setUpdateFollowers(true)
   };
 
@@ -87,29 +96,26 @@ const Followers = ({ user }) => {
                         </div>
                       </Link>
 
-                      <div>
-                          <button onClick={() => {
-                            handleUnfollow(user.followedBy.id)}}>
-                                Unfollow
-                          </button>
-                      </div>
-
+                      {user.followingId === userId ? (
+                              <button onClick={() => {
+                                handleUnfollow(user.followedBy.id)}}>
+                                    Unfollow
+                              </button>
+                            ) : (
+                             <button onClick={() => {
+                               handleFollow(user.followedBy.id)}}>
+                                      Follow
+                             </button>
+                      )}
                   </div>
-
                 </div>         
-             
               )
             })}
             </div>
           </>
-          
-
         ) : (
-
           <>
-          
             <p className={styles.defaultContent}>No Followers Yet</p>
-      
           </>
         )}
       </ul>

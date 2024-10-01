@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const CreateTrip = ({ setNewTripForm, setUpdateTrips }) => {
+const CreateTrip = ({ setNewTripForm, setUpdateTrips, setUpdateUser }) => {
 
   const [destinations, setDestinations] = useState([]);
   const [tripName, setTripName] = useState("");
@@ -50,6 +50,7 @@ const CreateTrip = ({ setNewTripForm, setUpdateTrips }) => {
       );
 
       setNewTripForm(false)
+      setUpdateUser(true);
       setUpdateTrips(true)
 
       navigate("/account/mytrips")

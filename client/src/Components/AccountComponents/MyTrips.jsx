@@ -4,7 +4,7 @@ import CreateTrip from '../CreateTrip';
 import EditTrip from "./EditTrip";
 import styles from "../../styles/AccountSubs.module.css";
 
-const MyTrips = ({ user }) => {
+const MyTrips = ({ user, setUpdateUser }) => {
 
 /* -------------------------------- CONDITIONAL RENDERING --------------------------------*/
   //CREATE NEW POST
@@ -75,9 +75,8 @@ const MyTrips = ({ user }) => {
     } catch (error) {
         console.error("error deleting post: ", error);
     }
-
+      setUpdateUser(true)
       setUpdateTrips(true)
-
   }
    
   return ( 
@@ -92,7 +91,7 @@ const MyTrips = ({ user }) => {
           </div>
     
           {newTripForm === true && trips.length > 0 
-            ? <CreateTrip setNewTripForm={setNewTripForm} setUpdateTrips={setUpdateTrips}/> 
+            ? <CreateTrip setNewTripForm={setNewTripForm} setUpdateTrips={setUpdateTrips} setUpdateUser={setUpdateUser}/> 
             : null
           }
        <div className={styles.list}>
@@ -168,7 +167,7 @@ const MyTrips = ({ user }) => {
                 <p className={styles.defaultContent}>No Trips Yet</p>
                 <button onClick={() => setNewTripForm(true)}>Create your first Trip</button>
 
-                {newTripForm === true ? <CreateTrip setNewTripForm={setNewTripForm} setUpdateTrips={setUpdateTrips}/> : null}
+                {newTripForm === true ? <CreateTrip setNewTripForm={setNewTripForm} setUpdateTrips={setUpdateTrips} setUpdateUser={setUpdateUser}/> : null}
               </>
         )
     }

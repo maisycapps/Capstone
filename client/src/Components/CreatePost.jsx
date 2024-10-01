@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const CreatePost = ({ setNewPostForm, setUpdatePosts }) => {
+const CreatePost = ({ setNewPostForm, setUpdatePosts, setUpdateUser }) => {
   const [text, setText] = useState("");
   const [destinations, setDestinations] = useState([]);
   const [destinationId, setDestinationId] = useState("");
@@ -40,8 +40,12 @@ const CreatePost = ({ setNewPostForm, setUpdatePosts }) => {
           },
         }
       );
+      
       setNewPostForm(false);
+      setUpdateUser(true);
       setUpdatePosts(true);
+
+      navigate("/account/myposts")
 
     } catch (error) {
       setError("Failed to create post, Please try again.");
