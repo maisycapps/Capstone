@@ -4,22 +4,11 @@ import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 import italy from "../Images/italy.jpg";
 
-const ProfileFollowing = ({ user, thisUser }) => {
+const ProfileFollowing = ({ thisUser, setUpdateThisUser }) => {
 
+  /* -------------------------------- PROFILE FOLLOWING DATA --------------------------------*/
   const [following, setFollowing] = useState([]);
   const [updateFollowing, setUpdateFollowing] = useState(false);
-
-  const [seeUsers, setSeeUsers] = useState(false);
-
-    /* -------------------------------- USER DATA --------------------------------*/
-    const [userId, setUserId] = useState(null);
-
-    //SET USER ID
-    useEffect(() => {
-      if (user && user.id) {
-         setUserId(user.id);
-      }
-    }, [user]); 
 
   useEffect(() => {
 
@@ -30,7 +19,10 @@ const ProfileFollowing = ({ user, thisUser }) => {
 
           );
         const result = await response.data;
+
+        //people this user follows
         setFollowing(result)
+
       }
        catch (error) {
         console.error(error);
@@ -41,26 +33,6 @@ const ProfileFollowing = ({ user, thisUser }) => {
 
   }, [updateFollowing]);
 
-  //UNFOLLOW
-  const handleUnfollow = async (userId) => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.delete(
-        `http://localhost:3000/api/auth/account/users/${userId}/follows`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      console.log(`UnFollowed user with ID: ${userId}`);
-      setFollowing((prev) => prev.filter((id) => id !== userId)); //remove userId from following
-    } catch (error) {
-      console.error("Error unfollowing user: ", error);
-    }
-    setUpdateFollowing(true)
-  };
-
-
   return (
     <>
       <h3>Following</h3>
@@ -70,32 +42,26 @@ const ProfileFollowing = ({ user, thisUser }) => {
         ? (
           <>
           <div className={styles.followList}>
-            {/* maps through instances in which auth user's ID = followedBy id, and returns the ids and data of who they follow. */}
+            {/* maps through instances in which profile user's ID = followedBy id, and returns the ids and data of who they follow. */}
             {following.map((user) => {
               return (
                 <div key={user.following.id}>
+
                   <div className={styles.followListCard}>
                   
-                  <Link to={`/profile/${user.following.id}`} className={styles.userLinks}>
-                      <div className={styles.followListCardImg}>
-                      {user.following.profileImg 
-                      ? <img src={user.following.profileImg} alt="profileImg" />
-                      : <img src={italy} alt="defaultImg" />}
-                      </div>
-                  </Link>
-                  <Link to={`/profile/${user.following.id}`} className={styles.userLinks}>
-                      <div className={styles.followListCardText}>
-                        <li><b>{user.following.userName}</b></li>
-                        <li>{user.following.firstName} {user.following.lastName}</li>
-                      </div>
-                  </Link>
-               
-                    { userId ? <div>
-                          <button onClick={() => {
-                            handleUnfollow(user.following.id)}}>
-                                Unfollow
-                          </button>
-                    </div> : null }
+                    <Link to={`/profile/${user.followingId}`} className={styles.userLinks}>
+                        <div className={styles.followListCardImg}>
+                        {user.following.profileImg 
+                        ? <img src={user.following.profileImg} alt="profileImg" />
+                        : <img src={italy} alt="defaultImg" />}
+                        </div>
+                    </Link>
+                    <Link to={`/profile/${user.followingId}`} className={styles.userLinks}>
+                        <div className={styles.followListCardText}>
+                          <li><b>{user.following.userName}</b></li>
+                          <li>{user.following.firstName} {user.following.lastName}</li>
+                        </div>
+                    </Link>
 
                   </div>
                 </div>

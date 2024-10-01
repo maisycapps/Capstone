@@ -72,7 +72,7 @@ const Settings = ({user, setUpdateUser, setLoggedIn}) => {
             <h3>Account Settings</h3> 
 
             <form onSubmit={handleSubmit}>
-                <div className={styles.settingsForm}>
+                  <div className={styles.settingsForm}>
                     <label>First Name</label>
                     <input type="text" name="firstName" onChange={(e) => setFirstName(e.target.value)}/>
 
@@ -96,6 +96,7 @@ const Settings = ({user, setUpdateUser, setLoggedIn}) => {
                     </div>
                 </div>
             </form>
+
             <div className={styles.deleteSection}>
             <h3>Delete Account</h3> 
             <p className={styles.warning}>this action is permanent</p>

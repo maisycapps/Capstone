@@ -41,22 +41,22 @@ const Following = ({ user, setUpdateUser }) => {
   }, [updateFollowing]);
 
   //UNFOLLOW
-  const handleUnfollow = async (userId) => {
+  const handleUnfollow = async (unfollowId) => {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `http://localhost:3000/api/auth/account/users/${userId}/follows`,
+        `http://localhost:3000/api/auth/account/users/${unfollowId}/follows`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      console.log(`UnFollowed user with ID: ${userId}`);
-      setFollowing((prev) => prev.filter((id) => id !== userId)); //remove userId from following
+      console.log(`UnFollowed user with ID: ${unfollowId}`);
+      setFollowing((prev) => prev.filter((id) => id !== unfollowId)); //remove unfollowIdfrom following
     } catch (error) {
       console.error("Error unfollowing user: ", error);
     }
-    // {following.length === 0 && navigate("/account/myposts")}
+   
     setUpdateUser(true)
     setUpdateFollowing(true)
   };
@@ -80,9 +80,9 @@ const Following = ({ user, setUpdateUser }) => {
                       
                       <Link to={`/profile/${user.following.id}`} className={styles.userLinks}>
                         <div className={styles.followListCardImg}>
-                        {user.following.profileImg 
-                        ? <img src={user.following.profileImg} alt="profileImg" />
-                        : <img src={italy} alt="defaultImg" />}
+                          {user.following.profileImg 
+                            ? <img src={user.following.profileImg} alt="profileImg" />
+                            : <img src={italy} alt="defaultImg" />}
                         </div>
                       </Link>
                       <Link to={`/profile/${user.following.id}`} className={styles.userLinks}>
@@ -92,7 +92,6 @@ const Following = ({ user, setUpdateUser }) => {
                         </div>
                       </Link>
                      
-                   
                       <div>
                         <button onClick={() => {
                           handleUnfollow(user.following.id)}}>
