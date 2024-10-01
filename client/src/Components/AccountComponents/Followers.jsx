@@ -104,7 +104,7 @@ const Followers = ({ user }) => {
 
           <>
           
-            <p className={styles.defaultContent}>Not Followers</p>
+            <p className={styles.defaultContent}>No Followers Yet</p>
       
           </>
         )}

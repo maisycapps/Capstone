@@ -198,9 +198,12 @@ const MyPosts = ({ user }) => {
 
   return (  
     <>
+      {posts.length > 0 ? 
       <div className={styles.buttonContainer}>
           <button onClick={() => setNewPostForm(true)}>Add New Post</button>
       </div>
+      : null
+    }
 
       {/* CONDITIONALLY RENDER CREATE POST FORM */}
       {newPostForm === true && posts.length > 0 ? <CreatePost setNewPostForm={setNewPostForm} setUpdatePosts={setUpdatePosts}/> : null}
@@ -210,6 +213,7 @@ const MyPosts = ({ user }) => {
         {posts.length > 0 ? (
 
         posts.map((post) => {
+
             const hasLiked = post.likes.some((like) => like.userId === userId);
 
           return (
@@ -218,15 +222,28 @@ const MyPosts = ({ user }) => {
 
               <div className={styles.postModsButtonContainer}>
 
-                {/* EDIT BUTTON --- Change text to gear icon */}
-                <button onClick={() => {
-                  setSeeEditForm(true),
-                  setViewEditFormId(post.id)
-                  }}>Edit Post
-                </button>
+                 {/* CONDITIONALLY RENDERED EDIT POST OR CANCEL BUTTON */}
                 
-                {/* DELETE BUTTON --- Change text to trashcan icon */}
-                <button onClick={() => deletePost(post.id)}>Delete Post</button>
+
+                      { seeEditForm === true && post.id === viewEditFormId 
+                      ? (
+                        <>
+                          <button onClick={() => setSeeEditForm(false)}>Cancel</button>
+                        </>
+                      ) : (
+                        <>
+                          <button onClick={() => {
+                          setSeeEditForm(true),
+                          setViewEditFormId(post.id)
+                          }}>Edit Post
+                         </button>
+                       </>
+                      )
+                      }            
+                
+                  {/* DELETE BUTTON --- Change text to trashcan icon */}
+                  <button onClick={() => deletePost(post.id)}>Delete Post</button>
+
               </div>
 
                 {/* CONDITIONALLY RENDER POST OR EDIT FORM */}

@@ -11,13 +11,13 @@ import ProfileFollowers from "./ProfileComponents/ProfileFollowers";
 import ProfileFollowing from "./ProfileComponents/ProfileFollowing";
 import ProfilePosts from "./ProfileComponents/ProfilePosts";
 
-const Profile = ({ loggedIn }) => {
+const Profile = () => {
   const location = useLocation();
   const [thisUser, setThisUser] = useState(null);
   const { id } = useParams();
 
-  //Re-Rendering Dependency
-  // const [updatedUser, setUpdatedUser] = useState(false);
+  const [followers, setFollowers] = useState([]);
+  const [updateFollowers, setUpdateFollowers] = useState(false);
 
   /* ---------------- AUTH USER DATA FOR LIKE & COMMENT FUNCTIONALITIES ------------------ */
   const [user, setUser] = useState(null);
@@ -70,6 +70,58 @@ const Profile = ({ loggedIn }) => {
     return <div>User not found...</div>;
   }
 
+    //handle for 'follow' user button
+  const handleFollow = async (userId) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      //perform follow request
+      await axios.post(
+        `http://localhost:3000/api/auth/account/users/${userId}/follows`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      //fetch full details of user after following
+      const response = await axios.get(
+        `http://localhost:3000/api/users/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      //set user details from response
+      const followedUser = response.data;
+
+      console.log(`Followed user with ID: ${userId}`);
+      setFollowing((prev) => [...prev, userId]); // Add the user ID to the following list
+      setFollowingList((prev) => [...prev, followedUser]); // Add the user to the followingList array
+    } catch (error) {
+      console.error("Error following user: ", error);
+    }
+  };
+
+  //UNFOLLOW - WORKS
+  const handleUnfollow = async (userId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(
+        `http://localhost:3000/api/auth/account/users/${userId}/follows`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      console.log(`UnFollowed user with ID: ${userId}`);
+      setFollowing((prev) => prev.filter((id) => id !== userId)); //remove userId from following
+    } catch (error) {
+      console.error("Error unfollowing user: ", error);
+    }
+    setUpdateFollowing(true)
+  };
+
   return (
     <>
       <div className={styles.account}>
@@ -114,15 +166,32 @@ const Profile = ({ loggedIn }) => {
                     </p>
                     <p>{thisUser.following.length}</p>
                   </div>
-
+                  
                   <div className={styles.stat}>
                     <p>
                       <b>Posts</b>
                     </p>
                     <p>{thisUser.posts.length}</p>
-                  </div>
+                  </div> 
+
                 </div>
+               
               </div>
+            { user ? 
+              <div className={styles.header}>
+                  {thisUser.following.includes(user.id) 
+                  ? ( 
+                    <button onClick={() => handleUnfollow(user.id)}>
+                      Unfollow
+                    </button>                 
+                  ) : ( 
+                    <button onClick={() => handleFollow(user.id)}>
+                      Follow
+                    </button>
+                  )}
+              </div>
+              : null
+              }
             </div>
 
             <div className={styles.accountNav}>

@@ -162,10 +162,10 @@ h3 {
     padding-left: 5rem;
 }
 
-.followListCard >.followListCardImg > img {
-    max-height: 175px;
-    max-width: 175px;
+.followListCardImg img {
     border-radius: 50%;
+    height: 175px;
+    width: 175px;
 }
 
 .followListCardText {

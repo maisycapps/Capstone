@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 import italy from "../Images/italy.jpg";
+import Friends from "../Friends";
 
 const Following = ({ user }) => {
+
+  const navigate = useNavigate();
 
   const [following, setFollowing] = useState([]);
   const [updateFollowing, setUpdateFollowing] = useState(false);
@@ -53,6 +57,7 @@ const Following = ({ user }) => {
     } catch (error) {
       console.error("Error unfollowing user: ", error);
     }
+    // {following.length === 0 && navigate("/account/myposts")}
     setUpdateFollowing(true)
   };
 
@@ -70,26 +75,32 @@ const Following = ({ user }) => {
             {following.map((user) => {
               return (
                 <div key={user.following.id}>
-                  <Link to={`/profile/${user.following.id}`} className={styles.userLinks}>
+
+                    
                     <div className={styles.followListCard}>
+                      <Link to={`/profile/${user.following.id}`} className={styles.userLinks}>
                       <div className={styles.followListCardImg}>
                       {user.following.profileImg 
                       ? <img src={user.following.profileImg} alt="profileImg" />
                       : <img src={italy} alt="defaultImg" />}
                       </div>
+                      </Link>
+                      <Link to={`/profile/${user.following.id}`} className={styles.userLinks}>
                       <div className={styles.followListCardText}>
                         <li><b>{user.following.userName}</b></li>
                         <li>{user.following.firstName} {user.following.lastName}</li>
                       </div>
+                      </Link>
+                   
                       <div>
                         <button onClick={() => {
                           handleUnfollow(user.following.id)}}>
                               Unfollow
                         </button>
-                    
                       </div>
-                    </div>
-                  </Link>
+                      </div> 
+                    
+                 
                 </div>
               )
             })}
@@ -102,16 +113,10 @@ const Following = ({ user }) => {
           <>
           
             <p className={styles.defaultContent}>Not Following Anyone Yet</p>
-            <div className={styles.buttonContainer}>
-              <button onClick={() => setSeeUsers(true)}>
-                Browse users to follow
-              </button>
-            </div>
-            {seeUsers === true
-              ? /* view all users component*/ console.log(
-                  "seeUsers component tbd"
-                )
-              : null}
+
+            <button onClick={() => setSeeUsers(true)}>Browse Users to Follow</button>
+            {seeUsers && <Friends />}
+           
           </>
         )}
       </ul>
