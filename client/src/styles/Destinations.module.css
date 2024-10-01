@@ -17,55 +17,19 @@ h1 {
 }
 .desCard {
   display: flex;
-  justify-content: center;
   width: 500px;
   height: 300px;
   border-right: 30px solid #1f5156;
   border-radius: 0 10px 10px 0;
-  /* border: 2px solid red; */
   box-shadow: rgba(100, 100, 111, 0.7) 0px 7px 29px 0px;
 }
-.desImage {
-  width: 200px;
-  height: 300px;
-  display: grid;
-  place-items: center;
+.desCard .desImage {
+  width: 300px;
+  height: 100%;
 }
-.desImage img {
-  border: 2px solid red;
-  width: 200px;
-  height: 280px;
-  border-radius: 10px;
-}
-/* .desDetail {
-  width: 250px;
-  height: 300px;
-} */
-/* .desDetail p {
-  font-size: 16px;
-  display: flex;
-  justify-content: center;
-} */
-/* .desDetail ul {
-  display: block;
-  padding: 10px;
-} */
 .desDetail h2 {
   color: #1f5156;
   display: flex;
   justify-content: center;
   padding: 15px;
 }
-
-/* .desDetail ul li {
-  list-style: none;
-} */
-/* .desDetail ul h1 {
-  font-size: 18px;
-} */
-/* .desDetail .personIcon {
-  color: #1f5156;
-} */
-/* .desDetail span {
-  font-weight: bold;
-} */
