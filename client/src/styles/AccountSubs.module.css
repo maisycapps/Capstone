@@ -32,9 +32,11 @@ h3 {
 }
 
 .listItemCardHeader > img {
-    height: 70px;
     width: 70px;
+    height: 70px;
     border-radius: 50%;
+    object-fit: cover; 
+    object-position: center; 
 }
 
 .listItemCard {
@@ -52,6 +54,13 @@ h3 {
     padding: 10px;
 }
 
+.addNewSection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
 
 /* --------------------------------------MYPOSTS.JSX-------------------------------------- */
 
@@ -153,15 +162,14 @@ h3 {
 .followListCardImg {
     justify-items: center;
     display: flex;
-    justify-content: center;
     align-items: center;
-    height: 175px;
-    width: 175px;
     padding-left: 5rem;
 }
 
 .followListCardImg img {
     border-radius: 50%;
+    object-fit: cover; 
+    object-position: center; 
     height: 175px;
     width: 175px;
 }

@@ -3,6 +3,7 @@ import axios from "axios";
 import CreateTrip from '../CreateTrip';
 import EditTrip from "./EditTrip";
 import styles from "../../styles/AccountSubs.module.css";
+import PopUp from "../ProfileComponents/PopUp"
 
 const MyTrips = ({ user, setUpdateUser }) => {
 
@@ -85,15 +86,30 @@ const MyTrips = ({ user, setUpdateUser }) => {
 
     { trips.length > 0 
     ? ( <>
-          {/* CREATE NEW TRIP BUTTON & CONDITIONALLY RENDERED FORM */}
-          <div className={styles.buttonContainer}>
-            <button onClick={() => setNewTripForm(true)}>Add New Trip</button>
-          </div>
-    
-          {newTripForm === true && trips.length > 0 
-            ? <CreateTrip setNewTripForm={setNewTripForm} setUpdateTrips={setUpdateTrips} setUpdateUser={setUpdateUser}/> 
+         
+        {/* CREATE NEW TRIP BUTTON & CONDITIONALLY RENDERED FORM */}
+
+        <div className={styles.addNewSection}>
+          {newTripForm === false && trips.length > 0 ?
+           <div className={styles.buttonContainer}>
+           <button onClick={() => setNewTripForm(true)}>Add New Trip</button>
+           </div>
             : null
-          }
+            }
+
+            {/* CONDITIONALLY RENDER CREATE POST FORM */}
+            {newTripForm === true && trips.length > 0 ?
+            <>
+            <PopUp trigger={newTripForm} setTrigger={setNewTripForm}>
+
+            <div className={styles.addNewSection}>
+            <CreateTrip setNewTripForm={setNewTripForm} setUpdateTrips={setUpdateTrips} setUpdateUser={setUpdateUser}/> 
+            </div>
+            </PopUp>
+            </> 
+            : null}
+        </div>
+          
        <div className={styles.list}>
 
           {trips.map((trip) => {
@@ -164,10 +180,22 @@ const MyTrips = ({ user, setUpdateUser }) => {
         ) : ( 
 
               <>
-                <p className={styles.defaultContent}>No Trips Yet</p>
-                <button onClick={() => setNewTripForm(true)}>Create your first Trip</button>
-
-                {newTripForm === true ? <CreateTrip setNewTripForm={setNewTripForm} setUpdateTrips={setUpdateTrips} setUpdateUser={setUpdateUser}/> : null}
+              <div className={styles.list}>
+                <div className={styles.addNewSection}>
+                {newTripForm === false ? 
+                  <>
+                  <p className={styles.defaultContent}>No Trips Yet</p>
+                  <button onClick={() => setNewTripForm(true)}>Create your first Trip</button>
+                  </>
+                : null}
+                {newTripForm === true ? 
+                <>
+                <button onClick={() => setNewTripForm(false)} >{" "}exit{" "}</button>
+                <CreateTrip setNewTripForm={setNewTripForm} setUpdateTrips={setUpdateTrips} setUpdateUser={setUpdateUser}/>
+                </>
+                : null}
+                </div>
+                </div>
               </>
         )
     }
