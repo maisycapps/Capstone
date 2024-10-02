@@ -27,9 +27,21 @@ h1 {
   width: 300px;
   height: 100%;
 }
-.desDetail h2 {
-  color: #1f5156;
+
+.desDetail {
   display: flex;
+  width: 170px;
+  padding-left: auto;
+  padding-right: auto;
   justify-content: center;
-  padding: 15px;
+  padding-top: 3.5rem;
+}
+
+.desDetail h2 {
+  max-width: 165px;
+  color: #1f5156;
+  /* adjust font size*/
+  font-size: clamp(14px, 4vw, 18px); 
+  line-height: 1.2; 
+  text-align: left;
 }
