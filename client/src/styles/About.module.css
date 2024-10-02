@@ -23,6 +23,11 @@
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+.aboutText h1 {
+padding: 10px;
+font-size: 25px;
+}
+
 .memorize {
   display: flex;
 
