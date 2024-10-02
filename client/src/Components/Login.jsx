@@ -59,6 +59,7 @@ const Login = ({ setLoggedIn }) => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          {error && <p style={{ color: "red" }}>{error}</p>}
 
           <button type="submit">Login</button>
         </form>
