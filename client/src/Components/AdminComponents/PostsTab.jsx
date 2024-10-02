@@ -93,7 +93,7 @@ const Posts = () => {
 
   return (
     <>
-      <div className="adminContainerv2">
+      <div className={styles.adminContainer}>
         <h3>Manage Posts</h3>
         <input
           type="text"
@@ -101,19 +101,15 @@ const Posts = () => {
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        {/* <div className="userDetail"> */}
-        {/* <ul className={styles.ul}> */}
-        {/* maps through posts */}
-        {/* <div className="userCardv2-container"> */}
         {filteredPosts.map((post) => (
-          <div className="eachPost" key={post.id}>
+          <div className={styles.eachPost} key={post.id}>
             {/* user pfp */}
             <img
               src={post.user.profileImg}
               alt="Profile Image"
               style={{ width: "50px", height: "50px" }}
             />
-            <div className="userDetail">
+            <div className={styles.userDetail}>
               {/* username */}
               <h2>USER: {post.user.userName}</h2>
               {/* destination */}
@@ -138,13 +134,14 @@ const Posts = () => {
 
             {/* Render comments */}
             {post.comments && post.comments.length > 0 && (
-              <div className={styles.adminPostComments}>
+              <div>
                 {post.comments.map((comment) => (
                   <div key={comment.id}>
-                    <h3>
+                    <h3 className={styles.comment}>
                       {comment.user.userName}: {comment.text}
                     </h3>
                     <button
+                      className={styles.btn}
                       onClick={() => handleDeleteComment(comment.id, post.id)}
                     >
                       Delete Comment

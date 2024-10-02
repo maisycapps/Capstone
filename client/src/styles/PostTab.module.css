@@ -1,21 +1,49 @@
-.adminContainerv2 {
+.adminContainer {
   width: 100%;
   height: 100vh;
+  margin-left: 30%;
+  /* display: block;
+  justify-content: center;
+  align-items: center; */
+}
+
+.adminContainer h3 {
   display: flex;
-  flex-direction: row;
+  justify-content: center;
+  margin-right: 600px;
+}
+.adminContainer input {
+  width: 700px;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .eachPost {
-  display: flex;
-  border: 2px solid red;
-  background-color: #333;
+  width: 700px;
+  border: 2px solid #1f5156;
+}
+.eachPost img {
+  margin-left: 200px;
 }
 
-.userDetail {
-  border: 2px solid red;
-  background-color: #333;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
+.userDetail h2 {
+  margin-left: 100px;
+}
+.userDetail h4 {
+  margin-left: 80px;
+}
+.userDetail button {
+  margin-left: 80px;
+}
+.userDetail h3 {
+  margin-left: 80px;
+}
+.userDetail div button {
+  margin-left: 300px;
+}
+.btn {
+  margin-left: 300px;
+}
+.comment {
+  margin-left: 300px;
 }

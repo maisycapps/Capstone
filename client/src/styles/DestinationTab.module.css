@@ -1,14 +1,3 @@
-.adContainer {
-  width: 100%;
-  height: 80vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.form {
-  display: flex;
-  justify-content: center;
-}
 .adContainer form {
   display: block;
   justify-content: center;
@@ -44,18 +33,13 @@
   align-items: center;
 }
 .desContainer {
-  width: 100%;
-  height: 60vh;
-  display: flex;
-}
-.desContainer ul {
-  width: 300px;
-  height: 300px;
-  justify-content: center;
-  align-items: center;
+  margin-left: 60px;
 }
 
 .desContainer ul button {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
   width: 60px;
   color: #fff;
   background-color: #1f5156;

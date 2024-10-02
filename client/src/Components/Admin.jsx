@@ -38,7 +38,7 @@ const Admin = () => {
             </button>
           </div>
 
-          <div className="admin-content">{renderTabContent()}</div>
+          <div className={styles.adminContent}>{renderTabContent()}</div>
         </div>
       </div>
     </>
