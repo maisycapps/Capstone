@@ -97,27 +97,6 @@ const Destinations = () => {
     <div className={styles.adContainer}>
       <h3>Manage Destinations</h3>
 
-      {/* Form to create a new destination */}
-      <div className={styles.form}>
-        <form onSubmit={handleCreateDestination}>
-          <input
-            type="text"
-            placeholder="Destination Name"
-            value={destinationName}
-            onChange={(e) => setDestinationName(e.target.value)}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Destination Image URL"
-            value={destinationImg}
-            onChange={(e) => setDestinationImg(e.target.value)}
-            required
-          />
-          <button type="submit">Create Destination</button>
-        </form>
-      </div>
-
       {/* Search input */}
       <input
         type="text"
@@ -126,6 +105,27 @@ const Destinations = () => {
         className={styles.search}
         onChange={handleSearchChange}
       />
+
+      {/* Form to create a new destination */}
+      <div className={styles.form}>
+        <form onSubmit={handleCreateDestination}>
+          <input
+            type="text"
+            placeholder="Create Destination Name"
+            value={destinationName}
+            onChange={(e) => setDestinationName(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Create Destination Image URL"
+            value={destinationImg}
+            onChange={(e) => setDestinationImg(e.target.value)}
+            required
+          />
+          <button type="submit">Create Destination</button>
+        </form>
+      </div>
 
       {/* Render destinations */}
       <div className={styles.desContainer}>
