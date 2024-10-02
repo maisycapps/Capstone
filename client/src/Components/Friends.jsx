@@ -155,7 +155,8 @@ const Friends = () => {
                 {filteredUsers
                   .filter(
                     (user) =>
-                      user.id !== loggedInUserId && user.role !== "ADMIN"
+                      user.role !== "ADMIN" &&
+                      (loggedIn ? user.id !== loggedInUserId : true)
                   ) //filters out logged in user in search
                   .map((user) => (
                     <>
