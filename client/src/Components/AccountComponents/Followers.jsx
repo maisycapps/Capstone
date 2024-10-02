@@ -42,6 +42,32 @@ const Followers = ({ user, setUpdateUser }) => {
     fetchFollowers();
   }, [updateFollowers]);
 
+  const [following, setFollowing] = useState([]);
+  const [updateFollowing, setUpdateFollowing] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    const fetchFollowing = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/auth/account/following`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        const result = await response.data;
+        setFollowing(result);
+      } catch (error) {
+        console.error(error);
+      }
+      setUpdateFollowing(false);
+    };
+    fetchFollowing();
+  }, [updateFollowing]);
+
   //UNFOLLOW
   const handleUnfollow = async (unfollowId) => {
     try {
@@ -53,30 +79,30 @@ const Followers = ({ user, setUpdateUser }) => {
         }
       );
 
-      setFollowers((prev) => prev.filter((id) => id !== unfollowId)); //remove unfollowId from following
     } catch (error) {
       console.error("Error unfollowing user: ", error);
     }
+    setUpdateFollowing(true);
     setUpdateUser(true);
     setUpdateFollowers(true);
   };
 
   //FOLLOW
-  const handleFollow = async (userId) => {
+  const handleFollow = async (followId) => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://localhost:3000/api/auth/account/users/${userId}/follows`,
-        {},
+        `http://localhost:3000/api/auth/account/users/${followId}/follows`,
+        { },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      setFollowers((prev) => [...prev, userId]); //remove userId from following
     } catch (error) {
       console.error("Error following user: ", error);
     }
+    setUpdateFollowing(true);
     setUpdateUser(true);
     setUpdateFollowers(true);
   };
@@ -126,23 +152,20 @@ const Followers = ({ user, setUpdateUser }) => {
                         </div>
                       </Link>
 
-                      {user.followedById === userId ? (
-                        <button
-                          onClick={() => {
-                            handleUnfollow(user.followingId);
-                          }}
-                        >
+                      {following.some(
+                        (instance) => instance.followingId === user.followedBy.id
+                      ) ? (
+                        <button onClick={() => handleUnfollow(user.followedBy.id)}>
                           Unfollow
                         </button>
                       ) : (
-                        <button
-                          onClick={() => {
-                            handleFollow(user.followingId);
-                          }}
-                        >
+                        <button onClick={() => handleFollow(user.followedBy.id)}>
                           Follow
                         </button>
                       )}
+                  
+                
+
                     </div>
                   </div>
                 );
