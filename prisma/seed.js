@@ -47,7 +47,7 @@ const destinationData = Array.from({ length: 30 }).map(() => ({
   destinationImg: faker.image.urlLoremFlickr({
     width: 300,
     height: 300,
-    category: "cities",
+    category: "skyline",
   }),
 }));
 
@@ -67,7 +67,7 @@ const postData = Array.from({ length: 30 }).map(() => ({
   postImg: faker.image.urlLoremFlickr({
     width: 300,
     height: 300,
-    category: "cities",
+    category: "tourism"
   }),
   destinationId: faker.number.int({ min: 1, max: 30 }),
 }));
