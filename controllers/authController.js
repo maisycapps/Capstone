@@ -23,7 +23,6 @@ const isLoggedIn = async (req, res, next) => {
 
     //verify token
     const decoded = jwt.verify(token, JWT_SECRET);
-    console.log("decoded toke: ", decoded);
 
     req.user = decoded;
 
@@ -35,7 +34,6 @@ const isLoggedIn = async (req, res, next) => {
 
 //create user function
 const createUser = async (req, res, next) => {
-  console.log("math");
   try {
     const { firstName, lastName, userName, email, password } = req.body;
 
@@ -44,7 +42,6 @@ const createUser = async (req, res, next) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
 
     const newUser = await prisma.users.create({
       data: {
@@ -55,7 +52,7 @@ const createUser = async (req, res, next) => {
         password: hashedPassword,
       },
     });
-    console.log(newUser);
+
     res.status(201).json(newUser);
   } catch (error) {
     next(error);
@@ -75,7 +72,6 @@ const authenticate = async (req, res, next) => {
       });
     }
 
-    console.log("Step 1: Finding user"); //debuggin
     //find user by username
     const user = await prisma.users.findUnique({
       where: { userName },
@@ -89,8 +85,6 @@ const authenticate = async (req, res, next) => {
       });
     }
 
-    console.log("Step 2: User found", user); //debuggin
-
     //compare password with bcrypt
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
@@ -102,8 +96,6 @@ const authenticate = async (req, res, next) => {
       });
     }
 
-    console.log("Step 3: Password is valid"); //debuggin
-
     //create token payload
     const payload = {
       userId: user.id,
@@ -111,14 +103,10 @@ const authenticate = async (req, res, next) => {
       role: user.role, //checks if user or admin
     };
 
-    console.log("Step 4: Payload created", payload); //debuggin
-
     //sign token with secret
     const token = jwt.sign(payload, JWT_SECRET, {
       expiresIn: "1h", //token valid for 1 hour
     });
-
-    console.log("Step 5: Token generated", token); //debuggin
 
     //respond with token
     return res.status(200).json({

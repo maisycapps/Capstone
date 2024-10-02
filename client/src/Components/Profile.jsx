@@ -35,8 +35,7 @@ const Profile = () => {
         const accountData = await response.data[0];
 
         setUser(accountData);
-        setUpdateUser(false)
-
+        setUpdateUser(false);
       } catch (error) {
         console.error("Error fetching user account data", error);
       }
@@ -44,69 +43,62 @@ const Profile = () => {
     fetchData();
   }, [updateUser]);
 
-
   const [following, setFollowing] = useState([]);
   const [updateFollowing, setUpdateFollowing] = useState(false);
 
   useEffect(() => {
-
     const token = localStorage.getItem("token");
 
     const fetchFollowing = async () => {
       try {
-          const response = await axios.get(
-            `http://localhost:3000/api/auth/account/following`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+        const response = await axios.get(
+          `http://localhost:3000/api/auth/account/following`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const result = await response.data;
-        setFollowing(result)
-      }
-       catch (error) {
+        setFollowing(result);
+      } catch (error) {
         console.error(error);
-      }  
-      setUpdateFollowing(false)
+      }
+      setUpdateFollowing(false);
     };
     fetchFollowing();
-
   }, [updateFollowing]);
 
   const [followers, setFollowers] = useState([]);
   const [updateFollowers, setUpdateFollowers] = useState(false);
 
   useEffect(() => {
-
     const token = localStorage.getItem("token");
 
     const fetchFollowers = async () => {
       try {
-          const response = await axios.get(
-            `http://localhost:3000/api/auth/account/followedBy`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+        const response = await axios.get(
+          `http://localhost:3000/api/auth/account/followedBy`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         const result = await response.data;
 
-        setFollowers(result)
-      }
-       catch (error) {
+        setFollowers(result);
+      } catch (error) {
         console.error(error);
-      }  
-      setUpdateFollowers(false)
+      }
+      setUpdateFollowers(false);
     };
     fetchFollowers();
-
   }, [updateFollowers]);
 
   /*---------------- GET PROFILE BY USER ID ---------------- */
 
-  const [updateThisUser, setUpdateThisUser] = useState(false)
+  const [updateThisUser, setUpdateThisUser] = useState(false);
   const [thisUser, setThisUser] = useState(null);
   const { id } = useParams();
 
@@ -120,15 +112,14 @@ const Profile = () => {
         const response = await axios.get(
           `http://localhost:3000/api/users/${id}`
         );
-        const accountData = await response.data
+        const accountData = await response.data;
 
-        setThisUser(accountData)
+        setThisUser(accountData);
 
-        setProfileFollowers(accountData.following)
-        setProfileFollowing(accountData.followedBy)
+        setProfileFollowers(accountData.following);
+        setProfileFollowing(accountData.followedBy);
 
-        setUpdateThisUser(false)
-
+        setUpdateThisUser(false);
       } catch (error) {
         console.error("Error fetching user account data", error);
       }
@@ -140,7 +131,7 @@ const Profile = () => {
     return <div>User not found...</div>;
   }
 
-    //handle for 'follow' user button
+  //handle for 'follow' user button
   const handleFollow = async (userId) => {
     try {
       const token = localStorage.getItem("token");
@@ -154,12 +145,9 @@ const Profile = () => {
         }
       );
 
-      console.log(`Followed user with ID: ${userId}`);
-
-      setUpdateThisUser(true)
-      setUpdateUser(true)
-      setUpdateFollowing(true)
-
+      setUpdateThisUser(true);
+      setUpdateUser(true);
+      setUpdateFollowing(true);
     } catch (error) {
       console.error("Error following user: ", error);
     }
@@ -175,16 +163,13 @@ const Profile = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-
-      console.log(`UnFollowed user with ID: ${userId}`);
-
     } catch (error) {
       console.error("Error unfollowing user: ", error);
     }
-  
-    setUpdateThisUser(true)
-    setUpdateUser(true)
-    setUpdateFollowing(true)
+
+    setUpdateThisUser(true);
+    setUpdateUser(true);
+    setUpdateFollowing(true);
   };
 
   return (
@@ -231,38 +216,31 @@ const Profile = () => {
                     </p>
                     <p>{thisUser.following.length}</p>
                   </div>
-                  
+
                   <div className={styles.stat}>
                     <p>
                       <b>Posts</b>
                     </p>
                     <p>{thisUser.posts.length}</p>
-                  </div> 
-
+                  </div>
                 </div>
-                
-                
-               
               </div>
-                 
-            { user ? 
-            
-              <div className={styles.header}>
 
-                  { following.some((instance) => instance.followingId === thisUser.id)
-
-                  ? ( 
+              {user ? (
+                <div className={styles.header}>
+                  {following.some(
+                    (instance) => instance.followingId === thisUser.id
+                  ) ? (
                     <button onClick={() => handleUnfollow(thisUser.id)}>
                       Unfollow
-                    </button>                 
-                  ) : ( 
+                    </button>
+                  ) : (
                     <button onClick={() => handleFollow(thisUser.id)}>
                       Follow
                     </button>
                   )}
-              </div>
-              : null
-            }
+                </div>
+              ) : null}
             </div>
 
             <div className={styles.accountNav}>
@@ -271,9 +249,25 @@ const Profile = () => {
 
             {/* CURRENT URL LOCATION /ACCOUNT */}
             <Routes>
-              <Route path="ProfileFollowers" element={<ProfileFollowers thisUser={thisUser} setUpdateThisUser={setUpdateThisUser} />} />
+              <Route
+                path="ProfileFollowers"
+                element={
+                  <ProfileFollowers
+                    thisUser={thisUser}
+                    setUpdateThisUser={setUpdateThisUser}
+                  />
+                }
+              />
 
-              <Route path="ProfileFollowing" element={<ProfileFollowing thisUser={thisUser} setUpdateThisUser={setUpdateThisUser} />} />
+              <Route
+                path="ProfileFollowing"
+                element={
+                  <ProfileFollowing
+                    thisUser={thisUser}
+                    setUpdateThisUser={setUpdateThisUser}
+                  />
+                }
+              />
 
               <Route
                 path="ProfilePosts"
@@ -284,7 +278,6 @@ const Profile = () => {
             {location.pathname === `/profile/${thisUser.id}` ? (
               <ProfilePosts thisUser={thisUser} user={user} />
             ) : null}
-
           </>
         ) : (
           //IF USER IS LOADING
