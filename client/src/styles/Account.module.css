@@ -42,12 +42,11 @@
 
 /* ACCOUNT HEADER IMAGE */
 .accountCard img {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 200px;
   height: 200px;
   border-radius: 50%;
+  object-fit: cover; 
+  object-position: center; 
 }
 
  /* ACCOUNT HEADER FIRSTNAME LASTNAME */

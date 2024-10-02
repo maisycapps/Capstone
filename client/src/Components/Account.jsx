@@ -55,11 +55,13 @@ const Account = ({ setLoggedIn }) => {
             <div className={styles.accountCard}>
               <div className={styles.header}>
                 <div className={styles.stat}>
+                  <div className={styles.accountCardImg}>
                   {user.profileImg ? (
                     <img src={user.profileImg} alt="Profile Image" />
                   ) : (
                     <img src={italy} alt="Default Profile Image" />
                   )}
+                  </div>
 
                   <h2>
                     {user.firstName} {user.lastName}
