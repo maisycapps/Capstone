@@ -8,12 +8,10 @@ const Destinations = () => {
   const [destinationName, setDestinationName] = useState("");
   const [destinationImg, setDestinationImg] = useState("");
 
-  // Fetch destinations on component mount
   useEffect(() => {
     fetchDestinations();
   }, []);
 
-  //fetch all destinations
   const fetchDestinations = async () => {
     const token = localStorage.getItem("token");
 
@@ -32,7 +30,6 @@ const Destinations = () => {
     }
   };
 
-  //create a destination
   const handleCreateDestination = async (e) => {
     const token = localStorage.getItem("token");
 
@@ -50,7 +47,7 @@ const Destinations = () => {
           },
         }
       );
-      fetchDestinations(); // Refresh destination list after creation
+      fetchDestinations();
       setDestinationName("");
       setDestinationImg("");
     } catch (error) {
@@ -58,7 +55,6 @@ const Destinations = () => {
     }
   };
 
-  //delete a destination
   const handleDeleteDestination = async (destinationId) => {
     const token = localStorage.getItem("token");
 
@@ -83,12 +79,10 @@ const Destinations = () => {
     }
   };
 
-  //search function
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
 
-  // Filter destinations by name
   const filteredDestinations = destinations.filter((destination) =>
     destination.destinationName.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -97,7 +91,6 @@ const Destinations = () => {
     <div className={styles.adContainer}>
       <h3>Manage Destinations</h3>
 
-      {/* Form to create a new destination */}
       <div className={styles.form}>
         <form onSubmit={handleCreateDestination}>
           <input
@@ -118,7 +111,6 @@ const Destinations = () => {
         </form>
       </div>
 
-      {/* Search input */}
       <input
         type="text"
         placeholder="Search destinations by name..."
@@ -127,7 +119,6 @@ const Destinations = () => {
         onChange={handleSearchChange}
       />
 
-      {/* Render destinations */}
       <div className={styles.desContainer}>
         <ul>
           {filteredDestinations.map((destination) => (

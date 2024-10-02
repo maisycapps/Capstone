@@ -40,8 +40,6 @@
 .adminContainer .userCard ul {
   width: 100%;
   height: 100vh;
-  /* display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)); */
   gap: 20px;
   justify-content: center;
   place-items: center;
@@ -78,4 +76,10 @@
 
 .userDetail p {
   align-items: center;
+}
+.adminContent {
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
 }
