@@ -4,22 +4,11 @@ import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
 import italy from "../Images/italy.jpg";
 
-const ProfileFollowers = ({ user, thisUser }) => {
+const ProfileFollowers = ({ thisUser, setUpdateUser }) => {
 
+  /* -------------------------------- PROFILE DATA --------------------------------*/
   const [followers, setFollowers] = useState([]);
   const [updateFollowers, setUpdateFollowers] = useState(false);
-
-  const [seeUsers, setSeeUsers] = useState(false);
-
-  /* -------------------------------- USER DATA --------------------------------*/
-  const [userId, setUserId] = useState(null);
-
-    //SET USER ID
-    useEffect(() => {
-      if (user && user.id) {
-         setUserId(user.id);
-      }
-    }, [user]); 
 
   useEffect(() => {
 
@@ -41,27 +30,6 @@ const ProfileFollowers = ({ user, thisUser }) => {
 
   }, [updateFollowers]);
 
-
-  //UNFOLLOW
-  const handleUnfollow = async (userId) => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.delete(
-        `http://localhost:3000/api/auth/account/users/${userId}/follows`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      console.log(`UnFollowed user with ID: ${userId}`);
-      setFollowers((prev) => prev.filter((id) => id !== userId)); //remove userId from following
-    } catch (error) {
-      console.error("Error unfollowing user: ", error);
-    }
-    setUpdateFollowers(true)
-  };
-
-
   return (
     <>
       <h3>Followers</h3>
@@ -71,10 +39,10 @@ const ProfileFollowers = ({ user, thisUser }) => {
         ? (
           <>
           <div className={styles.followList}>
-            {/* maps through instances in which auth user's ID = followedBy id, and returns the ids and data of who they follow. */}
+            {/* maps through instances in which profile user's ID = following id, and returns the ids and data of who follows them. */}
             {followers.map((user) => {
               return (
-                <div key={user.followedBy.id}>
+                <div key={user.followedById}>
                    <div className={styles.followListCard}>
 
                     <Link to={`/profile/${user.followedBy.id}`} className={styles.userLinks}>
@@ -90,18 +58,10 @@ const ProfileFollowers = ({ user, thisUser }) => {
                         <li>{user.followedBy.firstName} {user.followedBy.lastName}</li>
                       </div>
                     </Link>
-                     
-                
-
-                    { userId ? <div>
-                        <button onClick={() => {
-                          handleUnfollow(user.followedBy.id)}}>
-                              Unfollow
-                        </button>
-                      </div> : null } 
-
+                      
                   </div>
-                </div>
+               </div>
+               
               )
             })}
             </div>

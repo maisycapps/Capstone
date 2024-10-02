@@ -1,7 +1,6 @@
 /* ACCOUNT WHOLE PAGE CONTAINER*/
 .account {
   display: grid;
-  border: 1px solid black;
 }
 
 /* ACCOUNT HEADER */
@@ -9,6 +8,7 @@
   height: 400px;
   padding: 10px;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  justify-content: center;
   align-content: center;
   display: flex;
   flex-wrap: wrap;
@@ -42,12 +42,11 @@
 
 /* ACCOUNT HEADER IMAGE */
 .accountCard img {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 200px;
   height: 200px;
   border-radius: 50%;
+  object-fit: cover; 
+  object-position: center; 
 }
 
  /* ACCOUNT HEADER FIRSTNAME LASTNAME */

@@ -10,8 +10,11 @@
 }
 
 .profileBitContainer {
-  display: block;
+  /* display: block; */
   margin: 10px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .profileBit {
@@ -24,13 +27,14 @@
 }
 
 .profileBitImg > img {
-  height: 15rem;
-  max-width: 15rem;
+  width: 12rem;
+  height: 12rem;
   border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  object-fit: cover; 
+  object-position: center; 
 }
+
+
 
 .sideList {
   /* border: 2px solid blue; */

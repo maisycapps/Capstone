@@ -95,7 +95,6 @@ const Friends = () => {
       //set user details from response
       const followedUser = response.data;
 
-      console.log(`Followed user with ID: ${userId}`);
       setFollowing((prev) => [...prev, userId]); // Add the user ID to the following list
       setFollowingList((prev) => [...prev, followedUser]); // Add the user to the followingList array
     } catch (error) {
@@ -113,7 +112,7 @@ const Friends = () => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log(`UnFollowed user with ID: ${userId}`);
+
       setFollowing((prev) => prev.filter((id) => id !== userId)); //remove userId from following
       setFollowingList((prev) => prev.filter((user) => user.id !== userId)); //update following list
     } catch (error) {
@@ -154,26 +153,29 @@ const Friends = () => {
               <ul>
                 {/* maps through users */}
                 {filteredUsers
-                  .filter((user) => user.id !== loggedInUserId) //filters out logged in user in search
+                  .filter(
+                    (user) =>
+                      user.id !== loggedInUserId && user.role !== "ADMIN"
+                  ) //filters out logged in user in search
                   .map((user) => (
                     <>
                       <li key={`user-${user.id}`}>
                         {/* link to user profile */}
                         <Link to={`/profile/${user.id}`}>
-                              {/* conditionally renders pfp if doesnt exsist */}
-                              {user.profileImg ? (
-                               <img
-                                  src={user.profileImg}
-                                  alt="Profile Image"
-                                  className={styles.profile}
-                                />
-                              ) : (
-                                <img
-                                  src={italy}
-                                  alt="Default Profile Image"
-                                  className={styles.profile}
-                                />
-                              )}
+                          {/* conditionally renders pfp if doesnt exsist */}
+                          {user.profileImg ? (
+                            <img
+                              src={user.profileImg}
+                              alt="Profile Image"
+                              className={styles.profile}
+                            />
+                          ) : (
+                            <img
+                              src={italy}
+                              alt="Default Profile Image"
+                              className={styles.profile}
+                            />
+                          )}
                         </Link>
                         {user.userName}
                         {/* conditionally renders follow unfollow button if logged in */}

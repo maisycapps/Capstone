@@ -55,11 +55,13 @@ const Account = ({ setLoggedIn }) => {
             <div className={styles.accountCard}>
               <div className={styles.header}>
                 <div className={styles.stat}>
+                  <div className={styles.accountCardImg}>
                   {user.profileImg ? (
                     <img src={user.profileImg} alt="Profile Image" />
                   ) : (
                     <img src={italy} alt="Default Profile Image" />
                   )}
+                  </div>
 
                   <h2>
                     {user.firstName} {user.lastName}
@@ -118,12 +120,12 @@ const Account = ({ setLoggedIn }) => {
 
             {/* CURRENT URL LOCATION /ACCOUNT */}
             <Routes>
-              <Route path="followers" element={<Followers user={user} />} />
-              <Route path="following" element={<Following user={user} />} />
+              <Route path="followers" element={<Followers user={user} setUpdateUser={setUpdateUser} />} />
+              <Route path="following" element={<Following user={user} setUpdateUser={setUpdateUser} />} />
               <Route
                 path="myposts"
                 element={
-                  <MyPosts user={user} />
+                  <MyPosts user={user} setUpdateUser={setUpdateUser} />
 
                 }
               />

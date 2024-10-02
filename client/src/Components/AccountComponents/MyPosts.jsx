@@ -1,10 +1,11 @@
 import CreatePost from "../CreatePost";
 import EditPost from "./EditPost";
 import { useState, useEffect } from "react";
-import axios, { formToJSON } from "axios";
+import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
+import PopUp from "../ProfileComponents/PopUp"
 
-const MyPosts = ({ user }) => {
+const MyPosts = ({ user, setUpdateUser }) => {
 
   /* -------------------------------- CONDITIONAL RENDERING --------------------------------*/
 
@@ -88,6 +89,7 @@ const MyPosts = ({ user }) => {
         console.error("error deleting post: ", error);
     }
       setUpdatePosts(true)
+      setUpdateUser(true)
   }
  
   
@@ -198,15 +200,26 @@ const MyPosts = ({ user }) => {
 
   return (  
     <>
-      {posts.length > 0 ? 
-      <div className={styles.buttonContainer}>
-          <button onClick={() => setNewPostForm(true)}>Add New Post</button>
-      </div>
-      : null
-    }
+      
+      <div className={styles.addNewSection}>
+          { newPostForm === false && posts.length > 0 ? 
+            <>
+            <button onClick={() => setNewPostForm(true)}>Add new post</button>
+            </>
+            : null
+            }
 
-      {/* CONDITIONALLY RENDER CREATE POST FORM */}
-      {newPostForm === true && posts.length > 0 ? <CreatePost setNewPostForm={setNewPostForm} setUpdatePosts={setUpdatePosts}/> : null}
+            {/* CONDITIONALLY RENDER CREATE POST FORM */}
+            {newPostForm === true && posts.length > 0 ?
+            <>
+            <PopUp trigger={newPostForm} setTrigger={setNewPostForm}>
+            <div className={styles.addNewSection}>
+            <CreatePost setNewPostForm={setNewPostForm} setUpdatePosts={setUpdatePosts} setUpdateUser={setUpdateUser}/>
+            </div>
+            </PopUp>
+            </> 
+            : null}
+      </div>
       
       <div className={styles.list}>
 
@@ -409,11 +422,22 @@ const MyPosts = ({ user }) => {
           })
           ) : ( 
           <>
+          <div className={styles.addNewSection}>
+          { newPostForm === false ? 
+            <>
             <p className={styles.defaultContent}>No Posts Yet</p>
             <button onClick={() => setNewPostForm(true)}>Create your first post</button>
-
+            </>
+            : null
+            }
             {/* CONDITIONALLY RENDER CREATE POST FORM */}
-            {newPostForm === true ? <CreatePost setNewPostForm={setNewPostForm}/> : null}
+            {newPostForm === true ? 
+            <>
+            <button onClick={() => setNewPostForm(false)} >{" "}exit{" "}</button>
+            <CreatePost setNewPostForm={setNewPostForm} setUpdatePosts={setUpdatePosts} setUpdateUser={setUpdateUser}/>
+            </> 
+            : null}
+          </div>
           </>
         )}
 

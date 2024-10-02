@@ -126,11 +126,9 @@ router.delete("/account", isLoggedIn, async (req, res, next) => {
 //Create auth user follow (follow someone) --WORKS
 router.post("/account/users/:id/follows", isLoggedIn, async (req, res) => {
   const { id } = req.params; //user to follow's id > followingId
-  console.log("user to follow", parseInt(id));
 
   try {
     const userId = req.user.userId; // auth user > followedById
-    console.log("auth user", req.user.userId);
 
     const userToFollow = await prisma.users.findUnique({
       where: { id: parseInt(id) },
@@ -151,7 +149,6 @@ router.post("/account/users/:id/follows", isLoggedIn, async (req, res) => {
 
     res.status(201).json(newFollows);
   } catch (error) {
-    console.log("error following user: ", error);
     res.status(500).json({ error: "Failed to follow user!" });
   }
 });
@@ -295,8 +292,6 @@ router.post("/account/trips", isLoggedIn, async (req, res) => {
 
     res.status(201).json(newTrip);
   } catch (error) {
-    console.log("error creating trip: ", error);
-
     res.status(500).json({ error: "Failed to create trip!" });
   }
 });
@@ -418,7 +413,6 @@ router.post("/account/posts", isLoggedIn, async (req, res, next) => {
 
     res.status(201).json(newPost);
   } catch (error) {
-    console.log("error creating post: ", error);
     res.status(500).json({ error: "Failed to create post!" });
   }
 });
@@ -504,9 +498,9 @@ router.patch("/account/posts/:id", isLoggedIn, async (req, res, next) => {
 
     const updatedPost = await prisma.posts.update({
       where: { id: parseInt(id) },
-      data: updatedData
+      data: updatedData,
     });
-    
+
     res.json(updatedPost);
   } catch (error) {
     console.error("Error updating this post: ", error);
@@ -590,7 +584,6 @@ router.post(
 
       res.status(201).json(newComment);
     } catch (error) {
-      console.log("error creating comment: ", error.message, error.stack);
       res.status(500).json({ error: "Failed to create comment!" });
     }
   }
@@ -626,7 +619,6 @@ router.patch(
     const { postId, id } = req.params; //post id, comment id
 
     const { text } = req.body;
-    console.log("edit comment req.body", req.body);
 
     try {
       const userId = req.user.userId;
@@ -761,7 +753,6 @@ router.post("/account/posts/:id/likes", isLoggedIn, async (req, res, next) => {
         .json({ message: "Post liked successfully", action: "like" });
     }
   } catch (error) {
-    console.log("error creating like: ", error);
     res.status(500).json({ error: "Failed to like/unlike post!" });
   }
 });

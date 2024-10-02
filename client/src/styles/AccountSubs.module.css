@@ -14,9 +14,7 @@ h3 {
     flex-direction: row;
     gap: 10px;
     flex-flow: wrap;
-    justify-content: left;
-    margin-right: 3rem;
-    margin-left: 3rem;
+    justify-content: center;
 }
 
 /* INDIVIDAUL MAPPED ITEM "CARDS" */
@@ -34,9 +32,11 @@ h3 {
 }
 
 .listItemCardHeader > img {
-    height: 70px;
     width: 70px;
+    height: 70px;
     border-radius: 50%;
+    object-fit: cover; 
+    object-position: center; 
 }
 
 .listItemCard {
@@ -54,6 +54,13 @@ h3 {
     padding: 10px;
 }
 
+.addNewSection {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
 
 /* --------------------------------------MYPOSTS.JSX-------------------------------------- */
 
@@ -155,15 +162,14 @@ h3 {
 .followListCardImg {
     justify-items: center;
     display: flex;
-    justify-content: center;
     align-items: center;
-    height: 175px;
-    width: 175px;
     padding-left: 5rem;
 }
 
 .followListCardImg img {
     border-radius: 50%;
+    object-fit: cover; 
+    object-position: center; 
     height: 175px;
     width: 175px;
 }
@@ -182,23 +188,26 @@ h3 {
 
 /* FORM LAYOUT */
 .settingsBody {
-    margin-right: 40px;
-    margin-left: 40px;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .settingsForm {
     margin-bottom: 30px;
     display: flex;
+    justify-content: center;
+    align-content: center;
     flex-wrap: wrap;
     flex-direction: column;
+    width: 500px;
+    height: fit-content;
 }
 
-.settingsForm > input {
-    margin-bottom: 5px;
-    width: 500px;
-    height:fit-content;
+.settingsForm input {
+    padding: 5px;
+    height: fit-content;
 }
 
 .buttonContainer {

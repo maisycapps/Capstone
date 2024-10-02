@@ -15,7 +15,7 @@ import boats from "./Images/boats.jpeg";
 function About() {
   return (
     <div className={styles.aboutContainer}>
-      <h1 className={styles.aboutTitle}>ABOUT</h1>
+      <h1 className={styles.aboutTitle}>About Us</h1>
       <div className={styles.aboutHeader}>
         <img src={italy} alt="about" className={styles.aboutImage} />
         <div className={styles.aboutText}>
