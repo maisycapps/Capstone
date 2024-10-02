@@ -6,8 +6,6 @@ Our team intends to build an API to manage users, destinations, and trips. We wo
 
 Scalability: could be used to plan a trip as simple as going to the grocery store, all the way up to planning a business trip involving multiple employees.
 
-# WITH INITIAL CLONE INSTALL PACKAGES EX. PRISMA, EXPRESS, MORGAN, FAKER, JSONWEBTOKEN, REACT, BCRYPT
-
 # ------ Database Notes ------
 
 # Routes
@@ -82,23 +80,3 @@ LIKES
 - GET /api/posts/:id (view a specific post)
 - GET /api/posts/:id/comments (view a specific post's comments)
 - GET /api/posts/:id/likes (view a specific post's likes)
-
-# discussion: "social" functions
-
-#### Frontend: Following / Follower
-
-- Auth users should have access to a seach bar to search other users by name (like book buddy search bar)
-
-- Auth users can click on another user's name/preview bit to view their page (shows user's posts, maybe bigger profileImg, and their following & followedBy data)
-
-- Auth users can follow another user (Does two things: First, adds clicked-on user's ID to "following" array in the auth user's account. Second, adds auth user's ID to the clicked-on user's "followedBy" array)
-
-- By clicking follow on another user, user1 can see user2 in their "following" data and user2 can see user1 in their "followedBy" data
-
-#### The "Friends" Query
-
-- Create a query to determine if users follow one another. If mutual, both users showed in either's "friends" 
-(will ref db schema: if followedBy === following, return those ids in friends list HTML)
-
-#### T3 Trips with multiple users 
-- If "friends", users can add one another to trips
