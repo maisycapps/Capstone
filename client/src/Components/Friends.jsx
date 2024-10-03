@@ -22,6 +22,7 @@ const Friends = () => {
       const decodedToken = jwtDecode(token); //decode token to get userId
       setLoggedInUserId(decodedToken.userId); //set userId
     } else {
+      localStorage.removeItem("token");
       setLoggedIn(false);
     }
   }, []);
@@ -209,6 +210,7 @@ const Friends = () => {
         </div>
 
         {/*conditionally renders a list of accounts the logged in user follows if logged in */}
+        {console.log(loggedIn)}
         {loggedIn && (
           <div className={styles.friendsFollowContainer}>
             <h1>Following</h1>
