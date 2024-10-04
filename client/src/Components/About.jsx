@@ -20,12 +20,19 @@ function About() {
         <img src={italy} alt="about" className={styles.aboutImage} />
         <div className={styles.aboutText}>
           <h1>
-            Copilot is a user-friendly social media app designed for travelers. Register for an account to create and manage trips, and create posts to document and share your experiences. Curious about what other travelers are doing? Follow other users, view their posts, and leave a comment or like. 
-            </h1>
+            Copilot is a user-friendly social media app designed for travelers.
+            Register for an account to create and manage trips, and create posts
+            to document and share your experiences. Curious about what other
+            travelers are doing? Follow other users, view their posts, and leave
+            a comment or like.
+          </h1>
           <p>
-             We aim to bring people together through shared adventures. By offering features that allow users to organize trips, follow friends, and engage with travel posts, Copilot is a hub for both social and travel enthusiasts.
-            
-          </p><br />
+            We aim to bring people together through shared adventures. By
+            offering features that allow users to organize trips, follow
+            friends, and engage with travel posts, Copilot is a hub for both
+            social and travel enthusiasts.
+          </p>
+          <br />
           <p>Developed by Jordan Harris, Maisy Capps, and Mathew Correa.</p>
         </div>
       </div>

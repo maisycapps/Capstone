@@ -3,444 +3,491 @@ import EditPost from "./EditPost";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../../styles/AccountSubs.module.css";
-import PopUp from "../ProfileComponents/PopUp"
+import PopUp from "../ProfileComponents/PopUp";
+import italy from "../Images/italy.jpg";
 
 const MyPosts = ({ user, setUpdateUser }) => {
-
   /* -------------------------------- CONDITIONAL RENDERING --------------------------------*/
 
   //CREATE NEW POST
   const [newPostForm, setNewPostForm] = useState(false); //view CreatePost route onClick
-  
+
   //EDIT POST
   const [seeEditForm, setSeeEditForm] = useState(false); //view EditPost route
-  const [viewEditFormId, setViewEditFormId] = useState("") //render edit form only on that post
-  
+  const [viewEditFormId, setViewEditFormId] = useState(""); //render edit form only on that post
+
   //VIEW COMMENTS ASSOCIATED WITH A SPECIFIC POST
   const [seeComments, setSeeComments] = useState(false); //view comments
-  const [viewCommentsId, setViewCommentsId] = useState("") //render comments on only that post
+  const [viewCommentsId, setViewCommentsId] = useState(""); //render comments on only that post
 
   //EDIT COMMENT
-  const [editComment, setEditComment] = useState(false) //view edit form
-  const [commentPostId, setCommentPostId] = useState("") //render edit form on only that post
-  const [commentId, setCommentId] = useState("") //render edit form on only that comment
-  const [text, setText] = useState("") //body for patch request
+  const [editComment, setEditComment] = useState(false); //view edit form
+  const [commentPostId, setCommentPostId] = useState(""); //render edit form on only that post
+  const [commentId, setCommentId] = useState(""); //render edit form on only that comment
+  const [text, setText] = useState(""); //body for patch request
 
-/* -------------------------------- RE-RENDER DEPENDENCY --------------------------------*/
-  const [updatePosts, setUpdatePosts] = useState(false)
+  /* -------------------------------- RE-RENDER DEPENDENCY --------------------------------*/
+  const [updatePosts, setUpdatePosts] = useState(false);
 
-/* -------------------------------- USER DATA --------------------------------*/
+  /* -------------------------------- USER DATA --------------------------------*/
   const [userId, setUserId] = useState(null);
   const [posts, setPosts] = useState([]);
-
 
   //SET USER ID
   useEffect(() => {
     if (user && user.id) {
-       setUserId(user.id);
+      setUserId(user.id);
     }
-  }, [user]); 
+  }, [user]);
 
-/* -------------------------------- POSTS CRUD --------------------------------*/
+  /* -------------------------------- POSTS CRUD --------------------------------*/
 
   //GET ALL POSTS
   useEffect(() => {
-
     const token = localStorage.getItem("token");
 
-    const fetchUserPosts = async() => {
-
+    const fetchUserPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/auth/account/posts",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-
-        setPosts(response.data)
-
-      } catch (error) {
-        console.error("Error fetching posts: ", error);
-      }
-      setUpdatePosts(false)
-    };
-
-    fetchUserPosts();
-
-  }, [updatePosts]);
-
-  //DELETE POST BY ID
-  const deletePost = async(postId) => {
-
-    const token = localStorage.getItem("token");
-  
-    try {
-      await axios.delete(
-        `http://localhost:3000/api/auth/account/posts/${postId}`,
-          {
-            headers: {
-               Authorization: `Bearer ${token}`,
-             },
-          }
-        );  
-    } catch (error) {
-        console.error("error deleting post: ", error);
-    }
-      setUpdatePosts(true)
-      setUpdateUser(true)
-  }
- 
-  
-/* -------------------------------- LIKES CRUD --------------------------------*/
-
-//LIKE & UNLIKE
-  const handleLikes = async (postId) => {
-
-    try {
-      const token = localStorage.getItem("token");
-      
-      const response = await axios.post(
-        `http://localhost:3000/api/auth/account/posts/${postId}/likes`,
-        {}, {
-           headers: {
-              Authorization: `Bearer ${token}`,
-            },
-        }
-      );
-      const action = response.data.action;
-      setUpdatePosts(true)
-  
-      if (!action) {
-          console.error("action is undefined in the response");
-      } 
-
-    } catch (error) {
-        console.error("Error liking post: ", error);
-    }
-  };
-  
-/* -------------------------------- COMMENTS CRUD --------------------------------*/
-
-  //CREATE A NEW COMMENT
-  const handleComment = async (postId, commentText) => {
-
-    const token = localStorage.getItem("token");
-  
-    try {
-       const response = await axios.post(
-         `http://localhost:3000/api/auth/account/posts/${postId}/comments`,
-         {
-            text: commentText,
-          },
+        const response = await axios.get(
+          "http://localhost:3000/api/auth/account/posts",
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
-        
+
+        setPosts(response.data);
       } catch (error) {
-        console.error("error adding comment: ", error);
+        console.error("Error fetching posts: ", error);
       }
-      setUpdatePosts(true)
-      setSeeComments(true)
+      setUpdatePosts(false);
+    };
+
+    fetchUserPosts();
+  }, [updatePosts]);
+
+  //DELETE POST BY ID
+  const deletePost = async (postId) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      await axios.delete(
+        `http://localhost:3000/api/auth/account/posts/${postId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("error deleting post: ", error);
+    }
+    setUpdatePosts(true);
+    setUpdateUser(true);
+  };
+
+  /* -------------------------------- LIKES CRUD --------------------------------*/
+
+  //LIKE & UNLIKE
+  const handleLikes = async (postId) => {
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post(
+        `http://localhost:3000/api/auth/account/posts/${postId}/likes`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const action = response.data.action;
+      setUpdatePosts(true);
+
+      if (!action) {
+        console.error("action is undefined in the response");
+      }
+    } catch (error) {
+      console.error("Error liking post: ", error);
+    }
+  };
+
+  /* -------------------------------- COMMENTS CRUD --------------------------------*/
+
+  //CREATE A NEW COMMENT
+  const handleComment = async (postId, commentText) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/auth/account/posts/${postId}/comments`,
+        {
+          text: commentText,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error("error adding comment: ", error);
+    }
+    setUpdatePosts(true);
+    setSeeComments(true);
   };
 
   //EDIT COMMENT BY ID
-  const editMyComment = async(postId, commentId, text) => {
-
+  const editMyComment = async (postId, commentId, text) => {
     const token = localStorage.getItem("token");
 
     try {
       const response = await axios.patch(
         `http://localhost:3000/api/auth/account/posts/${postId}/comments/${commentId}`,
         { text },
-         {
-           headers: {
-             Authorization: `Bearer ${token}`,
-           },
-         }
-       );
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      setCommentPostId("")
-      setCommentId("")
-      setText("")
-
+      setCommentPostId("");
+      setCommentId("");
+      setText("");
     } catch (error) {
       console.error("error editing comment: ", error);
     }
 
-    setSeeComments(true)
-    setUpdatePosts(true)
-  }
- 
-  //DELETE COMMENT BY ID
-  const deleteComment = async(postId, commentId) => {
+    setSeeComments(true);
+    setUpdatePosts(true);
+  };
 
+  //DELETE COMMENT BY ID
+  const deleteComment = async (postId, commentId) => {
     const token = localStorage.getItem("token");
 
     try {
       await axios.delete(
         `http://localhost:3000/api/auth/account/posts/${postId}/comments/${commentId}`,
-         {
-           headers: {
-             Authorization: `Bearer ${token}`,
-           },
-         }
-       );
-      
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
     } catch (error) {
       console.error("error deleting comment: ", error);
     }
-    setCommentId("")
-    setUpdatePosts(true)
-  }
+    setCommentId("");
+    setUpdatePosts(true);
+  };
 
-  return (  
+  return (
     <>
-      
       <div className={styles.addNewSection}>
-          { newPostForm === false && posts.length > 0 ? 
-            <>
+        {newPostForm === false && posts.length > 0 ? (
+          <>
             <button onClick={() => setNewPostForm(true)}>Add new post</button>
-            </>
-            : null
-            }
+          </>
+        ) : null}
 
-            {/* CONDITIONALLY RENDER CREATE POST FORM */}
-            {newPostForm === true && posts.length > 0 ?
-            <>
+        {/* CONDITIONALLY RENDER CREATE POST FORM */}
+        {newPostForm === true && posts.length > 0 ? (
+          <>
             <PopUp trigger={newPostForm} setTrigger={setNewPostForm}>
-            <div className={styles.addNewSection}>
-            <CreatePost setNewPostForm={setNewPostForm} setUpdatePosts={setUpdatePosts} setUpdateUser={setUpdateUser}/>
-            </div>
+              <div className={styles.addNewSection}>
+                <CreatePost
+                  setNewPostForm={setNewPostForm}
+                  setUpdatePosts={setUpdatePosts}
+                  setUpdateUser={setUpdateUser}
+                />
+              </div>
             </PopUp>
-            </> 
-            : null}
+          </>
+        ) : null}
       </div>
-      
+
       <div className={styles.list}>
-
         {posts.length > 0 ? (
-
-        posts.map((post) => {
-
+          posts.map((post) => {
             const hasLiked = post.likes.some((like) => like.userId === userId);
 
-          return (
+            return (
+              <div key={post.id} className={styles.listItemCard}>
+                <div className={styles.postModsButtonContainer}>
+                  {/* CONDITIONALLY RENDERED EDIT POST OR CANCEL BUTTON */}
 
-            <div key={post.id} className={styles.listItemCard}>
+                  {seeEditForm === true && post.id === viewEditFormId ? (
+                    <>
+                      <button onClick={() => setSeeEditForm(false)}>
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => {
+                          setSeeEditForm(true), setViewEditFormId(post.id);
+                        }}
+                      >
+                        Edit
+                      </button>
+                    </>
+                  )}
 
-              <div className={styles.postModsButtonContainer}>
-
-                 {/* CONDITIONALLY RENDERED EDIT POST OR CANCEL BUTTON */}
-                
-
-                      { seeEditForm === true && post.id === viewEditFormId 
-                      ? (
-                        <>
-                          <button onClick={() => setSeeEditForm(false)}>Cancel</button>
-                        </>
-                      ) : (
-                        <>
-                          <button onClick={() => {
-                          setSeeEditForm(true),
-                          setViewEditFormId(post.id)
-                          }}>Edit
-                         </button>
-                       </>
-                      )
-                      }            
-                
                   {/* DELETE BUTTON --- Change text to trashcan icon */}
                   <button onClick={() => deletePost(post.id)}>Delete</button>
-
-              </div>
+                </div>
 
                 {/* CONDITIONALLY RENDER POST OR EDIT FORM */}
-                { seeEditForm && post.id === viewEditFormId ? 
-                (<> 
-                  <div className={styles.listItemCardHeader}>
-                    <img src={user.profileImg}/>
-                    <div className={styles.listItemCardHeaderText}>
-                      <p><b>{user.userName}</b></p>
-                    </div>
-                  </div>
-
-                    <EditPost 
-                        user={user}
-                        viewEditFormId={viewEditFormId}
-                        setUpdatePosts={setUpdatePosts} 
-                        setSeeEditForm={setSeeEditForm} 
-                        posts={posts} setPosts={setPosts} 
-                        setViewEditFormId={setViewEditFormId}
-                      />
-                  </> 
-                  ) : (
-                <>   
-                <div className={styles.listItemCardHeader}>
-                  <img src={user.profileImg}/>
-                  <div className={styles.listItemCardHeaderText}>
-                    <p><b>{user.userName}</b></p>
-                    <p>               
-                      {post.destination
-                      ? post.destination.destinationName
-                      : "No destination"} 
-                    </p>
-                  </div>
-                </div>
-
-                <div className={styles.postImg}>
-                  <img
-                    src={post.postImg}
-                    alt="Post Img"
-                  />
-                </div>
-
-                  { post.updatedAt !== post.createdAt 
-                    ? <p>{new Date(post.updatedAt).toLocaleDateString()}{"  "}
-                    "{post.text}" 
-                    </p> 
-                    : <p>{new Date(post.createdAt).toLocaleDateString()}{"  "}
-                    "{post.text}" </p>  
-                  }
-
-                {/* DYNAMIC LIKE BUTTON */}
-                <div className={styles.postButtonContainer}> 
-                  <button onClick={() => handleLikes(post.id)}>
-                    {hasLiked ? "Unlike" : "Like"}{"  "}
-                    {post.likes ? post.likes.length : 0}
-                  </button>
-                 
-                  {/* VIEW COMMENTS BUTTON */}
-                  <button onClick={() => {
-                          seeComments ? setSeeComments(false) :
-                          setSeeComments(true),
-                          setViewCommentsId(post.id)}}> 
-                          
-                          {seeComments && post.id === viewCommentsId && post.comments.length > 0
-                          ? `Hide Comments`
-                          : `Comments: ${post.comments? post.comments.length : 0}`}
-     
-                  </button>
-
-                </div>
-                
-                {/* CONDITIONALLY RENDER COMMENTS ON A PARTICULAR POST*/}
-                {seeComments && post.id === viewCommentsId && post.comments.length > 0
-                  ? post.comments.map((comment) => {
-                    return (
-                      <div key={comment.id}>
-                        <div className={styles.comments}>
-                          <p>
-                            <b> { comment.user 
-                                ? "@" + comment.user.userName : "...loading" }
-                            </b>{" "}
-                                {comment.text}{"  "}
-                                {new Date(comment.createdAt).toLocaleDateString()}
-                          </p>
-                            
-
-                            {/* CONDITIONALLY RENDER EDITING BUTTONS ON USER'S COMMENTS */}
-                            { comment.userId === userId 
-                              && editComment === false
-                            ? <> 
-                                <div className={styles.editCommentButtons}>
-                                  
-                                    <button onClick ={()=> { 
-                                      setEditComment(true),
-                                      setCommentPostId(comment.postId),
-                                      setCommentId(comment.id)
-                                      }}>Edit</button> 
-                                  
-
-                                  
-                                    <button onClick={() => deleteComment(comment.postId, comment.id)}>Delete</button>
-                                 
-                                </div>
-                              </>
-                            : null }
-                        </div>
-                            {/* CONDITIONALLY RENDER EDIT FORM ON USER'S COMMENT BY ID */}
-                            { comment.userId === userId 
-                              && editComment === true 
-                              && commentPostId === comment.postId
-                              && commentId === comment.id
-                                  ? 
-                                    <>
-                                      <div className={styles.editCommentForm}>
-                                        <form onSubmit={() => {
-                                               //error handling to prevent empty comment revision submissions
-                                               if (text.length > 0) { 
-                                                editMyComment(comment.postId, comment.id, text)
-                                               } else {
-                                                  alert("must enter text before submitting")
-                                                }
-                                          }}>
-                                          <input type="text" id="text" 
-                                            value={text}
-                                            onChange={(e) => setText(e.target.value)}/>
-                                      
-                                        <div className={styles.editCommentSubmitButtons}>
-                                          <button onClick={() => setEditComment(false)}>Cancel</button>
-                                        </div>
-
-                                        <div className={styles.editCommentSubmitButtons}>
-                                          <button value="submit">Submit</button>
-                                        </div>
-                                        </form>
-                                      </div>
-                                    </>
-                                  : null }
-
-                          
+                {seeEditForm && post.id === viewEditFormId ? (
+                  <>
+                    <div className={styles.listItemCardHeader}>
+                      <img src={user.profileImg} />
+                      <div className={styles.listItemCardHeaderText}>
+                        <p>
+                          <b>{user.userName}</b>
+                        </p>
                       </div>
-                    );
-                    })
-                : null }  
-                
-                
-              <div>
+                    </div>
 
-                <input
-                  type="text"
-                  placeholder="  Add a comment"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      handleComment(post.id, e.target.value);
-                        e.target.value = ""; //clear input after submission
-                    }
-                  }}
-                /> 
-    
+                    <EditPost
+                      user={user}
+                      viewEditFormId={viewEditFormId}
+                      setUpdatePosts={setUpdatePosts}
+                      setSeeEditForm={setSeeEditForm}
+                      posts={posts}
+                      setPosts={setPosts}
+                      setViewEditFormId={setViewEditFormId}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <div className={styles.listItemCardHeader}>
+                      {user.profileImg ? (
+                        <img
+                          src={user.profileImg}
+                          alt="Profile Image"
+                          className={styles.profile}
+                        />
+                      ) : (
+                        <img
+                          src={italy}
+                          alt="Default Profile Image"
+                          className={styles.profile}
+                        />
+                      )}
+                      <div className={styles.listItemCardHeaderText}>
+                        <p>
+                          <b>{user.userName}</b>
+                        </p>
+                        <p>
+                          {post.destination
+                            ? post.destination.destinationName
+                            : "No destination"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className={styles.postImg}>
+                      <img src={post.postImg} alt="Post Img" />
+                    </div>
+
+                    {post.updatedAt !== post.createdAt ? (
+                      <p>
+                        {new Date(post.updatedAt).toLocaleDateString()}
+                        {"  "}"{post.text}"
+                      </p>
+                    ) : (
+                      <p>
+                        {new Date(post.createdAt).toLocaleDateString()}
+                        {"  "}"{post.text}"{" "}
+                      </p>
+                    )}
+
+                    {/* DYNAMIC LIKE BUTTON */}
+                    <div className={styles.postButtonContainer}>
+                      <button onClick={() => handleLikes(post.id)}>
+                        {hasLiked ? "Unlike" : "Like"}
+                        {"  "}
+                        {post.likes ? post.likes.length : 0}
+                      </button>
+
+                      {/* VIEW COMMENTS BUTTON */}
+                      <button
+                        onClick={() => {
+                          seeComments
+                            ? setSeeComments(false)
+                            : setSeeComments(true),
+                            setViewCommentsId(post.id);
+                        }}
+                      >
+                        {seeComments &&
+                        post.id === viewCommentsId &&
+                        post.comments.length > 0
+                          ? `Hide Comments`
+                          : `Comments: ${
+                              post.comments ? post.comments.length : 0
+                            }`}
+                      </button>
+                    </div>
+
+                    {/* CONDITIONALLY RENDER COMMENTS ON A PARTICULAR POST*/}
+                    {seeComments &&
+                    post.id === viewCommentsId &&
+                    post.comments.length > 0
+                      ? post.comments.map((comment) => {
+                          return (
+                            <div key={comment.id}>
+                              <div className={styles.comments}>
+                                <p>
+                                  <b>
+                                    {" "}
+                                    {comment.user
+                                      ? "@" + comment.user.userName
+                                      : "...loading"}
+                                  </b>{" "}
+                                  {comment.text}
+                                  {"  "}
+                                  {new Date(
+                                    comment.createdAt
+                                  ).toLocaleDateString()}
+                                </p>
+
+                                {/* CONDITIONALLY RENDER EDITING BUTTONS ON USER'S COMMENTS */}
+                                {comment.userId === userId &&
+                                editComment === false ? (
+                                  <>
+                                    <div className={styles.editCommentButtons}>
+                                      <button
+                                        onClick={() => {
+                                          setEditComment(true),
+                                            setCommentPostId(comment.postId),
+                                            setCommentId(comment.id);
+                                        }}
+                                      >
+                                        Edit
+                                      </button>
+
+                                      <button
+                                        onClick={() =>
+                                          deleteComment(
+                                            comment.postId,
+                                            comment.id
+                                          )
+                                        }
+                                      >
+                                        Delete
+                                      </button>
+                                    </div>
+                                  </>
+                                ) : null}
+                              </div>
+                              {/* CONDITIONALLY RENDER EDIT FORM ON USER'S COMMENT BY ID */}
+                              {comment.userId === userId &&
+                              editComment === true &&
+                              commentPostId === comment.postId &&
+                              commentId === comment.id ? (
+                                <>
+                                  <div className={styles.editCommentForm}>
+                                    <form
+                                      onSubmit={() => {
+                                        //error handling to prevent empty comment revision submissions
+                                        if (text.length > 0) {
+                                          editMyComment(
+                                            comment.postId,
+                                            comment.id,
+                                            text
+                                          );
+                                        } else {
+                                          alert(
+                                            "must enter text before submitting"
+                                          );
+                                        }
+                                      }}
+                                    >
+                                      <input
+                                        type="text"
+                                        id="text"
+                                        value={text}
+                                        onChange={(e) =>
+                                          setText(e.target.value)
+                                        }
+                                      />
+
+                                      <div
+                                        className={
+                                          styles.editCommentSubmitButtons
+                                        }
+                                      >
+                                        <button
+                                          onClick={() => setEditComment(false)}
+                                        >
+                                          Cancel
+                                        </button>
+                                      </div>
+
+                                      <div
+                                        className={
+                                          styles.editCommentSubmitButtons
+                                        }
+                                      >
+                                        <button value="submit">Submit</button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </>
+                              ) : null}
+                            </div>
+                          );
+                        })
+                      : null}
+
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="  Add a comment"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            handleComment(post.id, e.target.value);
+                            e.target.value = ""; //clear input after submission
+                          }
+                        }}
+                      />
+                    </div>
+                  </>
+                )}
               </div>
-              </> )}
-            </div>
-            ) 
+            );
           })
-          ) : ( 
+        ) : (
           <>
-          <div className={styles.addNewSection}>
-          { newPostForm === false ? 
-            <>
-            <p className={styles.defaultContent}>No Posts Yet</p>
-            <button onClick={() => setNewPostForm(true)}>Create your first post</button>
-            </>
-            : null
-            }
-            {/* CONDITIONALLY RENDER CREATE POST FORM */}
-            {newPostForm === true ? 
-            <>
-            <button onClick={() => setNewPostForm(false)} >{" "}exit{" "}</button>
-            <CreatePost setNewPostForm={setNewPostForm} setUpdatePosts={setUpdatePosts} setUpdateUser={setUpdateUser}/>
-            </> 
-            : null}
-          </div>
+            <div className={styles.addNewSection}>
+              {newPostForm === false ? (
+                <>
+                  <p className={styles.defaultContent}>No Posts Yet</p>
+                  <button onClick={() => setNewPostForm(true)}>
+                    Create your first post
+                  </button>
+                </>
+              ) : null}
+              {/* CONDITIONALLY RENDER CREATE POST FORM */}
+              {newPostForm === true ? (
+                <>
+                  <button onClick={() => setNewPostForm(false)}> exit </button>
+                  <CreatePost
+                    setNewPostForm={setNewPostForm}
+                    setUpdatePosts={setUpdatePosts}
+                    setUpdateUser={setUpdateUser}
+                  />
+                </>
+              ) : null}
+            </div>
           </>
         )}
-
       </div>
     </>
   );
