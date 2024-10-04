@@ -22,6 +22,7 @@ const Friends = () => {
       const decodedToken = jwtDecode(token); //decode token to get userId
       setLoggedInUserId(decodedToken.userId); //set userId
     } else {
+      localStorage.removeItem("token");
       setLoggedIn(false);
     }
   }, []);
@@ -155,7 +156,8 @@ const Friends = () => {
                 {filteredUsers
                   .filter(
                     (user) =>
-                      user.id !== loggedInUserId && user.role !== "ADMIN"
+                      user.role !== "ADMIN" &&
+                      (loggedIn ? user.id !== loggedInUserId : true)
                   ) //filters out logged in user in search
                   .map((user) => (
                     <>
@@ -208,6 +210,7 @@ const Friends = () => {
         </div>
 
         {/*conditionally renders a list of accounts the logged in user follows if logged in */}
+        {console.log(loggedIn)}
         {loggedIn && (
           <div className={styles.friendsFollowContainer}>
             <h1>Following</h1>
